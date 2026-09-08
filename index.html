@@ -15,14 +15,33 @@
 
     body, html {
       height: 100%;
+      width: 100%;
       overflow: hidden;
       display: flex;
       background-color: #f4f6f8;
     }
 
+    /* BOTÓN HAMBURGUESA PARA PANTALLAS PEQUEÑAS */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      background-color: #0b112c;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
     /* BARRA LATERAL (SIDEBAR) */
     .sidebar {
       width: 260px;
+      min-width: 260px;
       background-color: #0b112c;
       color: #a0aec0;
       display: flex;
@@ -30,10 +49,13 @@
       justify-content: space-between;
       height: 100vh;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      z-index: 50;
+      transition: transform 0.3s ease;
     }
 
     .sidebar-menu {
       padding-top: 20px;
+      overflow-y: auto;
     }
 
     /* Botones de navegación */
@@ -77,7 +99,7 @@
       color: #0b112c;
     }
 
-    /* Submenú desplegable para módulos con varios dashboards */
+    /* Submenú desplegable */
     .submenu {
       display: none;
       background-color: #070b1e;
@@ -155,8 +177,10 @@
     /* ÁREA DE CONTENIDO PRINCIPAL */
     .content-container {
       flex: 1;
+      width: calc(100vw - 260px);
       height: 100vh;
       position: relative;
+      overflow: hidden;
     }
 
     iframe {
@@ -178,12 +202,57 @@
     .arrow-icon.rotate {
       transform: rotate(180deg);
     }
+
+    /* OVERLAY PARA CERRAR EL MENÚ EN MÓVILES */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 40;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* =========================================================
+       MEDIA QUERIES - DISEÑO RESPONSIVO PARA TABLETS Y MÓVILES
+       ========================================================= */
+    @media (max-width: 992px) {
+      .menu-toggle {
+        display: block; /* Muestra botón hamburguesa */
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%); /* Oculta la barra fuera de pantalla */
+      }
+
+      .sidebar.mobile-open {
+        transform: translateX(0); /* Desliza la barra hacia adentro */
+      }
+
+      .content-container {
+        width: 100vw; /* El dashboard ocupa el 100% de la pantalla */
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- BOTÓN HAMBURGUESA PANTALLAS PEQUEÑAS -->
+  <button class="menu-toggle" onclick="toggleSidebar()">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <!-- CAPA OSCURA PARA CERRAR EL MENÚ AL HACER CLIC FUERA -->
+  <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
   <!-- NAVEGACIÓN LATERAL -->
-  <aside class="sidebar">
+  <aside id="sidebar" class="sidebar">
     <div class="sidebar-menu">
       
       <!-- Módulo 1 -->
@@ -229,6 +298,8 @@
         </button>
       </div>
 
+      <!-- Módulo 5 -->
+  
       <!-- Módulo 6: ESTUDIOS EXTRAS (3 DASHBOARDS) -->
       <button class="nav-item" onclick="toggleSubmenu('submenu-extras', this)">
         <div class="nav-item-content">
@@ -281,23 +352,27 @@
       const iframes = document.querySelectorAll('.content-container iframe');
       iframes.forEach(iframe => iframe.classList.remove('active'));
 
-      // 2. Remover clase 'active' de todos los botones e ítems de submenú
+      // 2. Remover clase 'active' de botones y submenús
       const navButtons = document.querySelectorAll('.nav-item, .submenu-item');
       navButtons.forEach(btn => btn.classList.remove('active'));
 
-      // 3. Mostrar el iframe seleccionado
+      // 3. Activar el iframe seleccionado
       const targetIframe = document.getElementById(iframeId);
       if(targetIframe) {
         targetIframe.classList.add('active');
       }
 
-      // 4. Activar el botón o submenú presionado
+      // 4. Activar el botón presionado
       element.classList.add('active');
 
-      // Si el botón presionado es de submenú, resalta también el módulo padre
       if (element.classList.contains('submenu-item')) {
         const parentNav = element.closest('.submenu').previousElementSibling;
         if (parentNav) parentNav.classList.add('active');
+      }
+
+      // En pantallas pequeñas, cerrar el menú lateral automáticamente al presionar una opción
+      if (window.innerWidth <= 992) {
+        toggleSidebar();
       }
     }
 
@@ -305,11 +380,19 @@
       const submenu = document.getElementById(submenuId);
       const arrow = element.querySelector('.arrow-icon');
       
-      // Alternar la visibilidad del submenú
       submenu.classList.toggle('open');
       if (arrow) {
         arrow.classList.toggle('rotate');
       }
+    }
+
+    // Función para abrir/cerrar la barra lateral en pantallas pequeñas
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      
+      sidebar.classList.toggle('mobile-open');
+      overlay.classList.toggle('active');
     }
   </script>
 
