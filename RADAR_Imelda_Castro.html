@@ -1,0 +1,505 @@
+<title>RADAR Imelda Castro v2</title>
+<style>
+:root{--navy:#1C2738;--ac:#0B7285;--go:#8A6A06;--da:#B3121F;--su:#0F7D6F;--ne:#5B6B78;--bl:#1B4F8A;--or:#A8570F;--card:#D5D1D1;--border:rgba(28,39,56,0.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#F0EFED;color:var(--navy);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;min-height:100vh;font-size:14px}
+.page{max-width:1300px;margin:0 auto;padding:20px 16px}
+.hdr{background:#1C2738;color:#fff;padding:32px 24px 28px;border-radius:8px 8px 0 0;--ac:#00C2D4;--go:#F4C430;--da:#E63946;--su:#2EC4B6;--ne:#8FA3B1;--or:#E67E22;--bl:#7EB8F7}
+.con{max-width:none;margin:0;padding:24px 24px 10px;background:#fff;border-radius:0 0 8px 8px;box-shadow:0 2px 20px rgba(28,39,56,.07)}
+.hero-l{font-family:monospace;font-size:10px;color:var(--ac);letter-spacing:4px;margin-bottom:8px}
+.hero-n{font-size:clamp(24px,4vw,42px);font-weight:800;margin-bottom:6px;line-height:1.1}
+.hero-n span{color:var(--ac)}
+.hero-s{font-size:13px;color:var(--ne);margin-bottom:14px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-family:monospace;font-size:8px;padding:4px 10px;border-radius:2px;letter-spacing:1px;font-weight:700}
+.ta{background:rgba(0,194,212,.12);color:var(--ac);border:1px solid rgba(0,194,212,.3)}
+.tg{background:rgba(244,196,48,.1);color:var(--go);border:1px solid rgba(244,196,48,.3)}
+.tn{background:rgba(143,163,177,.1);color:var(--ne);border:1px solid rgba(143,163,177,.3)}
+.ts{background:rgba(46,196,182,.1);color:var(--su);border:1px solid rgba(46,196,182,.3)}
+.tor{background:rgba(230,126,34,.14);color:var(--or);border:1px solid rgba(230,126,34,.4)}
+.td{background:rgba(230,57,70,.1);color:var(--da);border:1px solid rgba(230,57,70,.3)}
+.tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;margin-bottom:24px;margin-top:2px}
+.tb{font-family:monospace;font-size:9px;padding:10px 13px;cursor:pointer;color:var(--ne);border-bottom:2px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;transition:all .2s}
+.tb:hover{color:var(--navy)}
+.tb.act{color:var(--ac);border-bottom-color:var(--ac)}
+.tb:focus-visible{outline:1px solid var(--ac);outline-offset:2px}
+.tsec{display:none}
+.tsec.show{display:block;animation:fi .3s ease}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.stitle{font-family:monospace;font-size:10px;font-weight:700;color:var(--ac);letter-spacing:4px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:14px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.kpi.ac::before{background:var(--ac)}.kpi.su::before{background:var(--su)}.kpi.da::before{background:var(--da)}.kpi.go::before{background:var(--go)}.kpi.bl::before{background:var(--bl)}
+.kl{font-family:monospace;font-size:8px;color:var(--ne);letter-spacing:1px;margin-bottom:5px}
+.kv{font-size:24px;font-weight:800;line-height:1;margin-bottom:3px}
+.kpi.ac .kv{color:var(--ac)}.kpi.su .kv{color:var(--su)}.kpi.da .kv{color:var(--da)}.kpi.go .kv{color:var(--go)}.kpi.bl .kv{color:var(--bl)}
+.kn{font-size:10px;color:var(--ne)}
+.cg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:768px){.cg{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:18px}
+.ct{font-size:13px;font-weight:700;margin-bottom:3px}
+.cs{font-size:10px;color:var(--ne);margin-bottom:14px}
+.bbar{display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.blbl{font-family:monospace;font-size:9px;color:var(--ac);letter-spacing:1px}
+.bb{font-family:monospace;font-size:8px;padding:5px 11px;border-radius:2px;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--ne);letter-spacing:1px;transition:all .15s}
+.bb:hover{border-color:var(--ac);color:var(--navy)}
+.bb.act{background:rgba(0,194,212,.12);border-color:var(--ac);color:var(--ac)}
+.ng{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:900px){.ng{grid-template-columns:1fr}}
+.nc{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.nh{padding:10px 13px;font-family:monospace;font-size:8px;font-weight:700;letter-spacing:2px}
+.nh.fav{background:rgba(46,196,182,.15);color:var(--su);border-bottom:1px solid rgba(46,196,182,.2)}
+.nh.crit{background:rgba(230,57,70,.15);color:var(--da);border-bottom:1px solid rgba(230,57,70,.2)}
+.nh.neu{background:rgba(143,163,177,.08);color:var(--ne);border-bottom:1px solid var(--border)}
+.ni{padding:11px 13px;border-bottom:1px solid rgba(28,39,56,.08)}
+.ni:last-child{border-bottom:none}
+.nit{font-size:12px;font-weight:500;margin-bottom:3px}
+.nd{font-size:10px;color:var(--ne);line-height:1.4}
+.btag{display:inline-block;font-family:monospace;font-size:7px;padding:2px 6px;border-radius:2px;margin-top:4px;margin-right:3px;font-weight:700}
+.bgen{background:rgba(0,194,212,.1);color:var(--ac);border:1px solid rgba(0,194,212,.25)}
+.bage{background:rgba(244,196,48,.1);color:var(--go);border:1px solid rgba(244,196,48,.25)}
+.bpar{background:rgba(46,196,182,.08);color:var(--su);border:1px solid rgba(46,196,182,.2)}
+.bloc{background:rgba(27,79,138,.15);color:var(--bl);border:1px solid rgba(27,79,138,.3)}
+.bsrc{background:rgba(230,57,70,.1);color:var(--da);border:1px solid rgba(230,57,70,.2)}
+.bi{background:rgba(11,114,133,.06);border-left:3px solid var(--ac);padding:6px 9px;font-size:9px;color:rgba(28,39,56,.8);line-height:1.5;margin-top:7px}
+.bi strong{color:var(--ac)}
+.bi.neg{border-left-color:var(--da);background:rgba(230,57,70,.05)}
+.bi.neg strong{color:var(--da)}
+.bi.ntr{border-left-color:var(--ne);background:rgba(143,163,177,.04)}
+.bi.ntr strong{color:var(--ne)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+@media(max-width:768px){.mg{grid-template-columns:1fr}}
+.mh{padding:10px 14px;font-family:monospace;font-size:8px;font-weight:700;letter-spacing:2px}
+.mh.risk{background:rgba(230,57,70,.2);color:var(--da);border:1px solid rgba(230,57,70,.25);border-bottom:none}
+.mh.opp{background:rgba(46,196,182,.12);color:var(--su);border:1px solid rgba(46,196,182,.2);border-bottom:none}
+.mb{border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px}
+.mr{padding:11px 13px;border-bottom:1px solid rgba(28,39,56,.08)}
+.mr:last-child{border-bottom:none}
+.mt{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.lv{font-family:monospace;font-size:7px;font-weight:700;padding:3px 7px;border-radius:2px;min-width:50px;text-align:center}
+.lc{background:#E63946;color:#fff}.la{background:#E67E22;color:#fff}.lm{background:#F4C430;color:#0D1B2A}
+.mn{font-size:12px;font-weight:500}
+.md{font-size:10px;color:var(--ne);line-height:1.5;margin-bottom:5px}
+.hm{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:28px}
+@media(max-width:768px){.hm{grid-template-columns:repeat(2,1fr)}}
+.hz{background:var(--card);border-radius:4px;padding:13px;text-align:center;border:2px solid transparent}
+.hz.fav{border-color:var(--su);background:rgba(46,196,182,.08)}
+.hz.adv{border-color:var(--da);background:rgba(230,57,70,.08)}
+.hz.ine{border-color:var(--go);background:rgba(244,196,48,.06)}
+.hzn{font-size:12px;font-weight:600;margin-bottom:4px}
+.hzs{font-size:20px;font-weight:800}
+.hz.fav .hzs{color:var(--su)}.hz.adv .hzs{color:var(--da)}.hz.ine .hzs{color:var(--go)}
+.hzl{font-family:monospace;font-size:8px;margin-top:4px}
+.hz.fav .hzl{color:var(--su)}.hz.adv .hzl{color:var(--da)}.hz.ine .hzl{color:var(--go)}
+.mog{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:28px}
+@media(max-width:900px){.mog{grid-template-columns:1fr 1fr}}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:15px}
+.mi{font-size:17px;margin-bottom:7px}
+.mn2{font-family:monospace;font-size:9px;color:var(--ac);letter-spacing:1px;margin-bottom:5px}
+.md2{font-size:11px;color:var(--ne);line-height:1.5}
+.eg{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:28px}
+@media(max-width:900px){.eg{grid-template-columns:1fr}}
+.ec{background:var(--card);border-radius:4px;overflow:hidden}
+.eh{padding:9px 13px;font-family:monospace;font-size:8px;font-weight:700;letter-spacing:1px}
+.eb{padding:13px;border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px}
+.er{display:flex;justify-content:space-between;margin-bottom:7px;font-size:11px;gap:8px}
+.ek{color:var(--ne);font-size:10px}
+.clb{background:linear-gradient(135deg,rgba(27,79,138,.3),rgba(0,194,212,.08));border:1px solid rgba(0,194,212,.3);border-radius:4px;padding:22px 26px;margin-bottom:18px;position:relative}
+.clb::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--ac)}
+.cll{font-family:monospace;font-size:9px;color:var(--ac);letter-spacing:3px;margin-bottom:9px}
+.clt{font-size:13px;line-height:1.7;color:rgba(255,255,255,.88);font-style:italic;font-weight:300}
+.clt+.clt{margin-top:10px}
+.vg{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:36px}
+@media(max-width:900px){.vg{grid-template-columns:1fr}}
+.vc{background:var(--card);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.vh{padding:8px 13px;font-family:monospace;font-size:7px;font-weight:700;letter-spacing:1.5px}
+.vb{padding:11px 13px;font-size:11px;line-height:1.5;color:rgba(255,255,255,.82);font-weight:300}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:24px}
+@media(max-width:768px){.ig{grid-template-columns:1fr}}
+.ic{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:13px}
+.ic.ac{border-left:3px solid var(--ac)}.ic.go{border-left:3px solid var(--go)}.ic.su{border-left:3px solid var(--su)}.ic.bl{border-left:3px solid var(--bl)}.ic.da{border-left:3px solid var(--da)}
+.ih{font-size:11px;font-weight:700;margin-bottom:5px}
+.ib{font-size:11px;color:rgba(28,39,56,.82);line-height:1.6}
+.im{font-size:10px;color:var(--ac);margin-top:5px}
+.tline{position:relative;padding-left:2px}
+.trow{display:grid;grid-template-columns:78px 1px 1fr;gap:14px;padding:10px 0}
+.trow .td1{font-family:monospace;font-size:9px;color:var(--ac);padding-top:2px}
+.trow .tline2{position:relative;background:var(--border)}
+.trow .tline2::before{content:'';position:absolute;top:4px;left:-3px;width:7px;height:7px;border-radius:50%;background:var(--dot,var(--ne))}
+.trow .tbody{font-size:12px;color:rgba(28,39,56,.88);line-height:1.5;padding-bottom:6px}
+.trow .tbody .tsub{font-size:10px;color:var(--ne);margin-top:3px}
+.cloudbox{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:26px 20px;text-align:center;line-height:1.9;margin-bottom:14px}
+.cloudbox span{cursor:default}
+.cllegend{display:flex;gap:16px;flex-wrap:wrap;font-family:monospace;font-size:8px;color:var(--ne);margin-bottom:24px}
+.cllegend .it{display:flex;align-items:center;gap:5px}
+.sw{width:8px;height:8px;border-radius:2px;display:inline-block}
+.htab{width:100%;border-collapse:collapse}
+.htab th{text-align:left;font-family:monospace;font-size:8px;letter-spacing:1px;color:var(--ne);padding:7px 9px;border-bottom:1px solid var(--border)}
+.htab td{padding:8px 9px;font-size:11px;color:rgba(28,39,56,.85);border-bottom:1px solid rgba(28,39,56,.08)}
+canvas{max-height:230px}
+.footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<div class="page">
+<header class="hdr">
+  <div class="hero-l">ANÁLISIS BIVARIADO · ESTUDIO EJECUTIVO</div>
+  <h1 class="hero-n">IMELDA CASTRO CASTRO</h1>
+  <p class="hero-s">Senadora con licencia · Coordinadora Estatal de Morena (Defensa de la Transformación) · Sinaloa · 1 Jul – 30 Ago 2026</p>
+  <div class="tags">
+    <span class="tag ta">ANÁLISIS BIVARIADO</span><span class="tag tn">COORDINACIÓN ESTATAL MORENA</span>
+  </div>
+</header>
+
+<main class="con">
+  <div class="tabs">
+    <button class="tb act" onclick="tab(this,'kpis')">KPIs AMPLIADOS</button>
+    <button class="tb" onclick="tab(this,'sent')">SENTIMIENTO</button>
+    <button class="tb" onclick="tab(this,'tom')">TOP OF MIND</button>
+    <button class="tb" onclick="tab(this,'picos')">PICOS</button>
+    <button class="tb" onclick="tab(this,'plat')">PLATAFORMAS</button>
+    <button class="tb" onclick="tab(this,'nube')">NUBE Y HASHTAGS</button>
+    <button class="tb" onclick="tab(this,'nar')">NARRATIVAS</button>
+    <button class="tb" onclick="tab(this,'risk')">RIESGOS &amp; OPORT.</button>
+    <button class="tb" onclick="tab(this,'ter')">MAPA TERRITORIAL</button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="tsec show" id="tab-kpis">
+    <div class="stitle">KPIs BIVARIADOS</div>
+    <div class="cg">
+      <div class="card"><div class="ct">NPS-P por Identidad Partidista/Faccional</div><div class="cs">El apoyo real según cercanía política</div><canvas id="c-npspar"></canvas></div>
+      <div class="card"><div class="ct">NPS-P por Género y Edad</div><div class="cs">Brecha de aprobación demográfica (estimación cualitativa)</div><canvas id="c-npsdemo"></canvas></div>
+      <div class="card"><div class="ct">Ratio Ataque/Defensa por Plataforma</div><div class="cs">¿Dónde crece más la conversación adversa?</div><canvas id="c-ratiopl"></canvas></div>
+      <div class="card"><div class="ct">TRA — Evolución Jul–Ago 2026</div><div class="cs">Temperatura reputacional acumulada, por quincena</div><canvas id="c-tra"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SENTIMIENTO -->
+  <div class="tsec" id="tab-sent">
+    <div class="stitle">SENTIMIENTO DIGITAL — ANÁLISIS BIVARIADO</div>
+    <div class="bbar">
+      <span class="blbl">CRUZAR POR →</span>
+      <button class="bb act" onclick="updSent(this,'general')">GENERAL</button>
+      <button class="bb" onclick="updSent(this,'genero')">GÉNERO</button>
+      <button class="bb" onclick="updSent(this,'edad')">EDAD</button>
+      <button class="bb" onclick="updSent(this,'partido')">FACCIÓN/PARTIDO</button>
+    </div>
+    <div class="cg">
+      <div class="card"><div class="ct" id="sent-t">Sentimiento General</div><div class="cs" id="sent-s">Clasificación semántica del periodo</div><canvas id="c-sent"></canvas></div>
+      <div class="card"><div class="ct">Clima Digital por Segmento</div><div class="cs" id="sent-cs">Temperatura percibida</div><canvas id="c-clima"></canvas></div>
+    </div>
+    <div class="stitle">HALLAZGOS BIVARIADOS</div>
+    <div class="ig">
+      <div class="ic da"><div class="ih">GÉNERO × SENTIMIENTO</div><div class="ib">Las <strong>mujeres</strong> muestran sentimiento negativo más alto (38% vs. 24% en hombres), impulsado por la lectura del esquema de escoltas como privilegio. NPS-P mujeres: −22 vs. hombres: +2.</div><div class="im">→ El vector "privilegio/seguridad" pega más entre votantes mujeres — prioridad de respuesta.</div></div>
+      <div class="ic go"><div class="ih">FACCIÓN × SENTIMIENTO</div><div class="ib">El <strong>78% del sentimiento favorable</strong> proviene de la base morenista afín a Castro. El círculo cercano a Rocha Moya dentro del propio Morena: NPS-P −10. Oposición dura (PRI): −46.</div><div class="im">→ No ha logrado unificar ni siquiera a todo Morena todavía. Riesgo de fractura interna antes de la fractura externa.</div></div>
+      <div class="ic su"><div class="ih">EDAD × SENTIMIENTO</div><div class="ib"><strong>Jóvenes 18-29:</strong> segmento más crítico y burlón (NPS-P −24, vía TikTok/"corcholata"). <strong>Adultos 45-59:</strong> más favorable (NPS-P +18, la conocen por su trayectoria legislativa).</div><div class="im">→ Brecha generacional amplia: la desconocen o la ridiculizan los jóvenes, la respetan los adultos mayores.</div></div>
+      <div class="ic bl"><div class="ih">LOCALIDAD × SENTIMIENTO</div><div class="ib"><strong>Mazatlán:</strong> NPS-P −28 (foco de la crítica de oposición). <strong>Culiacán:</strong> −14 (epicentro narco-narrativa). <strong>Los Mochis/Ahome:</strong> +18 (giras de julio bien recibidas).</div><div class="im">→ El daño está territorializado, no es un fenómeno estatal uniforme.</div></div>
+    </div>
+  </div>
+
+  <!-- TOP OF MIND -->
+  <div class="tsec" id="tab-tom">
+    <div class="stitle">TOP OF MIND — ANÁLISIS BIVARIADO</div>
+    <div class="bbar">
+      <span class="blbl">CRUZAR POR →</span>
+      <button class="bb act" onclick="updTom(this,'general')">GENERAL</button>
+      <button class="bb" onclick="updTom(this,'genero')">GÉNERO</button>
+      <button class="bb" onclick="updTom(this,'edad')">EDAD</button>
+      <button class="bb" onclick="updTom(this,'partido')">FACCIÓN/PARTIDO</button>
+    </div>
+    <div class="card" style="margin-bottom:18px"><div class="ct" id="tom-t">Top de Temas — General</div><div class="cs" id="tom-s">¿Qué domina la conversación pública?</div><canvas id="c-tom" style="max-height:230px"></canvas></div>
+    <div class="stitle">CRUCES TEMÁTICOS</div>
+    <div class="ig">
+      <div class="ic ac"><div class="ih">GÉNERO × TEMA</div><div class="ib"><strong>Hombres:</strong> Sucesión/estrategia interna (38%), seguridad (26%), trayectoria (16%)<br><strong>Mujeres:</strong> Escoltas/privilegio (34%), seguridad personal (28%), nombramiento (22%)</div><div class="im">→ Los hombres discuten la jugada política; las mujeres discuten el símbolo del privilegio.</div></div>
+      <div class="ic go"><div class="ih">EDAD × TEMA</div><div class="ib"><strong>18-29:</strong> "Corcholata"/burla (44%), escoltas (24%), Rocha Moya (14%)<br><strong>45-59:</strong> Nombramiento/coordinación (38%), seguridad institucional (26%), trayectoria (20%)</div><div class="im">→ El marco "corcholata" domina casi exclusivamente entre jóvenes; los adultos leen el nombramiento en clave institucional.</div></div>
+      <div class="ic da"><div class="ih">FACCIÓN × TEMA</div><div class="ib"><strong>Base Castro/Morena:</strong> Transformación y cercanía (42%), trabajo legislativo (24%)<br><strong>Círculo Rocha Moya:</strong> Deslinde/distancia (58%), legitimidad del nombramiento (26%)</div><div class="im">→ La fractura interna se discute en clave de legitimidad, no de proyecto.</div></div>
+      <div class="ic bl"><div class="ih">LOCALIDAD × TEMA</div><div class="ib"><strong>Mazatlán:</strong> Privilegio/escoltas (46%)<br><strong>Culiacán:</strong> Narco-nexos Rocha–Zambada (36%)<br><strong>Norte (Ahome/Los Mochis):</strong> Recorridos y cercanía (52%)</div><div class="im">→ Cada plaza le exige responder a un tema distinto; no hay un solo mensaje que sirva para las tres.</div></div>
+    </div>
+  </div>
+
+  <!-- PICOS -->
+  <div class="tsec" id="tab-picos">
+    <div class="stitle">PICOS DE LA CONVERSACIÓN — CRONOLOGÍA INTERPRETADA</div>
+    <div class="card" style="margin-bottom:18px"><div class="ct">Volumen relativo de menciones</div><div class="cs">Ocho semanas estables se rompen en 72 horas al cierre de agosto</div><canvas id="c-picos" style="max-height:260px"></canvas></div>
+    <div class="tline" id="picosTimeline"></div>
+  </div>
+
+  <!-- PLATAFORMAS -->
+  <div class="tsec" id="tab-plat">
+    <div class="stitle">PLATAFORMAS — ANÁLISIS BIVARIADO</div>
+    <div class="cg">
+      <div class="card"><div class="ct">Alcance por Plataforma</div><div class="cs">Peso relativo de cada canal</div><canvas id="c-plalc"></canvas></div>
+      <div class="card"><div class="ct">Tono por Plataforma</div><div class="cs">¿Dónde es más alta la crítica?</div><canvas id="c-pltono"></canvas></div>
+      <div class="card"><div class="ct">Plataforma × Edad</div><div class="cs">¿Dónde está cada generación?</div><canvas id="c-pledad"></canvas></div>
+      <div class="card"><div class="ct">Velocidad de Viralización (horas a 1K)</div><div class="cs">Crítica vs. contenido institucional propio</div><canvas id="c-plviral"></canvas></div>
+    </div>
+    <div class="stitle">LECTURA ESTRATÉGICA</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px">
+      <div class="card"><div class="ct" style="font-size:12px;color:var(--ac);margin-bottom:4px">X (Twitter) · 34% alcance · Clase política</div><div class="ib">Plataforma de <strong>formación de agenda</strong>. Aquí detonaron el nombramiento, el deslinde de Rocha y la acusación de Hernández. IAA de 2.0x.</div></div>
+      <div class="card"><div class="ct" style="font-size:12px;color:var(--ac);margin-bottom:4px">Facebook · 30% alcance · Base 35+</div><div class="ib">Plataforma de <strong>volumen territorial</strong>. Sostiene el sentimiento más favorable (institucional, cercanía). Riesgo: grupos regionales replican la crítica de Mazatlán.</div></div>
+      <div class="card"><div class="ct" style="font-size:12px;color:var(--da);margin-bottom:4px">TikTok · 12% alcance · BRECHA CRÍTICA</div><div class="ib">Plataforma <strong>casi no atendida</strong> institucionalmente. Ahí vive el marco "corcholata" como meme, y es donde peor le va con jóvenes (NPS-P −24).</div></div>
+    </div>
+  </div>
+
+  <!-- NUBE Y HASHTAGS -->
+  <div class="tsec" id="tab-nube">
+    <div class="stitle">NUBE DE PALABRAS Y ANÁLISIS DE HASHTAGS</div>
+    <div class="card" style="margin-bottom:6px">
+      <div class="ct">Nube de palabras del actor</div>
+      <div class="cs">Tamaño = peso en la conversación · color = tono</div>
+      <div class="cloudbox" id="wordCloud"></div>
+      <div class="cllegend">
+        <div class="it"><span class="sw" style="background:#2EC4B6"></span>Positivo</div>
+        <div class="it"><span class="sw" style="background:#E63946"></span>Negativo</div>
+        <div class="it"><span class="sw" style="background:#8FA3B1"></span>Neutro</div>
+        <div class="it"><span class="sw" style="background:#F4C430"></span>Polarizado</div>
+      </div>
+    </div>
+    <div class="cg">
+      <div class="card"><div class="ct">Ranking de hashtags</div><div class="cs">Frecuencia relativa por color de tono</div><canvas id="c-hash" style="max-height:280px"></canvas></div>
+      <div class="card">
+        <div class="ct">Detalle por hashtag</div><div class="cs">Origen orgánico vs. impulsado</div>
+        <div style="overflow-x:auto"><table class="htab"><thead><tr><th>Hashtag</th><th>Tono</th><th>Plataforma</th><th>Origen</th></tr></thead><tbody id="hashBody"></tbody></table></div>
+      </div>
+    </div>
+    <p style="font-size:10px;color:var(--ne);margin-top:12px;line-height:1.6">El hashtag que mejor resume el corte es <strong style="color:#fff">#SinaloaGobernadora2027</strong>: condensa a la vez el impulso institucional del nombramiento y el escrutinio crítico sobre la sucesión, sin que ninguna de las dos lecturas domine sobre la otra todavía.</p>
+  </div>
+
+  <!-- NARRATIVAS -->
+  <div class="tsec" id="tab-nar">
+    <div class="stitle">ANÁLISIS BIVARIADO DE NARRATIVAS</div>
+    <div class="ng">
+      <div class="nc">
+        <div class="nh fav">▲ NARRATIVAS FAVORABLES</div>
+        <div class="ni"><div class="nit">La heredera que ordena la casa</div><div class="nd">Perfil purista y disciplinado que llega a unificar a Morena rumbo a 2027.</div><span class="btag bgen">H 45-59</span><span class="btag bpar">Base Morena</span><div class="bi"><strong>Bivariado:</strong> Hombres 45-59 de la base morenista la amplifican 2x más que la media; casi ausente en oposición.</div></div>
+        <div class="ni"><div class="nit">Trayectoria legislativa sólida</div><div class="nd">Comisiones de seguridad nacional y estudios legislativos desde 2018.</div><span class="btag bage">45-59 / 60+</span><span class="btag bloc">Culiacán</span><div class="bi"><strong>Bivariado:</strong> Resuena en adultos mayores y clase política; casi nula penetración en menores de 30.</div></div>
+        <div class="ni"><div class="nit">Cercanía territorial (giras de julio)</div><div class="nd">Recorridos en colonias de Culiacán y el norte del estado, previos al nombramiento.</div><span class="btag bloc">Ahome / Los Mochis</span><span class="btag bgen">Mujeres 30-44</span><div class="bi"><strong>Bivariado:</strong> Mujeres 30-44 del norte son las principales amplificadoras de este activo, hoy opacado por la coyuntura.</div></div>
+        <div class="ni"><div class="nit">Agenda de seguridad institucional</div><div class="nd">Pide gabinete de seguridad y nombra la inseguridad como reto central de 2027.</div><span class="btag bpar">Prensa moderada</span><div class="bi"><strong>Bivariado:</strong> Único activo con potencial de resonar en prensa crítica si se sostiene con acciones verificables.</div></div>
+      </div>
+      <div class="nc">
+        <div class="nh crit">▼ NARRATIVAS CRÍTICAS</div>
+        <div class="ni"><div class="nit" style="color:var(--da)">⚠ La cómplice del silencio</div><div class="nd">Anabel Hernández: sabía desde 2021 de los nexos Rocha–"El Mayo" Zambada y no denunció. Riesgo CRÍTICO.</div><span class="btag bsrc">Periodismo de investigación</span><span class="btag bpar">Prensa / oposición</span><div class="bi neg"><strong>Bivariado:</strong> Instalada por prensa de investigación de alta credibilidad → daño estructural. Fuerte en clase política; aún no penetra la ciudadanía general.</div></div>
+        <div class="ni"><div class="nit">Privilegio con escoltas</div><div class="nd">Protección federal para sus recorridos, cuestionada por PRI Mazatlán: "¿a qué le tiene miedo?"</div><span class="btag bsrc">PRI Mazatlán</span><span class="btag bgen">Mujeres</span><span class="btag bloc">Mazatlán</span><div class="bi neg"><strong>Bivariado:</strong> Mujeres y votantes de Mazatlán son quienes más resienten el contraste con la inseguridad ciudadana cotidiana.</div></div>
+        <div class="ni"><div class="nit">"Corcholata" de imposición vertical</div><div class="nd">El nombramiento se lee como decisión desde la dirigencia nacional, no como consenso estatal.</div><span class="btag bsrc">X / TikTok</span><span class="btag bage">18-29</span><div class="bi neg"><strong>Bivariado:</strong> Domina en X entre analistas y se vuelve burla/meme en TikTok con jóvenes; casi no aparece en Facebook.</div></div>
+        <div class="ni"><div class="nit">Deslinde contradictorio de Rocha Moya</div><div class="nd">Versiones cruzadas: "se desmarcó" vs. "evitó deslindarse" del gobernador.</div><span class="btag bpar">Editorialistas</span><div class="bi neg"><strong>Bivariado:</strong> Erosiona credibilidad sobre todo entre analistas y editorialistas que siguen el caso día a día.</div></div>
+      </div>
+      <div class="nc">
+        <div class="nh neu">◆ NARRATIVAS NEUTRAS</div>
+        <div class="ni"><div class="nit">Perfil técnico y académico</div><div class="nd">Maestría en Ciencia Política, ex profesora universitaria. Baja emocionalidad.</div><span class="btag bage">45+</span><div class="bi ntr"><strong>Bivariado:</strong> Receptividad alta en 45+ pero sin adhesión emocional; es credencial, no simpatía.</div></div>
+        <div class="ni"><div class="nit">Origen en el PRD</div><div class="nd">Militó en el PRD 1989-2017 antes de sumarse a Morena. Dato biográfico recurrente.</div><span class="btag bpar">Clase política</span><div class="bi ntr"><strong>Bivariado:</strong> Solo relevante para analistas políticos; el electorado general no lo procesa como atributo relevante.</div></div>
+        <div class="ni"><div class="nit">Encuestas de agosto</div><div class="nd">Sondeos ubican a Morena/Castro a la cabeza de la sucesión en Sinaloa.</div><span class="btag bpar">Base Morena</span><div class="bi ntr"><strong>Bivariado:</strong> Consumido casi exclusivamente por la base partidista; sin amplificación fuera de círculos morenistas.</div></div>
+        <div class="ni"><div class="nit">Rol de Ariadna Montiel / dirigencia nacional</div><div class="nd">Se le atribuye la operación del nombramiento para fragmentar menos al partido.</div><span class="btag bloc">Todo el estado</span><div class="bi ntr"><strong>Bivariado:</strong> Tema transversal de bajo engagement emocional, pero alto valor analítico para entender la jugada interna.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIESGOS -->
+  <div class="tsec" id="tab-risk">
+    <div class="stitle">MATRIZ BIVARIADA DE RIESGOS Y OPORTUNIDADES</div>
+    <div class="mg">
+      <div>
+        <div class="mh risk">⚠ RIESGOS — IMPACTO POR SEGMENTO</div>
+        <div class="mb">
+          <div class="mr"><div class="mt"><span class="lv lc">CRÍTICO</span><span class="mn">Escalamiento del frente Hernández–Zambada</span></div><div class="md">Si aparece evidencia documental o se exige comparecencia, el encuadre pasa de "lo sabía" a "lo encubrió".</div><div class="bi neg"><strong>Bivariado:</strong> Pega más fuerte en prensa nacional y clase política, que exige consistencia ética inmediata; aún bajo en ciudadanía general.</div></div>
+          <div class="mr"><div class="mt"><span class="lv la">ALTO</span><span class="mn">Símbolo de privilegio (escoltas) en clave de inseguridad</span></div><div class="md">Esquema de protección federal se lee como distancia de la vida cotidiana del sinaloense promedio.</div><div class="bi neg"><strong>Bivariado:</strong> Munición directa para oposición en Mazatlán; resuena más en mujeres y en votantes que viven inseguridad sin protección.</div></div>
+          <div class="mr"><div class="mt"><span class="lv la">ALTO</span><span class="mn">Contradicción pública sobre el deslinde de Rocha Moya</span></div><div class="md">Coexisten versiones de "se desmarcó" y "evitó deslindarse"; la inconsistencia es más costosa que una postura clara.</div><div class="bi neg"><strong>Bivariado:</strong> Erosiona credibilidad sobre todo en editorialistas y analistas que siguen el caso día a día.</div></div>
+          <div class="mr"><div class="mt"><span class="lv lm">MEDIO</span><span class="mn">Bajo control narrativo (ICN 35%)</span></div><div class="md">Más de 6 de cada 10 menciones responden a temas impuestos por terceros, no a su agenda propia.</div><div class="bi neg"><strong>Bivariado:</strong> Efecto transversal, más visible en X, donde la coyuntura —no su comunicación oficial— marca la conversación.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="mh opp">✦ OPORTUNIDADES — POTENCIAL POR SEGMENTO</div>
+        <div class="mb">
+          <div class="mr"><div class="mt"><span class="lv" style="background:var(--su);color:#fff">ALTO</span><span class="mn">Share of Voice dominante (62%)</span></div><div class="md">Sin disputa relevante interna, ya es la cara de Morena para 2027 en Sinaloa.</div><div class="bi"><strong>Bivariado:</strong> Ventaja mayor en base partidista; falta construirla en ciudadanía general y jóvenes, que aún la conocen poco.</div></div>
+          <div class="mr"><div class="mt"><span class="lv" style="background:var(--su);color:#fff">ALTO</span><span class="mn">Reencuadre vía agenda de seguridad verificable</span></div><div class="md">Su llamado a un gabinete de seguridad es la primera señal de que busca convertir el ataque en su tema.</div><div class="bi"><strong>Bivariado:</strong> Si se sostiene con acciones concretas, puede recuperar terreno específicamente en prensa, el segmento más escéptico.</div></div>
+          <div class="mr"><div class="mt"><span class="lv" style="background:var(--ac);color:var(--navy)">MEDIO</span><span class="mn">Perfil "purista" como respuesta directa</span></div><div class="md">Su origen en el PRD y disciplina ética le dan plataforma creíble para responder con transparencia proactiva.</div><div class="bi"><strong>Bivariado:</strong> Más persuasivo en clase política que ya conoce su trayectoria; menos relevante para el votante desinformado.</div></div>
+          <div class="mr"><div class="mt"><span class="lv" style="background:var(--ac);color:var(--navy)">MEDIO</span><span class="mn">Ventana de definición temprana en TikTok</span></div><div class="md">El vacío institucional en TikTok es total; ocuparlo antes que la oposición podría revertir el marco "corcholata".</div><div class="bi"><strong>Bivariado:</strong> Único canal donde puede recuperar directamente al segmento 18-29, hoy el más adverso (NPS-P −24).</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRITORIAL -->
+  <div class="tsec" id="tab-ter">
+    <div class="stitle">MAPA DE CALOR TERRITORIAL — NPS-P POR ZONA</div>
+    <div class="hm">
+      <div class="hz adv"><div class="hzn">Culiacán</div><div class="hzs">−14</div><div class="hzl">🔴 ADVERSA</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Epicentro narco-narrativa</div></div>
+      <div class="hz adv"><div class="hzn">Mazatlán</div><div class="hzs">−28</div><div class="hzl">🔴 ADVERSA CRÍTICA</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Foco de crítica PRI</div></div>
+      <div class="hz fav"><div class="hzn">Los Mochis / Ahome</div><div class="hzs">+18</div><div class="hzl">🟢 FAVORABLE</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Giras de julio bien recibidas</div></div>
+      <div class="hz ine"><div class="hzn">Guasave</div><div class="hzs">+6</div><div class="hzl">🟡 INERCIAL-FAV</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Baja conversación política</div></div>
+      <div class="hz ine"><div class="hzn">Guamúchil / Salvador Alvarado</div><div class="hzs">−4</div><div class="hzl">🟡 INERCIAL</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Volumen bajo, tono mixto</div></div>
+      <div class="hz fav"><div class="hzn">El Fuerte</div><div class="hzs">+10</div><div class="hzl">🟢 FAVORABLE</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Zona agrícola, agenda social</div></div>
+      <div class="hz ine"><div class="hzn">Escuinapa / sur</div><div class="hzs">−10</div><div class="hzl">🟡 INERCIAL-ADV</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Poco presente en agenda de giras</div></div>
+      <div class="hz ine"><div class="hzn">Navolato</div><div class="hzs">−6</div><div class="hzl">🟡 INERCIAL</div><div style="font-size:9px;color:var(--ne);margin-top:5px">Zona conurbada, arrastra tono de Culiacán</div></div>
+    </div>
+    <div class="cg">
+      <div class="card"><div class="ct">NPS-P por Zona</div><div class="cs">Aprobación neta por municipio</div><canvas id="c-ternps"></canvas></div>
+      <div class="card"><div class="ct">Volumen de Conversación por Zona</div><div class="cs">% del total de menciones territoriales del periodo</div><canvas id="c-tervol"></canvas></div>
+    </div>
+  </div>
+
+</main>
+<footer class="footer"><div>RADAR v2.0 · ANÁLISIS BIVARIADO · SISTEMA DE INTELIGENCIA POLÍTICO-DIGITAL · ESTUDIO CONFIDENCIAL · SINALOA · JUL-AGO 2026</div></footer>
+</div>
+
+<script>
+const C={ac:'#00C2D4',go:'#F4C430',da:'#E63946',su:'#2EC4B6',ne:'#8FA3B1',bl:'#1B4F8A',or:'#E67E22'};
+const SENTC={positivo:C.su,negativo:C.da,neutro:C.ne,polarizado:C.go};
+const D={ac:'#0B7285',go:'#8A6A06',da:'#B3121F',su:'#0F7D6F',ne:'#5B6B78',bl:'#1B4F8A',or:'#A8570F'};
+const SENTD={positivo:D.su,negativo:D.da,neutro:D.ne,polarizado:D.go};
+Chart.defaults.color='#5B6B78';Chart.defaults.font.family='system-ui,sans-serif';
+
+function tab(btn,id){
+  document.querySelectorAll('.tsec').forEach(s=>s.classList.remove('show'));
+  document.querySelectorAll('.tb').forEach(t=>t.classList.remove('act'));
+  document.getElementById('tab-'+id).classList.add('show');btn.classList.add('act');
+  setTimeout(()=>rCharts(id),60);
+}
+const CH={};
+function mk(id,cfg){if(CH[id])CH[id].destroy();const c=document.getElementById(id);if(!c)return;CH[id]=new Chart(c,cfg)}
+
+function rKpis(){
+  mk('c-npspar',{type:'bar',data:{labels:['Base Castro/Morena','Círculo Rocha Moya','Independientes','Oposición blanda (MC)','Oposición dura (PRI)'],datasets:[{data:[34,-10,-4,-22,-46],backgroundColor:[C.su,C.go,C.ne,C.da,'#AA0000'],borderRadius:2,borderWidth:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>(v>0?'+':'')+v}},x:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  mk('c-npsdemo',{type:'bar',data:{labels:['H18-29','M18-29','H30-44','M30-44','H45-59','M45-59','H60+','M60+'],datasets:[{data:[-8,-22,10,-6,18,6,14,4],backgroundColor:d=>d.raw>=0?C.su:C.da,borderRadius:2,borderWidth:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>(v>0?'+':'')+v}},x:{grid:{display:false},ticks:{font:{size:8}}}}}});
+  mk('c-ratiopl',{type:'bar',data:{labels:['X (Twitter)','YouTube','TikTok','Facebook','Medios'],datasets:[{data:[2.1,1.9,1.5,1.1,1.6],backgroundColor:[C.da,C.da,C.go,C.su,C.go],borderRadius:2,borderWidth:0}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  mk('c-tra',{type:'line',data:{labels:['1-15 jul','16-31 jul','1-15 ago','16-25 ago','26 ago','27-28 ago','29-30 ago'],datasets:[{data:[5,7,9,14,22,-16,-14],borderColor:C.ac,backgroundColor:'rgba(0,194,212,.08)',fill:true,tension:.4,borderWidth:2,pointRadius:3,pointBackgroundColor:(ctx)=>ctx.raw<0?C.da:C.ac}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>(v>0?'+':'')+v}},x:{grid:{display:false},ticks:{font:{size:8}}}}}});
+}
+
+let sC=null,clC=null;
+const SENT={
+  general:{l:['Favorable','Neutro','Negativo','Polarizado'],d:[22,33,28,17],c:[C.su,C.ne,C.da,C.go],t:'doughnut'},
+  genero:{l:['H Favorable','H Neutro','H Negativo','M Favorable','M Neutro','M Negativo'],d:[26,36,24,16,28,38],c:[C.su,C.ne,C.da,'rgba(46,196,182,.5)','rgba(143,163,177,.5)','rgba(230,57,70,.6)'],t:'bar'},
+  edad:{l:['18-29','30-44','45-59','60+'],d:[-24,-4,18,10],c:[C.da,C.go,C.su,C.su],t:'bar'},
+  partido:{l:['Base Castro/Morena','Círculo Rocha','Independientes','Oposición'],d:[34,-10,-4,-46],c:[C.su,C.go,C.ne,'#AA0000'],t:'bar'}
+};
+const CLIMA={
+  general:{l:['Favorable','Mixto','Adverso','Inercial'],d:[20,30,32,18],c:[C.su,C.go,C.da,C.ne]},
+  genero:{l:['Hombres','Mujeres'],d:[30,14],c:[C.su,C.da]},
+  edad:{l:['18-29','30-44','45-59','60+'],d:[8,20,34,26],c:[C.da,C.go,C.su,C.su]},
+  partido:{l:['Morena (Castro)','Círculo Rocha','Oposición'],d:[46,14,6],c:[C.su,C.go,C.da]}
+};
+function rSent(k){
+  if(sC)sC.destroy();if(clC)clC.destroy();
+  const d=SENT[k];const c1=document.getElementById('c-sent');const c2=document.getElementById('c-clima');if(!c1||!c2)return;
+  const isBar=d.t==='bar';
+  sC=new Chart(c1,{type:d.t,data:{labels:d.l,datasets:[{data:d.d,backgroundColor:d.c,borderWidth:0,borderRadius:isBar?2:0,hoverOffset:isBar?0:6}]},options:{responsive:true,plugins:{legend:{display:!isBar,position:'bottom',labels:{font:{size:9},padding:8}}},cutout:isBar?undefined:'55%',scales:isBar?{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>(typeof v==='number'&&v>0?'+':'')+v}},x:{grid:{display:false},ticks:{font:{size:9}}}}:undefined}});
+  const cd=CLIMA[k];clC=new Chart(c2,{type:'doughnut',data:{labels:cd.l,datasets:[{data:cd.d,backgroundColor:cd.c,borderWidth:0,hoverOffset:6}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:8}}},cutout:'55%'}});
+}
+function updSent(btn,k){document.querySelectorAll('#tab-sent .bb').forEach(b=>b.classList.remove('act'));btn.classList.add('act');const t={general:'Sentimiento General',genero:'Sentimiento por Género',edad:'NPS-P por Edad',partido:'NPS-P por Facción/Partido'};document.getElementById('sent-t').textContent=t[k];rSent(k);}
+
+let tomC=null;
+const TOM={
+  general:{l:['Nombramiento/coordinación','Sucesión 2027 / "corcholata"','Relación con Rocha Moya','Escoltas / privilegio','Acusación Hernández–Zambada','Inseguridad / narco-violencia','Trayectoria / perfil "purista"'],d:[28,20,16,14,12,7,3],c:[C.su,C.go,C.go,C.da,C.da,C.da,C.ac]},
+  genero:{l:['Sucesión/estrategia','Seguridad','Escoltas/privilegio','Trayectoria','Nombramiento'],h:[38,26,10,16,10],m:[10,28,34,6,22]},
+  edad:{l:['Nombramiento','Corcholata/burla','Seguridad institucional','Trayectoria'],g:['18-29','30-44','45-59','60+'],d:[[16,24,38,42],[44,22,10,6],[16,26,26,20],[14,18,20,24]]},
+  partido:{l:['Transformación/cercanía','Trabajo legislativo','Deslinde/distancia','Legitimidad del nombramiento','Seguridad'],base:[42,24,8,6,16],rocha:[6,8,58,26,2],indep:[14,10,20,18,30]}
+};
+function rTom(k){if(tomC)tomC.destroy();const c=document.getElementById('c-tom');if(!c)return;
+  if(k==='general'){tomC=new Chart(c,{type:'bar',data:{labels:TOM.general.l,datasets:[{data:TOM.general.d,backgroundColor:TOM.general.c,borderRadius:2,borderWidth:0}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:10}}}}}})}
+  else if(k==='genero'){tomC=new Chart(c,{type:'bar',data:{labels:TOM.genero.l,datasets:[{label:'Hombres',data:TOM.genero.h,backgroundColor:C.bl,borderRadius:2},{label:'Mujeres',data:TOM.genero.m,backgroundColor:'rgba(230,57,70,.7)',borderRadius:2}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}})}
+  else if(k==='edad'){const d=TOM.edad;tomC=new Chart(c,{type:'bar',data:{labels:d.g,datasets:d.l.map((l,i)=>({label:l,data:d.d[i],backgroundColor:[C.su,C.ac,C.go,C.da][i],borderRadius:2}))},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}})}
+  else{const d=TOM.partido;tomC=new Chart(c,{type:'bar',data:{labels:d.l,datasets:[{label:'Base Castro/Morena',data:d.base,backgroundColor:C.su,borderRadius:2},{label:'Círculo Rocha',data:d.rocha,backgroundColor:C.da,borderRadius:2},{label:'Independientes',data:d.indep,backgroundColor:C.go,borderRadius:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}})}
+}
+function updTom(btn,k){document.querySelectorAll('#tab-tom .bb').forEach(b=>b.classList.remove('act'));btn.classList.add('act');const t={general:'Top de Temas — General',genero:'Top of Mind por Género',edad:'Top of Mind por Edad',partido:'Top of Mind por Facción/Partido'};document.getElementById('tom-t').textContent=t[k];rTom(k);}
+
+function rPicos(){
+  const labels=['03 jul','26 jul','25 ago','26 ago','27 ago','28 ago AM','28 ago PM','29 ago'];
+  const vol=[8,14,22,100,46,58,64,40];
+  const dot=[C.ne,C.su,C.su,C.or,C.go,C.da,C.da,C.or];
+  mk('c-picos',{type:'line',data:{labels,datasets:[{data:vol,borderColor:C.bl,backgroundColor:'rgba(27,79,138,.18)',fill:true,tension:.3,pointRadius:5,pointHoverRadius:8,pointBackgroundColor:dot,borderWidth:2}]},options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Volumen índice: '+c.raw}}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  const events=[
+    ['03 JUL','#8FA3B1','"Continuamos en la tarea de toda la vida": declaración de cercanía territorial.','Institucional · neutro-positivo · Línea Directa'],
+    ['26 JUL','#2EC4B6','Recorridos en el norte de Sinaloa; compromiso con derechos sociales.','Institucional · positivo · El Heraldo de México'],
+    ['25 AGO','#2EC4B6','Encuestas ubican a Morena/Castro a la cabeza de la sucesión.','Coyuntural · positivo · El Heraldo de México'],
+    ['26 AGO','#E67E22','Morena la nombra Coordinadora Estatal (Defensa de la Transformación).','Detonante mayor · mixto/ambivalente · Infobae, El Universal, El Financiero, TV Azteca'],
+    ['27 AGO','#F4C430','Se desmarca de Rocha Moya ("cada quien responde por sus actos"); versiones cruzadas sobre si evitó deslindarse.','Narrativo · polarizado · SDP Noticias y otras'],
+    ['28 AGO','#E63946','Anabel Hernández (podcast Narcosistema) acusa a Castro de conocer desde 2021 los nexos Rocha–"El Mayo" Zambada.','Crítico/reputacional · negativo · Infobae'],
+    ['28-29 AGO','#E63946','Se revela protección de Guardia Nacional; PRI Mazatlán (Chollet) cuestiona el privilegio.','Reputacional · negativo · La Jornada, Café Negro Portal'],
+    ['29 AGO','#E67E22','Castro declara que la inseguridad será el mayor reto de 2027 y pide gabinete de seguridad.','Reencuadre institucional · neutro · Noticiero Altavoz'],
+  ];
+  document.getElementById('picosTimeline').innerHTML = events.map(e=>`
+    <div class="trow" style="--dot:${e[1]}">
+      <div class="td1">${e[0]}</div>
+      <div class="tline2"></div>
+      <div class="tbody">${e[2]}<div class="tsub">${e[3]}</div></div>
+    </div>`).join('');
+}
+
+function rPlat(){
+  mk('c-plalc',{type:'doughnut',data:{labels:['X (Twitter)','Facebook','TikTok','YouTube','Instagram','WhatsApp'],datasets:[{data:[34,30,12,10,8,6],backgroundColor:[C.ac,C.bl,C.da,C.go,C.su,C.ne],borderWidth:0,hoverOffset:6}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9},padding:8}}},cutout:'55%'}});
+  mk('c-pltono',{type:'bar',data:{labels:['X','Facebook','TikTok','YouTube','Instagram'],datasets:[{label:'% Favorable',data:[18,30,12,10,20],backgroundColor:C.su,borderRadius:2},{label:'% Negativo',data:[32,22,28,46,18],backgroundColor:C.da,borderRadius:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  mk('c-pledad',{type:'bar',data:{labels:['X','Facebook','TikTok','YouTube','WhatsApp'],datasets:[{label:'18-29',data:[22,10,72,18,20],backgroundColor:'rgba(230,57,70,.7)',borderRadius:2},{label:'30-44',data:[34,28,20,26,34],backgroundColor:C.go,borderRadius:2},{label:'45-59',data:[30,38,6,32,32],backgroundColor:C.su,borderRadius:2},{label:'60+',data:[14,24,2,24,14],backgroundColor:C.ne,borderRadius:2}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{y:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  mk('c-plviral',{type:'bar',data:{labels:['TikTok','X','YouTube','Instagram','Facebook'],datasets:[{label:'Crítica (h)',data:[1.4,2.0,6.5,5.2,8.0],backgroundColor:C.da,borderRadius:2},{label:'Propia (h)',data:[20,5.8,30,9.0,10.5],backgroundColor:C.su,borderRadius:2}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+}
+
+function buildCloud(list){
+  const max=Math.max(...list.map(w=>w.weight));
+  const min=Math.min(...list.map(w=>w.weight));
+  return list.map(w=>{
+    const t=(w.weight-min)/((max-min)||1);
+    const size=(13+t*30).toFixed(0);
+    const color=SENTD[w.sentiment]||D.ne;
+    const fw=t>0.6?800:t>0.3?700:500;
+    return `<span style="font-size:${size}px;color:${color};font-weight:${fw};margin:4px 8px;display:inline-block" title="${w.word} · peso ${w.weight} · ${w.sentiment}">${w.word}</span>`;
+  }).join(' ');
+}
+const WORDS=[
+  {word:'Senadora',weight:95,sentiment:'neutro'},{word:'Coordinadora',weight:90,sentiment:'positivo'},
+  {word:'Morena',weight:88,sentiment:'neutro'},{word:'Sinaloa',weight:85,sentiment:'neutro'},
+  {word:'Transformación',weight:70,sentiment:'positivo'},{word:'Gubernatura',weight:78,sentiment:'neutro'},
+  {word:'2027',weight:74,sentiment:'neutro'},{word:'Corcholata',weight:76,sentiment:'polarizado'},
+  {word:'Rocha Moya',weight:80,sentiment:'polarizado'},{word:'El Mayo Zambada',weight:66,sentiment:'negativo'},
+  {word:'Narcosistema',weight:58,sentiment:'negativo'},{word:'Anabel Hernández',weight:55,sentiment:'negativo'},
+  {word:'Escoltas',weight:64,sentiment:'negativo'},{word:'Guardia Nacional',weight:52,sentiment:'neutro'},
+  {word:'Privilegio',weight:48,sentiment:'negativo'},{word:'Purista',weight:44,sentiment:'positivo'},
+  {word:'PRD',weight:34,sentiment:'neutro'},{word:'Inseguridad',weight:60,sentiment:'negativo'},
+  {word:'Narco-guerra',weight:50,sentiment:'negativo'},{word:'Cercanía',weight:38,sentiment:'positivo'},
+  {word:'Recorridos',weight:40,sentiment:'positivo'},{word:'Deslinde',weight:42,sentiment:'polarizado'},
+  {word:'Silencio cómplice',weight:36,sentiment:'negativo'},{word:'Encuestas',weight:46,sentiment:'positivo'},
+  {word:'Gabinete de seguridad',weight:30,sentiment:'neutro'},{word:'Ariadna Montiel',weight:33,sentiment:'neutro'},
+  {word:'Culiacán',weight:37,sentiment:'neutro'},{word:'Mazatlán',weight:28,sentiment:'neutro'},
+  {word:'PRI',weight:26,sentiment:'neutro'},{word:'Estocada',weight:35,sentiment:'polarizado'},
+  {word:'Legislatura',weight:24,sentiment:'positivo'},{word:'4T',weight:32,sentiment:'neutro'},
+];
+const HASH=[
+  {tag:'#ImeldaCastro',freq:100,tono:'polarizado',plat:'X',origen:'Orgánico'},
+  {tag:'#SinaloaGobernadora2027',freq:88,tono:'polarizado',plat:'X',origen:'Orgánico'},
+  {tag:'#CoordinadoraMorena',freq:80,tono:'positivo',plat:'X / Facebook',origen:'Orgánico institucional'},
+  {tag:'#Corcholata',freq:74,tono:'negativo',plat:'X / TikTok',origen:'Orgánico con impulso opositor'},
+  {tag:'#RochaMoya',freq:70,tono:'negativo',plat:'X',origen:'Orgánico'},
+  {tag:'#NarcoSistema',freq:62,tono:'negativo',plat:'YouTube / X',origen:'Orgánico (difusión de podcast)'},
+  {tag:'#ElMayoZambada',freq:58,tono:'negativo',plat:'X',origen:'Orgánico'},
+  {tag:'#GuardiaNacionalImelda',freq:46,tono:'negativo',plat:'X / Facebook',origen:'Impulsado por oposición'},
+  {tag:'#DefensaDeLaTransformación',freq:44,tono:'positivo',plat:'X',origen:'Orgánico institucional (Morena)'},
+  {tag:'#4TSinaloa',freq:40,tono:'neutro',plat:'X / Facebook',origen:'Orgánico institucional'},
+  {tag:'#InseguridadSinaloa',freq:38,tono:'negativo',plat:'Facebook / X',origen:'Orgánico (contexto general)'},
+  {tag:'#PuristaMorena',freq:24,tono:'neutro',plat:'X',origen:'Orgánico editorial'},
+];
+function rNube(){
+  document.getElementById('wordCloud').innerHTML = buildCloud(WORDS);
+  mk('c-hash',{type:'bar',data:{labels:HASH.map(h=>h.tag),datasets:[{data:HASH.map(h=>h.freq),backgroundColor:HASH.map(h=>SENTC[h.tono]),borderRadius:2,borderWidth:0}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  document.getElementById('hashBody').innerHTML = HASH.map(h=>{
+    const col = h.tono==='positivo'?D.su:h.tono==='negativo'?D.da:h.tono==='polarizado'?D.go:D.ne;
+    return `<tr><td>${h.tag}</td><td style="color:${col}">${h.tono}</td><td>${h.plat}</td><td>${h.origen}</td></tr>`;
+  }).join('');
+}
+
+function rTer(){
+  mk('c-ternps',{type:'bar',data:{labels:['Los Mochis/Ahome','El Fuerte','Guasave','Guamúchil','Navolato','Escuinapa/sur','Culiacán','Mazatlán'],datasets:[{data:[18,10,6,-4,-6,-10,-14,-28],backgroundColor:d=>d.raw>10?C.su:d.raw>0?C.go:d.raw>-15?C.da:'#AA0000',borderRadius:2,borderWidth:0}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>(v>0?'+':'')+v}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+  mk('c-tervol',{type:'bar',data:{labels:['Culiacán','Mazatlán','Los Mochis/Ahome','Guasave','Guamúchil','Navolato','El Fuerte','Escuinapa/sur'],datasets:[{data:[46,20,12,6,5,5,3,3],backgroundColor:[C.da,C.da,C.su,C.go,C.go,C.go,C.su,C.go],borderRadius:2,borderWidth:0}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(28,39,56,.08)'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}});
+}
+
+function rCharts(t){
+  if(t==='kpis')rKpis();
+  if(t==='sent')rSent('general');
+  if(t==='tom')rTom('general');
+  if(t==='picos')rPicos();
+  if(t==='plat')rPlat();
+  if(t==='nube')rNube();
+  if(t==='ter')rTer();
+}
+window.addEventListener('load',()=>setTimeout(()=>rCharts('kpis'),100));
+</script>
