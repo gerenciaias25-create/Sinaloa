@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPOSITOR — Imelda Castro</title>
+<style>
+  :root{
+    color-scheme: light;
+    --surface-1:#1C2738; 
+    --surface-2:#f4f5f7; 
+    --surface-card:#ffffff;
+    --text-primary:#0b0b0b; 
+    --text-secondary:#334155; 
+    --text-muted:#64748b;
+    --grid:#cbd5e1; 
+    --border:#cbd5e1; 
+    --box-bg:#d5d1d1;
+    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+    --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--surface-2);color:var(--text-primary);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.45;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 60px;}
+
+  header.top{background:#1C2738;color:#ffffff;padding:26px 20px 22px;border-bottom:1px solid rgba(255,255,255,.1);}
+  header.top .wrap{padding:0;}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#94A3B8;font-weight:700;}
+  h1{font-size:26px;margin:4px 0 12px;letter-spacing:-.01em;color:#ffffff;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:12px 24px;font-size:13.5px;color:#cbd5e1;}
+  .meta-row b{color:#ffffff;}
+
+  nav.tabs{position:sticky;top:0;z-index:21;background:#ffffff;border-bottom:1px solid var(--border);box-shadow:0 2px 4px rgba(0,0,0,0.05);}
+  nav.tabs .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 20px;}
+  .tab-btn{white-space:nowrap;border:1px solid var(--border);background:var(--surface-2);color:var(--text-secondary);
+    padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;transition:.15s;}
+  .tab-btn:hover{color:var(--text-primary);background:#e2e8f0;}
+  .tab-btn.active{background:#1C2738;color:#ffffff;border-color:#1C2738;}
+
+  /* toolbar */
+  .toolbar{position:sticky;top:45px;z-index:20;background:#ffffff;border-bottom:1px solid var(--border);}
+  .toolbar .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 20px;}
+  .search-box{position:relative;flex:1;min-width:200px;max-width:340px;}
+  .search-box input{width:100%;padding:8px 12px 8px 32px;border-radius:10px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text-primary);font-size:13px;font-family:inherit;}
+  .search-box input::placeholder{color:var(--text-muted);}
+  .search-box svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.55;}
+  .toggle-wrap{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-secondary);font-weight:600;white-space:nowrap;}
+  .switch{position:relative;width:38px;height:22px;flex:none;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;inset:0;background:var(--grid);border-radius:999px;cursor:pointer;transition:.15s;}
+  .slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#ffffff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.25);}
+  .switch input:checked + .slider{background:var(--s1);}
+  .switch input:checked + .slider::before{transform:translateX(16px);}
+  .results-hint{font-size:11.5px;color:var(--text-muted);white-space:nowrap;margin-left:auto;}
+  .clear-btn{font-size:12px;color:var(--s1);background:none;border:none;cursor:pointer;font-weight:600;padding:0;display:none;}
+
+  .card{background:var(--surface-card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;scroll-margin-top:105px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+  .grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;}
+  @media (max-width:860px){.grid2{grid-template-columns:1fr;}}
+
+  h2.sec-title{font-size:19px;margin:0 0 4px;}
+  p.sec-sub{color:var(--text-secondary);font-size:13.5px;margin:0 0 18px;}
+
+  .cand-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .gauge-big{position:relative;width:130px;height:130px;flex:none;cursor:default;background:var(--box-bg);border-radius:50%;padding:5px;}
+  .gauge-big svg{transform:rotate(-90deg);}
+  .gauge-big .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gauge-big .val b{font-size:30px;font-weight:800;line-height:1;}
+  .gauge-big .val span{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;margin-top:6px;}
+  .party-morena{background:rgba(208,59,59,.12);color:var(--critical);}
+  .lvl-pill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px;}
+  .lvl-good{background:rgba(12,163,12,.14);color:var(--good);}
+  .lvl-warning{background:rgba(250,178,25,.25);color:#785000;}
+  .lvl-serious{background:rgba(236,131,90,.25);color:#8a3211;}
+  .lvl-critical{background:rgba(208,59,59,.16);color:var(--critical);}
+
+  .profile-list{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:13.5px;margin-top:14px;}
+  .profile-list div span{color:var(--text-muted);display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;}
+  @media (max-width:600px){.profile-list{grid-template-columns:1fr;}}
+
+  .subhead{font-size:14.5px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .subhead .n{font-size:11px;background:var(--box-bg);color:var(--text-primary);padding:1px 7px;border-radius:999px;font-weight:700;}
+  .sub-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+
+  /* filter chips */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--border);background:var(--surface-2);color:var(--text-secondary);
+    font-size:11.5px;font-weight:700;padding:4px 11px;border-radius:999px;cursor:pointer;transition:.12s;}
+  .chip:hover{color:var(--text-primary);}
+  .chip.active{background:#1C2738;color:#ffffff;border-color:#1C2738;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);
+    font-weight:700;padding:8px 10px;border-bottom:2px solid var(--grid);white-space:nowrap;}
+  th.sortable{cursor:pointer;user-select:none;}
+  th.sortable:hover{color:var(--text-primary);}
+  th.sortable .arrow{display:inline-block;margin-left:3px;opacity:.35;font-size:10px;}
+  th.sortable.sorted .arrow{opacity:1;color:var(--s1);}
+  td{padding:10px;border-bottom:1px solid var(--grid);vertical-align:top;color:var(--text-secondary);}
+  tr:last-child td{border-bottom:none;}
+  td.strong{color:var(--text-primary);font-weight:600;}
+  .table-wrap{overflow-x:auto;}
+  .empty-row td{text-align:center;color:var(--text-muted);font-style:italic;padding:22px 10px;}
+
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;flex:none;}
+  .dot-good{background:var(--good);} .dot-warning{background:var(--warning);}
+  .dot-serious{background:var(--serious);} .dot-critical{background:var(--critical);}
+  .tag{display:inline-flex;align-items:center;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap;}
+  .tag-good{background:rgba(12,163,12,.12);color:var(--good);}
+  .tag-warning{background:rgba(250,178,25,.25);color:#785000;}
+  .tag-serious{background:rgba(236,131,90,.25);color:#8a3211;}
+  .tag-critical{background:rgba(208,59,59,.14);color:var(--critical);}
+
+  .legal{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;}
+  .legal-verde{background:rgba(12,163,12,.14);color:var(--good);}
+  .legal-amarillo{background:rgba(250,178,25,.3);color:#785000;}
+  .legal-rojo{background:rgba(208,59,59,.16);color:var(--critical);}
+
+  ul.clean{margin:0;padding-left:18px;font-size:13.5px;color:var(--text-secondary);}
+  ul.clean li{margin-bottom:6px;}
+
+  .note{font-size:12.5px;color:var(--text-primary);background:var(--box-bg);border:1px solid rgba(0,0,0,0.08);
+    border-radius:10px;padding:12px 14px;margin-top:10px;}
+  .callout{border-left:4px solid var(--s1);background:var(--box-bg);border-radius:0 10px 10px 0;padding:12px 14px;font-size:13.5px;margin-bottom:14px;color:var(--text-primary);}
+  .callout b{display:block;margin-bottom:2px;color:#1C2738;}
+  .alert-box{border-left:4px solid var(--critical);background:var(--box-bg);border-radius:0 10px 10px 0;padding:12px 14px;font-size:13.5px;color:var(--text-primary);}
+  .alert-box b{display:block;margin-bottom:2px;color:var(--critical);}
+
+  details{background:var(--box-bg);border-radius:10px;padding:12px 14px;margin-top:14px;}
+  details summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--text-primary);}
+  details ol{font-size:12px;color:var(--text-secondary);padding-left:18px;margin:10px 0 2px;}
+  details ol li{margin-bottom:5px;word-break:break-word;}
+  details a{color:#004499;font-weight:600;}
+
+  /* timeline */
+  .timeline{position:relative;margin-left:8px;padding-left:22px;border-left:2px solid var(--grid);}
+  .tl-item{position:relative;padding-bottom:16px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{content:'';position:absolute;left:-28px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--dotc,var(--s1));border:2px solid var(--surface-card);}
+  .tl-head{display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .tl-date{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text-muted);}
+  .tl-rumor-tag{font-size:10px;font-weight:800;color:var(--critical);border:1px solid var(--critical);border-radius:999px;padding:0 6px;}
+  .tl-title{font-size:13.5px;font-weight:700;color:var(--text-primary);margin-top:2px;}
+  .tl-txt{font-size:13px;color:var(--text-secondary);margin-top:3px;max-height:0;overflow:hidden;transition:max-height .2s ease;}
+  .tl-item.open .tl-txt{max-height:220px;margin-bottom:2px;}
+  .tl-src{font-size:11px;color:var(--text-muted);}
+  .tl-src a{color:var(--s1);}
+  .tl-caret{margin-left:auto;font-size:11px;color:var(--text-muted);transition:transform .15s;flex:none;}
+  .tl-item.open .tl-caret{transform:rotate(90deg);}
+
+  /* IVA breakdown */
+  .breakdown-row{display:flex;align-items:center;gap:10px;padding:7px 0;cursor:pointer;border-bottom:1px solid var(--grid);}
+  .breakdown-row:last-child{border-bottom:none;}
+  .breakdown-label{font-size:12.5px;font-weight:600;width:180px;flex:none;color:var(--text-secondary);}
+  .breakdown-row.active .breakdown-label{color:var(--text-primary);font-weight:700;}
+  .breakdown-track{flex:1;height:10px;border-radius:5px;background:var(--box-bg);overflow:hidden;position:relative;}
+  .breakdown-fill{height:100%;border-radius:5px;transition:.15s;}
+  .breakdown-val{font-size:12px;font-weight:800;width:34px;text-align:right;flex:none;color:var(--text-primary);}
+  .breakdown-desc{font-size:12px;color:var(--text-primary);background:var(--box-bg);border-radius:10px;padding:12px 14px;margin-top:10px;min-height:38px;}
+  .breakdown-desc b{color:var(--text-primary);}
+
+  .footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+  .footer-note{font-size:11px;color:#94A3B8;line-height:1.5;}
+  .footer-note em{font-style:italic;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">OPOSITOR · Sinaloa</div>
+    <h1>Expediente de vulnerabilidad — Imelda Castro Castro</h1>
+    <div class="meta-row">
+      <span><b>Marco territorial:</b> Estado de Sinaloa</span>
+      <span><b>Ventana de análisis:</b> septiembre 2023 – agosto 2026 (últimos 3 años)</span>
+      <span><b>Corte del expediente:</b> 31/ago/2026</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" id="secNav">
+  <div class="wrap">
+    <a class="tab-btn" data-nav href="#perfil">Perfil</a>
+    <a class="tab-btn" data-nav href="#timeline">Línea de tiempo</a>
+    <a class="tab-btn" data-nav href="#contradicciones">Contradicciones</a>
+    <a class="tab-btn" data-nav href="#vulnerabilidades">Vulnerabilidades</a>
+    <a class="tab-btn" data-nav href="#red">Red de poder</a>
+    <a class="tab-btn" data-nav href="#vectores">Vectores de ataque</a>
+ 
+  </div>
+</nav>
+
+
+
+<div class="wrap" style="padding-top:24px;">
+
+  <div class="callout"><b>Corrección de premisa (transparencia metodológica)</b>
+    A diferencia de lo que en ocasiones se le atribuye, Imelda Castro Castro <b>no ha sido</b> Secretaria de Seguridad Pública de Sinaloa (ese cargo lo ocupa el general Sinuhé Téllez López desde marzo 2026, cuarto titular del sexenio de Rocha Moya). Castro es Senadora de la República por Morena (2018, reelecta 2024, actualmente con licencia) y desde el 26 de agosto de 2026 es Coordinadora Estatal de Morena en Sinaloa — es decir, la candidata virtual del partido a la gubernatura 2027. Su vínculo con la crisis de seguridad del estado es político/narrativo, como heredera del proyecto de Rocha Moya, no de gestión ejecutiva directa.
+  </div>
+
+  <div class="card" id="perfil" style="margin-top:14px;">
+    <div class="cand-head">
+      <div class="gauge-big" id="gaugeMain" title="Índice de Vulnerabilidad del Adversario"></div>
+      <div style="flex:1;min-width:260px;">
+        <h2 class="sec-title" style="margin-bottom:2px;">Imelda Castro Castro</h2>
+        <p class="sec-sub" style="margin-bottom:6px;">Senadora por Morena (con licencia) · Coordinadora Estatal de Morena en Sinaloa (desde 26/ago/2026) · Candidata virtual a la gubernatura 2027</p>
+        <span class="badge party-morena">Morena</span>
+        <span class="lvl-pill lvl-warning" id="lvlPill" style="margin-left:8px;">55 · 🟡 Vulnerabilidad media (límite con 🟠)</span>
+      </div>
+    </div>
+    <div class="note"><b style="color:var(--text-primary)">Componente dominante del IVA:</b> Riesgo legal/electoral (sanción confirmada del IEES + investigación reabierta por el TEESIN sobre origen de financiamiento) combinado con narrativa de continuidad frente al desgaste de Rocha Moya.
+      <br><b style="color:var(--text-primary)">Estado:</b> [PARCIAL — sin Módulo 1C/IER real: nunca ha ocupado cargo ejecutivo con resultados de gestión medibles, solo trayectoria legislativa/partidista; IVA se recalculará cuando el TEESIN resuelva la investigación reabierta en agosto 2026]</div>
+
+    <h3 class="subhead" style="margin-top:18px;">Desglose interactivo del IVA <span class="n">clic o pase el cursor sobre cada barra</span></h3>
+    <div id="breakdownWrap"></div>
+    <div class="breakdown-desc" id="breakdownDesc">Selecciona un componente para ver su definición y cómo se calculó.</div>
+
+    <div class="profile-list">
+      <div><span>Edad</span>57 años</div>
+      <div><span>Origen</span>Agua Caliente de Cebada, Sinaloa de Leyva (radica en Culiacán desde 1991)</div>
+      <div><span>Formación</span>Cs. Política y Admón. Pública (UAS) · Maestría en Cs. Política (UAZ)</div>
+      <div><span>Partidos</span>PRD (1989–2017) → Morena (desde ago 2017)</div>
+      <div style="grid-column:1/-1;"><span>Cargos</span>Dip. local 2001–04 · Presidenta estatal PRD 2005–08 · Directora Agronegocios SEDECO 2011–13 · Dip. local coordinadora 2013–16 · Candidata a alcaldesa de Culiacán 2016 (perdió) · Senadora 2018–24 y reelecta 2024 (fórmula con Rocha Moya) · Con licencia desde jun 2026 · Coordinadora estatal Morena Sinaloa desde ago 2026</div>
+    </div>
+  </div>
+
+  <div class="card" id="timeline">
+    <div class="sub-row">
+      <h3 class="subhead" style="margin:0;">Línea de tiempo reciente <span class="n" id="tlCount"></span></h3>
+    </div>
+    <div class="timeline" id="timelineWrap"></div>
+  </div>
+
+  <div class="card" id="contradicciones">
+    <div class="sub-row">
+      <h3 class="subhead" style="margin:0;">Contradicciones <span class="n" id="contraCount"></span></h3>
+    </div>
+    <div class="table-wrap"><table id="tblContra">
+     
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" id="vulnerabilidades">
+      <div class="sub-row">
+        <h3 class="subhead" style="margin:0;">Vulnerabilidades <span class="n" id="vulnCount"></span></h3>
+        <div class="chips" id="vulnChips">
+          <button class="chip active" data-risk="all">Todas</button>
+          <button class="chip" data-risk="Alto">Alto</button>
+          <button class="chip" data-risk="Medio">Medio</button>
+          <button class="chip" data-risk="rumor">Rumor</button>
+        </div>
+      </div>
+      <div class="table-wrap"><table id="tblVuln">
+        <thead><tr>
+          <th>Categoría</th><th>Descripción</th><th>Verif.</th>
+         
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3 class="subhead">Fortalezas</h3>
+      <ul class="clean">
+        <li>Liderazgo abrumador en encuestas internas de Morena (41.3% vs. 9.5% del siguiente aspirante) y proyección de intención de voto general de 42.9%.</li>
+        <li>Trayectoria institucional larga y consistente (25+ años, dirección partidista y coordinaciones legislativas) — perfil de cuadro experimentado, no improvisado.</li>
+        <li>Posicionamiento oportuno como "relevo limpio" frente a la crisis de Rocha Moya, con narrativa de responsabilidad individual.</li>
+        <li>Buen manejo mediático nacional y narrativa de paz ("Vocerías por la Paz") que conecta con el hartazgo ciudadano por la violencia.</li>
+      </ul>
+      <h3 class="subhead" style="margin-top:16px;">Perfil DISC observado</h3>
+      <p style="font-size:13.5px;margin:0 0 4px;"><b>S — Estable (dominante), con I — Influyente (secundario)</b></p>
+      <p style="font-size:12.5px;color:var(--text-muted);margin:0;">Respuestas medidas y no confrontativas ante cuestionamientos directos (Parlamento Juvenil, abr 2026); lenguaje institucional/legalista frente al caso Rocha Moya ("cada quien es responsable de sus actos") en vez de denuncia dramática; ascenso gradual de 25+ años sugiere paciencia institucional. El componente I se refleja en su intensa actividad de giras y manejo mediático activo.</p>
+    </div>
+  </div>
+
+  <div class="card" id="red">
+    <div class="sub-row">
+      <h3 class="subhead" style="margin:0;">Red de poder <span class="n" id="redCount"></span></h3>
+    </div>
+    <div class="table-wrap"><table id="tblRed">
+      <thead><tr><th>Actor</th><th>Tipo de vínculo</th><th>Relevancia</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h3 class="subhead">Análisis digital</h3>
+    <p style="font-size:13.5px;color:var(--text-secondary);margin:0;">Tono dominante: institucional/aspiracional, centrado en "paz", "transformación" y "congruencia". Narrativas activas: (1) "Desnarcotizar el Estado" / pacificación institucional; (2) deslinde de Rocha Moya vía responsabilidad individual; (3) "la lógica diría que Sinaloa va a tener una mujer gobernadora". No se detectó un error digital viral mayor — el episodio más cercano es la confrontación semi-viral del Parlamento Juvenil (abril 2026) y la controversia local por encuestas telefónicas que ella negó públicamente.</p>
+  </div>
+
+  <div class="card" id="vectores">
+    <div class="sub-row">
+      <h3 class="subhead" style="margin:0;">Vectores de ataque <span class="n" id="vecCount"></span></h3>
+      <div class="chips" id="vecChips">
+        <button class="chip active" data-legal="all">Todos</button>
+        <button class="chip" data-legal="verde">🟢 Verde</button>
+        <button class="chip" data-legal="amarillo">🟡 Amarillo</button>
+        <button class="chip" data-legal="rojo">🔴 Rojo</button>
+      </div>
+    </div>
+    <div class="table-wrap"><table id="tblVec">
+      <thead><tr>
+        <th>Vector</th><th>Argumento</th><th>Evidencia</th>
+        <th class="sortable" data-table="vec" data-col="rank">Semáforo legal-electoral <span class="arrow">▾</span></th>
+      </tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <div class="alert-box" style="margin-top:12px;"><b>Advertencia Módulo 6E</b> El vector "conocimiento previo no denunciado" tiene semáforo 🔴 Rojo — no se presenta como acción sugerida. No usar sin validación de un abogado electoral y sin una segunda fuente documental independiente de Anabel Hernández.</div>
+  </div>
+
+ 
+  <footer class="footer">
+    <div class="footer-note">
+      Expediente elaborado con metodología OPOSITOR a partir de fuentes públicas y periodísticas con doble verificación cuando fue posible. Los niveles marcados como <em>Probable</em>, <em>Rumor</em> o <em>[PARCIAL]</em> indican evidencia con verificación pendiente — no deben tratarse como hecho confirmado. El único vector con semáforo 🔴 no se presenta como acción sugerida. Próxima actualización recomendada: inmediata cuando el TEESIN resuelva la investigación reabierta en agosto 2026, o ante cualquier segunda fuente sobre el señalamiento de Anabel Hernández.
+    </div>
+  </footer>
+</div>
+
+<script>
+// ---------------------------------------------------------------
+// helpers
+// ---------------------------------------------------------------
+const LEVELMAP = {good:'#0ca30c', warning:'#fab219', serious:'#ec835a', critical:'#d03b3b'};
+function ivaLevel(score){ if(score<=30) return 'good'; if(score<=55) return 'warning'; if(score<=75) return 'serious'; return 'critical'; }
+function gaugeSVG(score, size, strokeW){
+  const r = (size/2) - strokeW, c = 2*Math.PI*r, off = c * (1 - score/100), color = LEVELMAP[ivaLevel(score)];
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="transform:rotate(-90deg)">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#cbd5e1" stroke-width="${strokeW}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${strokeW}"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/>
+  </svg>`;
+}
+function esc(s){ return String(s); }
+function highlight(text, q){
+  if(!q) return text;
+  try{
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+    return text.replace(re, '<mark style="background:rgba(250,178,25,.45);color:inherit;border-radius:3px;padding:0 1px;">$1</mark>');
+  }catch(e){ return text; }
+}
+function matches(q, ...fields){
+  if(!q) return true;
+  const needle = q.toLowerCase();
+  return fields.some(f => String(f||'').toLowerCase().includes(needle));
+}
+
+// ---------------------------------------------------------------
+// DATA
+// ---------------------------------------------------------------
+const IVA = 55;
+const IVA_BREAKDOWN = [
+  {key:'dano', label:'Potencial de daño', weight:0.25, value:67, color:'var(--s2)',
+    desc:'<b>Módulo 2C — Potencial de daño.</b> Promedio ponderado del top-3 de contradicciones por potencial de daño (dos "Alto", una "Medio"). Peso 25% del IVA.'},
+  {key:'riesgo', label:'Riesgo de vulnerabilidades', weight:0.25, value:63, color:'var(--s8)',
+    desc:'<b>Módulo 3B — Riesgo de vulnerabilidades.</b> Promedio del nivel de riesgo de las vulnerabilidades Confirmadas/Probables (excluye el señalamiento marcado como rumor). Peso 25% del IVA.'},
+  {key:'narrativa', label:'Debilidad narrativa', weight:0.15, value:60, color:'var(--s4)',
+    desc:'<b>Módulo 5C — Debilidad narrativa.</b> Proporción de vulnerabilidades (6) frente a fortalezas (4) identificadas en el expediente. Peso 15% del IVA.'},
+  {key:'digital', label:'Vulnerabilidad digital', weight:0.15, value:20, color:'var(--s3)',
+    desc:'<b>Módulo 5C.4 — Vulnerabilidad digital.</b> No se detectó un error digital viral mayor en la ventana de análisis — componente bajo. Peso 15% del IVA.'},
+  {key:'gestion', label:'Brecha de gestión (IER)', weight:0.20, value:50, color:'var(--s7)',
+    desc:'<b>Módulo 1C — Brecha de gestión (IER).</b> Estimación: nunca ha ocupado un cargo ejecutivo con resultados de gestión medibles — solo trayectoria legislativa y partidista, por lo que este componente queda como aproximación. Peso 20% del IVA — módulo incompleto.'},
+];
+
+const TIMELINE = [
+  {date:'Nov 2025', title:'Denuncia del PAN por actos anticipados de campaña', text:'El PAN Sinaloa la denuncia por presuntos actos anticipados de campaña.', tag:'confirmed', color:'var(--s1)', source:'PAN Sinaloa, nov 2025', url:'https://pan.org.mx/2025/11/12/pan-sinaloa-denuncia-a-imelda-castro-por-actos-anticipados-de-campana/'},
+  {date:'Abr 2026', title:'"¿Patria antes que partido?"', text:'Un joven la confronta en un Parlamento Juvenil; ella admite que la disidencia legislativa rompería la "congruencia" con la presidenta.', tag:'confirmed', color:'var(--s1)', source:'Fuentes Fidedignas, abr 2026', url:'https://fuentesfidedignas.com.mx/index.php/2026/04/28/patria-o-partido-joven-sinaloense-confronta-a-senadora-imelda-castro-y-exhibe-tension-entre-lealtad-politica-y-representacion-ciudadana/'},
+  {date:'5 Jun 2026', title:'El IEES la sanciona', text:'El IEES la sanciona por incurrir en promoción personalizada; turna el expediente al Senado.', tag:'confirmed', color:'var(--warning)', source:'Proceso, jun 2026', url:'https://www.proceso.com.mx/nacional/2026/6/5/iees-sanciona-la-senadora-imelda-castro-por-incurrir-en-promocion-personalizada-376459.html'},
+  {date:'12 Ago 2026', title:'El TEESIN reabre investigación', text:'El Tribunal Electoral reabre investigación por posible uso indebido de recursos en sus eventos de precampaña — señala que no se investigó el origen del financiamiento.', tag:'confirmed', color:'var(--serious)', source:'La Silla Rota, ago 2026', url:'https://lasillarota.com/estados/2026/8/12/tribunal-electoral-de-sinaloa-ordena-reabrir-investigacion-contra-senadora-de-morena-524177.html'},
+  {date:'22–23 Ago 2026', title:'EE. UU. acusa a Rocha Moya; licencia indefinida', text:'EE. UU. acusa al gobernador Rocha Moya de nexos con el narcotráfico; el Congreso de Sinaloa aprueba por unanimidad su licencia indefinida.', tag:'confirmed', color:'var(--critical)', source:'Infobae / CNN, ago 2026', url:'https://cnnespanol.cnn.com/2026/08/22/mexico/gobernador-ruben-rocha-sheinbaum-morena-dan-espalda-orix'},
+  {date:'26 Ago 2026', title:'Morena la nombra Coordinadora Estatal', text:'Morena la nombra Coordinadora Estatal en Sinaloa — candidata virtual a la gubernatura 2027, tras la salida de los aspirantes también acusados (Inzunza, Gámez).', tag:'confirmed', color:'var(--critical)', source:'El Universal, ago 2026', url:'https://www.eluniversal.com.mx/nacion/morena-da-estocada-a-rocha-moya-nombra-a-imelda-castro-coordinadora-en-sinaloa/'},
+  {date:'27 Ago 2026', title:'Se deslinda de Rocha Moya e Inzunza', text:'"Cada quien es responsable de sus actos"; exige que enfrenten investigaciones "sin fuero".', tag:'confirmed', color:'var(--s2)', source:'Sociedad Noticias, ago 2026', url:'https://sociedad-noticias.com/2026/08/27/imelda-castro-se-deslinda-de-rocha-moya-e-inzunza-y-pide-que-enfrenten-investigaciones-sin-fuero/'},
+  {date:'28 Ago 2026', title:'Señalamiento de Anabel Hernández', text:'Afirma, con fuente única y sin documentos, que Castro habría sabido desde 2021 de encuentros entre Rocha Moya y "El Mayo" Zambada sin denunciarlos.', tag:'rumor', color:'var(--critical)', source:'Infobae (fuente única de la acusación)', url:'https://www.infobae.com/mexico/2026/08/28/anabel-hernandez-acusa-a-imelda-castro-corcholata-de-morena-en-sinaloa-de-conocer-los-vinculos-entre-rocha-moya-y-el-mayo-zambada/'},
+];
+
+const CONTRA = [
+  {tipo:'Antes vs. ahora', txt:'Compañera de fórmula senatorial de Rocha Moya en 2018 y del mismo proyecto político por 8+ años; en ago 2026, tras la acusación de EE. UU., se deslinda con "cada quien es responsable de sus actos".', fechas:'2018 → ago 2026', fuente:'Sociedad Noticias / California Medios', dano:'Alto', rank:3, tagClass:'tag-serious', verif:'confirmed'},
+  {tipo:'Discurso vs. práctica institucional', txt:'Se presenta como garante de "congruencia" y transparencia mientras el IEES la sancionó por promoción personalizada y el TEESIN reabrió investigación por posible uso indebido de recursos.', fechas:'jun–ago 2026', fuente:'Proceso / La Silla Rota', dano:'Alto', rank:3, tagClass:'tag-serious', verif:'confirmed'},
+  {tipo:'Dicho vs. hecho', txt:'Ante un joven que preguntó si los legisladores pondrían "patria antes que partido", respondió que la disidencia rompería la "congruencia" con la presidenta — admite subordinación partidista sobre representación ciudadana independiente.', fechas:'abr 2026', fuente:'Fuentes Fidedignas (fuente única)', dano:'Medio', rank:2, tagClass:'tag-warning', verif:'confirmed'},
+  {tipo:'Postura selectiva sobre el fuero', txt:'Exige que Inzunza enfrente investigaciones "sin fuero" mientras ella litiga activamente ante tribunales para evitar sanciones por sus propias faltas administrativas.', fechas:'ago 2026', fuente:'Sociedad Noticias / El Sol de Sinaloa', dano:'Medio-Bajo', rank:1.5, tagClass:'tag-warning', verif:'confirmed'},
+  {tipo:'[Rumor — no confirmado]', txt:'Anabel Hernández afirma, con fuente anónima y sin documentos, que Castro supo desde 2021 de encuentros entre Rocha Moya y "El Mayo" Zambada y no los denunció.', fechas:'28 ago 2026', fuente:'Infobae (fuente única de la acusación)', dano:'Alto si se confirmara — hoy no activable', rank:3, tagClass:'tag-critical', verif:'rumor'},
+];
+
+const VULN = [
+  {cat:'Legal / Electoral', txt:'Sanción confirmada del IEES (promoción personalizada, jun 2026) + investigación reabierta por el TEESIN (ago 2026) que señala que no se investigó el origen del dinero de sus eventos.', verifLabel:'Confirmada', verifDot:'dot-good', riesgo:'Alto', rank:3, riskTag:'Alto', tagClass:'tag-serious', fuente:'Proceso / La Silla Rota', verif:'confirmed'},
+  {cat:'Asociaciones / continuidad', txt:'Vínculo histórico de 8+ años con Rocha Moya (gobernador con licencia, acusado por EE. UU.); ella denuncia una "campaña pagada" para vincularla a esa continuidad.', verifLabel:'Confirmada (la relación); no probado el vínculo con la acusación penal', verifDot:'dot-good', riesgo:'Alto', rank:3, riskTag:'Alto', tagClass:'tag-serious', fuente:'Infobae / Noticiero Altavoz', verif:'confirmed'},
+  {cat:'[Rumor] Conocimiento previo no denunciado', txt:'Señalamiento de Anabel Hernández sobre conocimiento previo de nexos Rocha Moya–Zambada, no denunciado.', verifLabel:'Rumor (fuente única, anónima)', verifDot:'dot-serious', riesgo:'Crítico si se confirma / bajo para uso actual', rank:1.5, riskTag:'rumor', tagClass:'tag-critical', fuente:'Infobae', verif:'rumor'},
+  {cat:'Entorno de seguridad heredado', txt:'Culiacán señalada entre las ciudades más violentas del mundo (CESP); +2,425 homicidios dolosos en 17 meses de conflicto Mayitos-Chapitos. Su propuesta "desnarcotizar el Estado" es aspiracional, sin resultados ejecutivos propios.', verifLabel:'Confirmada (cifras)', verifDot:'dot-good', riesgo:'Alto', rank:3, riskTag:'Alto', tagClass:'tag-serious', fuente:'CESP / Grupo Animal / Proceso', verif:'confirmed'},
+  {cat:'Financiera', txt:'El propio TEESIN señaló que el origen del financiamiento de sus actos de precampaña no fue investigado a fondo por la autoridad electoral local.', verifLabel:'Probable (hallazgo judicial formal)', verifDot:'dot-warning', riesgo:'Alto', rank:3, riskTag:'Alto', tagClass:'tag-serious', fuente:'La Silla Rota', verif:'probable'},
+  {cat:'Reputacional', txt:'Denuncias ciudadanas por encuestas telefónicas masivas percibidas como invasivas, vinculadas en redes a su promoción (ella lo niega públicamente).', verifLabel:'Probable', verifDot:'dot-warning', riesgo:'Medio', rank:2, riskTag:'Medio', tagClass:'tag-warning', fuente:'TV Azteca', verif:'probable'},
+];
+
+const REDPODER = [
+  {actor:'Rubén Rocha Moya (gobernador, con licencia)', tipo:'Histórico — compañera de fórmula 2018; hoy riesgo reputacional por continuidad', rel:'Alta', dot:'dot-critical'},
+  {actor:'Morena nacional / Sheinbaum', tipo:'Designación institucional como coordinadora estatal (ago 2026)', rel:'Alta', dot:'dot-critical'},
+  {actor:'Anabel Hernández (periodista de investigación)', tipo:'Adversarial — fuente del señalamiento de mayor riesgo narrativo', rel:'Alta', dot:'dot-critical'},
+  {actor:'Enrique Inzunza (senador, acusado por EE. UU.)', tipo:'Excompañero de proyecto — deslinde público reciente', rel:'Media', dot:'dot-warning'},
+  {actor:'Juan de Dios Gámez (alcalde interino de Culiacán, acusado por EE. UU.)', tipo:'Competidor interno eliminado de la contienda por la misma acusación', rel:'Media', dot:'dot-warning'},
+  {actor:'Tere Guerra / Ricardo Madrid (aspirantes internos de Morena)', tipo:'Competidores ahora subordinados a su coordinación estatal', rel:'Media', dot:'dot-warning'},
+  {actor:'Partido del Trabajo (PT)', tipo:'Dato sin confirmar — una sola fuente de baja fiabilidad la señaló como "petista"; fuentes mayores (Wikipedia, medios nacionales) la ubican consistentemente en Morena', rel:'Baja (verificar)', dot:'dot-good'},
+];
+
+const VECTORES = [
+  {n:'Contraste de coherencia', arg:'Compañera de fórmula del gobernador acusado por EE. UU. durante 8 años, ahora se deslinda.', ev:'Sociedad Noticias / California Medios', legal:'amarillo', rank:2, just:'Interés público legítimo, pero debe formularse como pregunta de consistencia política — nunca como imputación de complicidad criminal no probada.'},
+  {n:'Contraste de resultados', arg:'Bajo el proyecto político del que fue parte, Sinaloa vivió su periodo más violento; su propuesta de pacificación llega después de la crisis, no antes.', ev:'CESP / Grupo Animal / Proceso', legal:'verde', rank:1, just:'Datos oficiales/periodísticos verificables, sin imputación personal.'},
+  {n:'Transparencia financiera', arg:'El Tribunal Electoral confirmó que no se investigó el origen del dinero de sus eventos de precampaña.', ev:'La Silla Rota / El Sol de Sinaloa', legal:'verde', rank:1, just:'Hechos de resolución oficial pública.'},
+  {n:'Congruencia democrática', arg:'Admitió que la disciplina de partido pesa más que la representación ciudadana independiente.', ev:'Fuentes Fidedignas (fuente única)', legal:'verde', rank:1, just:'Declaración pública propia, verificable — aunque respaldada por una sola fuente periodística, conviene corroborar antes de uso masivo.'},
+  {n:'Conocimiento previo no denunciado (Rocha–Zambada)', arg:'Presunto conocimiento previo, no denunciado, de nexos entre Rocha Moya y "El Mayo" Zambada.', ev:'Infobae / Anabel Hernández (fuente única, anónima)', legal:'rojo', rank:3, just:'Fuente única, anónima, sin documentos. Riesgo alto de calumnia electoral. NO se presenta como acción sugerida — requiere validación jurídica y una segunda fuente antes de cualquier uso.'},
+];
+
+// ---------------------------------------------------------------
+// STATE
+// ---------------------------------------------------------------
+const state = {
+  search:'', onlyConfirmed:false,
+  riskFilter:'all', legalFilter:'all',
+  sort:{ contra:{col:null,dir:1}, vuln:{col:null,dir:1}, vec:{col:null,dir:1} }
+};
+
+// ---------------------------------------------------------------
+// IVA gauge + breakdown
+// ---------------------------------------------------------------
+document.getElementById('gaugeMain').innerHTML = gaugeSVG(IVA,130,12) + `<div class="val"><b>${IVA}</b><span>IVA / 100</span></div>`;
+
+const bwWrap = document.getElementById('breakdownWrap');
+const bwDesc = document.getElementById('breakdownDesc');
+IVA_BREAKDOWN.forEach((b,i)=>{
+  const row = document.createElement('div');
+  row.className = 'breakdown-row';
+  row.tabIndex = 0;
+  row.innerHTML = `<div class="breakdown-label">${b.label} <span style="opacity:.6">(${Math.round(b.weight*100)}%)</span></div>
+    <div class="breakdown-track"><div class="breakdown-fill" style="width:${b.value}%;background:${b.color}"></div></div>
+    <div class="breakdown-val">${b.value}</div>`;
+  function show(){
+    document.querySelectorAll('.breakdown-row').forEach(r=>r.classList.remove('active'));
+    row.classList.add('active');
+    bwDesc.innerHTML = b.desc;
+  }
+  row.addEventListener('mouseenter', show);
+  row.addEventListener('click', show);
+  row.addEventListener('focus', show);
+  bwWrap.appendChild(row);
+});
+
+// ---------------------------------------------------------------
+// RENDER: timeline
+// ---------------------------------------------------------------
+function renderTimeline(){
+  const wrap = document.getElementById('timelineWrap');
+  wrap.innerHTML = '';
+  let shown = 0;
+  TIMELINE.forEach((t,idx)=>{
+    if(state.onlyConfirmed && t.tag==='rumor') return;
+    if(!matches(state.search, t.title, t.text, t.source)) return;
+    shown++;
+    const item = document.createElement('div');
+    item.className = 'tl-item';
+    item.style.setProperty('--dotc', t.color);
+    item.innerHTML = `
+      <div class="tl-head" data-idx="${idx}">
+        <div><div class="tl-date">${t.date}</div><div class="tl-title">${highlight(t.title, state.search)}</div></div>
+        ${t.tag==='rumor' ? '<span class="tl-rumor-tag">RUMOR</span>' : ''}
+        <span class="tl-caret">▸</span>
+      </div>
+      <div class="tl-txt"><div>${highlight(t.text, state.search)}</div><div class="tl-src" style="margin-top:5px;">Fuente: <a href="${t.url}" target="_blank" rel="noopener">${t.source}</a></div></div>`;
+    item.querySelector('.tl-head').addEventListener('click', ()=> item.classList.toggle('open'));
+    wrap.appendChild(item);
+  });
+  if(shown===0) wrap.innerHTML = '<p style="font-size:13px;color:var(--text-muted);font-style:italic;">Sin resultados con los filtros actuales.</p>';
+  document.getElementById('tlCount').textContent = shown + ' de ' + TIMELINE.length;
+}
+
+// ---------------------------------------------------------------
+// RENDER: contradicciones
+// ---------------------------------------------------------------
+function renderContra(){
+  const tbody = document.querySelector('#tblContra tbody');
+  tbody.innerHTML = '';
+  let rows = CONTRA.filter(r=>{
+    if(state.onlyConfirmed && r.verif==='rumor') return false;
+    return matches(state.search, r.tipo, r.txt, r.fuente, r.dano);
+  });
+  const s = state.sort.contra;
+  if(s.col){ rows = rows.slice().sort((a,b)=> (a[s.col]-b[s.col]) * s.dir); }
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="strong">${highlight(r.tipo, state.search)}</td><td>${highlight(r.txt, state.search)}</td>
+      <td>${r.fechas}<br><span style="color:var(--text-muted);font-size:11.5px">${highlight(r.fuente, state.search)}</span></td>
+      <td><span class="tag ${r.tagClass}">${r.dano}</span></td>`;
+    tbody.appendChild(tr);
+  });
+  if(rows.length===0) tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Sin resultados con los filtros actuales.</td></tr>';
+  document.getElementById('contraCount').textContent = rows.length + ' de ' + CONTRA.length;
+}
+
+// ---------------------------------------------------------------
+// RENDER: vulnerabilidades
+// ---------------------------------------------------------------
+function renderVuln(){
+  const tbody = document.querySelector('#tblVuln tbody');
+  tbody.innerHTML = '';
+  let rows = VULN.filter(r=>{
+    if(state.onlyConfirmed && r.verif==='rumor') return false;
+    if(state.riskFilter==='rumor' && r.riskTag!=='rumor') return false;
+    if(state.riskFilter!=='all' && state.riskFilter!=='rumor' && r.riskTag!==state.riskFilter) return false;
+    return matches(state.search, r.cat, r.txt, r.fuente, r.verifLabel);
+  });
+  const s = state.sort.vuln;
+  if(s.col){ rows = rows.slice().sort((a,b)=> (a[s.col]-b[s.col]) * s.dir); }
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="strong">${highlight(r.cat, state.search)}</td><td>${highlight(r.txt, state.search)}</td>
+      <td><span class="dot ${r.verifDot}"></span>${highlight(r.verifLabel, state.search)}</td>
+      <td><span class="tag ${r.tagClass}">${r.riesgo}</span></td>
+      <td style="font-size:11.5px;color:var(--text-muted)">${highlight(r.fuente, state.search)}</td>`;
+    tbody.appendChild(tr);
+  });
+  if(rows.length===0) tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Sin resultados con los filtros actuales.</td></tr>';
+  document.getElementById('vulnCount').textContent = rows.length + ' de ' + VULN.length;
+}
+
+// ---------------------------------------------------------------
+// RENDER: red de poder
+// ---------------------------------------------------------------
+function renderRed(){
+  const tbody = document.querySelector('#tblRed tbody');
+  tbody.innerHTML = '';
+  const rows = REDPODER.filter(r => matches(state.search, r.actor, r.tipo, r.rel));
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="strong">${highlight(r.actor, state.search)}</td><td>${highlight(r.tipo, state.search)}</td>
+      <td><span class="dot ${r.dot}"></span>${r.rel}</td>`;
+    tbody.appendChild(tr);
+  });
+  if(rows.length===0) tbody.innerHTML = '<tr class="empty-row"><td colspan="3">Sin resultados con los filtros actuales.</td></tr>';
+  document.getElementById('redCount').textContent = rows.length + ' de ' + REDPODER.length;
+}
+
+// ---------------------------------------------------------------
+// RENDER: vectores
+// ---------------------------------------------------------------
+function legalClass(l){ return 'legal-'+l; }
+function legalIcon(l){ return l==='verde' ? '🟢 Verde' : l==='amarillo' ? '🟡 Amarillo' : '🔴 Rojo'; }
+function renderVec(){
+  const tbody = document.querySelector('#tblVec tbody');
+  tbody.innerHTML = '';
+  let rows = VECTORES.filter(r=>{
+    if(state.legalFilter!=='all' && r.legal!==state.legalFilter) return false;
+    return matches(state.search, r.n, r.arg, r.ev, r.just);
+  });
+  const s = state.sort.vec;
+  if(s.col){ rows = rows.slice().sort((a,b)=> (a[s.col]-b[s.col]) * s.dir); }
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="strong">${highlight(r.n, state.search)}</td><td>${highlight(r.arg, state.search)}</td>
+      <td style="font-size:11.5px;color:var(--text-muted)">${highlight(r.ev, state.search)}</td>
+      <td><span class="legal ${legalClass(r.legal)}">${legalIcon(r.legal)}</span>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;max-width:240px">${highlight(r.just, state.search)}</div></td>`;
+    tbody.appendChild(tr);
+  });
+  if(rows.length===0) tbody.innerHTML = '<tr class="empty-row"><td colspan="4">Sin resultados con los filtros actuales.</td></tr>';
+  document.getElementById('vecCount').textContent = rows.length + ' de ' + VECTORES.length;
+}
+
+function renderAll(){
+  renderTimeline(); renderContra(); renderVuln(); renderRed(); renderVec();
+  const totalItems = TIMELINE.length+CONTRA.length+VULN.length+REDPODER.length+VECTORES.length;
+  const hint = document.getElementById('resultsHint');
+  const clearBtn = document.getElementById('clearSearch');
+  if(state.search || state.onlyConfirmed || state.riskFilter!=='all' || state.legalFilter!=='all'){
+    hint.textContent = 'Filtros activos';
+    clearBtn.style.display = 'inline';
+  } else {
+    hint.textContent = '';
+    clearBtn.style.display = 'none';
+  }
+}
+renderAll();
+
+// ---------------------------------------------------------------
+// CONTROLS
+// ---------------------------------------------------------------
+document.getElementById('searchInput').addEventListener('input', e=>{ state.search = e.target.value.trim(); renderAll(); });
+document.getElementById('onlyConfirmedToggle').addEventListener('change', e=>{ state.onlyConfirmed = e.target.checked; renderAll(); });
+document.getElementById('clearSearch').addEventListener('click', ()=>{
+  state.search=''; state.onlyConfirmed=false; state.riskFilter='all'; state.legalFilter='all';
+  document.getElementById('searchInput').value='';
+  document.getElementById('onlyConfirmedToggle').checked=false;
+  document.querySelectorAll('#vulnChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.risk==='all'));
+  document.querySelectorAll('#vecChips .chip').forEach(c=>c.classList.toggle('active', c.dataset.legal==='all'));
+  renderAll();
+});
+
+document.querySelectorAll('#vulnChips .chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    state.riskFilter = chip.dataset.risk;
+    document.querySelectorAll('#vulnChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderAll();
+  });
+});
+document.querySelectorAll('#vecChips .chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    state.legalFilter = chip.dataset.legal;
+    document.querySelectorAll('#vecChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderAll();
+  });
+});
+
+document.querySelectorAll('th.sortable').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const table = th.dataset.table, col = th.dataset.col;
+    const s = state.sort[table];
+    if(s.col===col){ s.dir *= -1; } else { s.col = col; s.dir = -1; }
+    document.querySelectorAll(`th.sortable[data-table="${table}"]`).forEach(t=>{
+      t.classList.remove('sorted');
+      t.querySelector('.arrow').textContent = '▾';
+    });
+    th.classList.add('sorted');
+    th.querySelector('.arrow').textContent = s.dir===1 ? '▴' : '▾';
+    renderAll();
+  });
+});
+
+// ---------------------------------------------------------------
+// scrollspy nav
+// ---------------------------------------------------------------
+const navLinks = Array.from(document.querySelectorAll('#secNav .tab-btn'));
+const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+function onScroll(){
+  let current = sections[0];
+  const y = window.scrollY + 110;
+  sections.forEach(sec => { if(sec.offsetTop <= y) current = sec; });
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+current.id));
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+</script>
+</body>
+</html>

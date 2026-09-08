@@ -1,0 +1,815 @@
+<!-- =========================================================
+  EMOCIONES DASHBOARD TEMPLATE v2.0
+  Sistema de Humor Social Emocional — Plutchik Framework
+  ========================================================= -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMOCIONES — SINALOA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-card:#d5d1d1;
+  --bg-card2:#d5d1d1;
+  --bg-hdr:#1C2738;
+  --brd:#b0abab;
+  --brd2:#b0abab;
+  --tx1:#1e293b;
+  --tx2:#334155;
+  --tx3:#475569;
+  --blue:#3b82f6;
+  --blue2:#60a5fa;
+  --red:#ef4444;
+  --red-s:#991b1b;
+  --red-bg:rgba(239,68,68,.12);
+  --org:#f97316;
+  --org-s:#9a3412;
+  --org-bg:rgba(249,115,22,.12);
+  --ylw:#eab308;
+  --ylw-bg:rgba(234,179,8,.12);
+  --grn:#22c55e;
+  --grn-s:#166534;
+  --grn-bg:rgba(34,197,94,.12);
+  --pur:#a855f7;
+  --pur-bg:rgba(168,85,247,.12);
+  --tel:#06b6d4;
+  --tel-bg:rgba(6,182,212,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--bg-hdr);border-bottom:1px solid #2d3a4e;color:#fff}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem .5rem;flex-wrap:wrap;gap:.5rem}
+.brand{display:flex;align-items:center;gap:.6rem}
+.brand-name{font-size:13px;font-weight:700;letter-spacing:.15em;color:#3b82f6}
+.brand-ver{font-size:10px;background:var(--blue);color:#fff;padding:1px 6px;border-radius:3px;font-weight:700}
+.hdr-meta{font-size:11px;color:#94a3b8;text-align:right;line-height:1.6}
+.hdr-body{padding:.3rem 2rem 1rem}
+.hdr-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.14em;color:#94a3b8;margin-bottom:.35rem}
+.hdr-title{font-size:2.5rem;font-weight:800;letter-spacing:-.01em;color:#fff;line-height:1.1}
+.hdr-title span{color:var(--blue2)}
+.hdr-sub{font-size:12.5px;color:#cbd5e1;margin-top:.3rem}
+.badges{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.65rem}
+.badge{font-size:10px;padding:3px 10px;border-radius:4px;font-weight:700;letter-spacing:.04em;border:1px solid}
+.b-red{background:rgba(239,68,68,.2);color:#fca5a5;border-color:var(--red)}
+.b-org{background:rgba(249,115,22,.2);color:#fdba74;border-color:var(--org)}
+.b-blu{background:rgba(59,130,246,.2);color:var(--blue2);border-color:var(--blue)}
+.b-pur{background:rgba(168,85,247,.2);color:#c084fc;border-color:var(--pur)}
+.b-grn{background:rgba(34,197,94,.2);color:#86efac;border-color:var(--grn)}
+.pulse{animation:PULSE 1.5s infinite}
+@keyframes PULSE{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* TABS */
+.tabs{display:flex;overflow-x:auto;border-bottom:1px solid #2d3a4e;padding:0 2rem;background:#1C2738}
+.tab{font-size:11.5px;font-weight:600;letter-spacing:.04em;padding:.65rem 1.1rem;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .18s}
+.tab:hover{color:#fff;background:rgba(255,255,255,.05)}
+.tab.on{color:var(--blue2);border-bottom-color:var(--blue2)}
+
+/* CONTENT */
+.cnt{padding:1.4rem 2rem;background:#ffffff}
+.pnl{display:none}
+.pnl.on{display:block}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+.gauto{display:grid;grid-template-columns:430px 1fr;gap:1.2rem;align-items:start}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--brd);border-radius:10px;padding:1.1rem 1.2rem;color:var(--tx1)}
+.card2{background:var(--bg-card2);border:1px solid var(--brd2);border-radius:10px;padding:1.1rem 1.2rem;color:var(--tx1)}
+.cv{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:.55rem}
+.cval{font-size:2rem;font-weight:800;line-height:1}
+.csub{font-size:11px;color:var(--tx2);margin-top:.3rem}
+
+/* SEC LABEL */
+.sl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:.7rem;padding-bottom:.35rem;border-bottom:1px solid var(--brd)}
+
+/* EMOTION ROWS */
+.emr{padding:9px 0;border-bottom:1px solid var(--brd);cursor:pointer;transition:background .12s;border-radius:4px}
+.emr:hover{background:rgba(0,0,0,.04)}
+.emr:last-child{border-bottom:none}
+.emh{display:flex;align-items:center;gap:7px}
+.emd-box{display:none;margin-top:8px;margin-left:17px;background:rgba(255,255,255,.5);border-radius:6px;padding:8px 10px}
+.emd-box.open{display:block}
+.edk{font-size:10.5px;font-weight:700;color:var(--tx2);margin-bottom:3px}
+.edv{font-size:11px;color:var(--tx3);line-height:1.6}
+
+/* DYAD CARDS */
+.dyc{background:var(--bg-card2);border:1px solid var(--brd2);border-radius:10px;padding:1rem 1.1rem;border-top:3px solid}
+.dyn{font-size:14px;font-weight:800;margin-bottom:3px}
+.dyf{font-size:11px;color:var(--tx3);font-style:italic;margin-bottom:7px}
+.dyt{font-size:12px;color:var(--tx2);line-height:1.6}
+.dybadge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;float:right;margin-top:-2px}
+
+/* MAPA */
+.mpc{background:var(--bg-card2);border:1px solid var(--brd2);border-radius:10px;padding:.9rem 1rem}
+.mptt{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.mpi{font-size:12px;color:var(--tx2);padding:5px 0;border-bottom:1px solid var(--brd);display:flex;align-items:flex-start;gap:6px}
+.mpi:last-child{border-bottom:none}
+.mpd{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+/* QUOTES */
+.qi{padding:9px 0;border-bottom:1px solid var(--brd)}
+.qi:last-child{border-bottom:none}
+.qt{font-size:12.5px;font-style:italic;color:var(--tx1);line-height:1.55}
+.qt::before{content:'"';color:#1d4ed8;font-style:normal;font-weight:700}
+.qt::after{content:'"';color:#1d4ed8;font-style:normal;font-weight:700}
+.qm{font-size:10.5px;color:var(--tx3);margin-top:3px}
+
+/* SEMAFORO */
+.sem{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--brd)}
+.sem:last-child{border-bottom:none}
+.semd{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.seml{font-size:12px;color:var(--tx2);flex:1}
+.semv{font-size:12px;font-weight:700}
+
+/* ACTOR CARD */
+.ac{background:var(--bg-card2);border:1px solid var(--brd2);border-radius:10px;overflow:hidden}
+.ach{padding:.9rem 1.1rem;border-bottom:1px solid var(--brd)}
+.acn{font-size:14px;font-weight:800;color:var(--tx1)}
+.acr{font-size:11px;color:var(--tx2);margin-top:2px}
+.acb{padding:.9rem 1.1rem}
+.acrow{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--brd);font-size:12px}
+.acrow:last-child{border-bottom:none}
+.ack{color:var(--tx3);font-size:11px}
+.acv{color:var(--tx1);font-weight:600;text-align:right;max-width:65%}
+
+/* CONCEPTO */
+.cbox{background:linear-gradient(135deg,#c8d6e5,#d5d1d1);border:1px solid #b0abab;border-radius:12px;padding:1.2rem 1.4rem;border-left:4px solid var(--blue)}
+.cbox-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1e3a8a;margin-bottom:.35rem}
+.cbox-name{font-size:21px;font-weight:800;color:var(--tx1);margin-bottom:.45rem}
+.cbox-text{font-size:12.5px;color:var(--tx2);line-height:1.72}
+
+/* CHART */
+.cw{position:relative}
+
+/* FOOTER */
+.footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+.badges { display: none; }
+/* RESPONSIVE */
+@media(max-width:780px){
+  .gauto,.g2,.g3,.g4{grid-template-columns:1fr}
+  .hdr-title{font-size:1.7rem}
+  .cnt{padding:1rem}
+  .hdr-body,.hdr-top{padding-left:1rem;padding-right:1rem}
+  .tabs{padding:0 1rem}
+ 
+}
+
+/* BUYER PERSONA (SEGMENTA) */
+.bp{background:var(--bg-card);border:1px solid var(--brd);border-radius:12px;overflow:hidden;margin-bottom:1.1rem}
+.bp-hdr{padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:.5rem}
+.bp-tipo{font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.bp-nombre{font-size:17px;font-weight:800;color:#fff;margin-top:2px}
+.bp-sub{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.bp-peso{font-size:20px;font-weight:800;color:#fff;text-align:right}
+.bp-pesol{font-size:9px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.08em;text-align:right}
+.bp-frase{padding:.75rem 1.2rem;font-size:12.5px;font-style:italic;color:var(--tx1);border-left:4px solid;background:rgba(255,255,255,.3)}
+.bp-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;padding:1.1rem 1.2rem}
+.bp-col-t{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:.55rem;padding-bottom:.35rem;border-bottom:1px solid var(--brd)}
+.bp-row{font-size:11.5px;color:var(--tx2);line-height:1.6;margin-bottom:.5rem}
+.bp-row b{color:var(--tx1);font-weight:700;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:1px}
+.bp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.bp-tag{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600;background:rgba(239,68,68,.14);color:#991b1b}
+.bp-foot{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.2rem;background:rgba(0,0,0,.03);border-top:1px solid var(--brd);flex-wrap:wrap;gap:.5rem}
+.bp-vec{font-size:11px;color:var(--tx2)}
+.bp-vec b{color:var(--tx1)}
+.bp-badge{font-size:10px;font-weight:800;letter-spacing:.05em;padding:4px 10px;border-radius:6px;white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ HEADER -->
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="brand">
+      <span class="brand-name">EMOCIONES</span>
+     
+      <span style="font-size:11px;color:#94a3b8"></span>
+    </div>
+    <div class="hdr-meta" id="hdr-meta"></div>
+  </div>
+  <div class="hdr-body">
+    <div class="hdr-eyebrow">// ESTUDIO DE HUMOR SOCIAL EMOCIONAL · ANÁLISIS TERRITORIAL · <span id="hdr-date"></span></div>
+    <div class="hdr-title" id="hdr-title"></div>
+    <div class="hdr-sub" id="hdr-sub"></div>
+    <div class="badges" id="hdr-badges"></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on"  onclick="ST('flor',this)"> Flor de Emociones</div>
+    <div class="tab"     onclick="ST('mapa',this)"> Mapa Social</div>
+    <div class="tab"     onclick="ST('diadas',this)">Díadas</div>
+    <div class="tab"     onclick="ST('identidad',this)"> Identidad Política</div>
+    <div class="tab"     onclick="ST('actores',this)"> Actores</div>
+    <div class="tab"     onclick="ST('segmentos',this)">Segmentos y Perfiles</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ CONTENT -->
+<div class="cnt">
+
+<!-- FLOR -->
+<div class="pnl on" id="pnl-flor">
+  <div class="gauto" style="margin-bottom:1rem">
+    <div>
+      <div class="sl">Rueda de Plutchik — <span id="whl-territory"></span></div>
+      <div class="card" style="padding:.8rem;text-align:center">
+        <div id="wheel-wrap"></div>
+        <div style="font-size:10px;color:var(--tx3);margin-top:.4rem">Toca cualquier pétalo activo para ver detalles</div>
+      </div>
+      <div class="card" style="margin-top:.75rem;padding:.75rem 1rem">
+        <div class="cv">Leyenda de Intensidad</div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:5px"><div id="leg-hi" style="width:11px;height:11px;border-radius:50%"></div><span style="font-size:11px;color:var(--tx2)">Alta ●●●</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div id="leg-md" style="width:11px;height:11px;border-radius:50%"></div><span style="font-size:11px;color:var(--tx2)">Media ●●○</span></div>
+          <div style="display:flex;align-items:center;gap:5px"><div style="width:11px;height:11px;border-radius:50%;background:#94a3b8"></div><span style="font-size:11px;color:var(--tx2)">Inactiva ○○○</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sl">Emociones Activas — clic para expandir</div>
+      <div class="card" id="em-list"></div>
+      <div class="card" style="margin-top:.75rem;padding:.9rem 1rem">
+        <div class="sl" style="margin-bottom:.5rem">Emociones Secundarias (Latentes)</div>
+        <div id="em-sec"></div>
+      </div>
+    </div>
+  </div>
+  <div class="cbox" style="margin-bottom:1rem" id="concepto-box"></div>
+  <div class="card">
+    <div class="sl">Distribución de Intensidad Emocional</div>
+    <div class="cw" style="height:200px"><canvas id="ch-intens" role="img" aria-label="Intensidad emocional por emoción"></canvas></div>
+  </div>
+</div>
+
+<!-- MAPA -->
+<div class="pnl" id="pnl-mapa">
+  <div class="g3" style="margin-bottom:1rem" id="mapa-cols"></div>
+  <div class="g2" style="margin-bottom:1rem">
+    <div class="card"><div class="sl">Frases Ciudadanas</div><div id="quotes"></div></div>
+    <div class="card">
+      <div class="sl">Emociones por Temática</div>
+      <div class="cw" style="height:260px"><canvas id="ch-temas" role="img" aria-label="Emociones por temática"></canvas></div>
+    </div>
+  </div>
+  <div class="card"><div class="sl">Semáforo Emocional del Territorio</div><div class="g3" id="semaforo"></div></div>
+</div>
+
+<!-- DÍADAS -->
+<div class="pnl" id="pnl-diadas">
+  <div class="g3" style="margin-bottom:1rem" id="dyad-cards"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="sl">Score de Riesgo por Díada</div>
+      <div class="cw" style="height:220px"><canvas id="ch-diadas" role="img" aria-label="Riesgo por díada"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="sl">Interpretación Estratégica</div>
+      <div id="dyad-interp" style="font-size:12.5px;color:var(--tx2);line-height:1.75;margin-top:.3rem"></div>
+    </div>
+  </div>
+</div>
+
+<!-- IDENTIDAD -->
+<div class="pnl" id="pnl-identidad">
+  <div class="cbox" style="margin-bottom:1rem" id="id-pregunta"></div>
+  <div class="g2" style="margin-bottom:1rem">
+    <div class="card"><div class="sl">Percepción del Gobierno Municipal</div><div id="gov-sem"></div></div>
+    <div class="card">
+      <div class="sl">Carga Emocional por Partido</div>
+      <div class="cw" style="height:220px"><canvas id="ch-partidos" role="img" aria-label="Emociones por partido"></canvas></div>
+    </div>
+  </div>
+  <div class="card"><div class="sl">Percepción Ciudadana por Partido</div><div id="partidos-tbl"></div></div>
+</div>
+
+<!-- ACTORES -->
+<div class="pnl" id="pnl-actores">
+  <div class="g2" style="margin-bottom:1rem" id="actores-grid"></div>
+  <div class="card">
+    <div class="sl">Mapa de Posicionamiento Emocional de Actores</div>
+    <div class="cw" style="height:280px"><canvas id="ch-actores" role="img" aria-label="Posicionamiento emocional de actores"></canvas></div>
+  </div>
+</div>
+
+<!-- SEGMENTOS Y PERFILES (SEGMENTA) -->
+<div class="pnl" id="pnl-segmentos">
+  <div class="cbox" style="margin-bottom:1rem" id="seg-intro"></div>
+  <div id="segmentos-list"></div>
+</div>
+
+</div><!-- /cnt -->
+
+<!-- ══════════════════════════════════════════════ FOOTER -->
+<div class="footer">
+  <span>EMOCIONES v2.0 // HUMOR SOCIAL EMOCIONAL</span>
+  <span>· MONITOREO ACTIVO SINALOA</span>
+  <span>· MARZO – AGOSTO 2026</span>
+</div>
+
+<!-- ══════════════════════════════════════════════ DATA + ENGINE -->
+<script>
+/* ================================================================
+   ▼▼▼  DATOS — Mantenimiento estricto del contenido original  ▼▼▼
+   ================================================================ */
+const D = {
+  territory: "Sinaloa",
+  subtitle:  "Gobierno estatal · Rubén Rocha Moya (licencia) / Morena · Rumbo a la gubernatura 2027",
+  date:      "Marzo – Agosto 2026",
+  riskLevel: "CRÍTICO",
+  concept:   "Miedo Naturalizado",
+  conceptDesc: "La violencia dejó de sorprender: Sinaloa aprendió a funcionar dentro del riesgo. La ciudadanía combina miedo crónico con fatiga y desconfianza institucional, viviendo en alerta permanente sin esperar ya una solución de corto plazo.",
+
+  emotions: [
+    { key:"ira", label:"Ira / Furia", active:true, intensity:3,
+      deg:180, color:["#FEE2E2","#FCA5A5","#B91C1C"],
+      sublabel:"Furia · Ira · Enfado",
+      triggers:["Pérdidas económicas de 36 mil mdp y 35 mil empleos por la violencia","Impunidad ante fosas clandestinas y ataques a colectivos de búsqueda","Robo de vehículos con violencia frente a retenes militares"],
+      consequences:["Desconfianza generalizada hacia autoridades estatales","Exigencia de resultados verificables, no discursos","Riesgo de voto de castigo hacia el partido en el poder"] },
+    { key:"miedo", label:"Miedo / Terror", active:true, intensity:3,
+      deg:0, color:["#CFFAFE","#67E8F9","#0E7490"],
+      sublabel:"Terror · Miedo · Temor",
+      triggers:["Enfrentamientos armados y balaceras en zonas públicas","Ataque con explosivo a una vivienda y agresión a fundadora de colectivo buscador","Rutas de transporte suspendidas hacia comunidades rurales"],
+      consequences:["Restricción de horarios y cierre de negocios nocturnos","Migración interna hacia zonas percibidas como más seguras","Ansiedad colectiva sostenida en la vida cotidiana"] },
+    { key:"tristeza", label:"Tristeza", active:true, intensity:2,
+      deg:90, color:["#EDE9FE","#A78BFA","#4C1D95"],
+      sublabel:"Aflicción · Tristeza · Melancolía",
+      triggers:["Más de 2,400 asesinatos y 2,800 desapariciones acumuladas desde sept. 2024","Hallazgo recurrente de fosas clandestinas","Duelo colectivo sin cierre ni acompañamiento institucional"],
+      consequences:["Fatiga emocional y apatía cívica en segmentos jóvenes","Normalización del luto como parte de la vida diaria"] },
+    { key:"asco", label:"Asco / Aversión", active:true, intensity:2,
+      deg:135, color:["#DCFCE7","#86EFAC","#15803D"],
+      sublabel:"Aversión · Asco · Aburrimiento",
+      triggers:["Percepción de complicidad e impunidad institucional","Ataque armado a la propia residencia del gobernador sin consecuencias claras","Sensación de que 'todos los partidos son iguales'"],
+      consequences:["Deslegitimación de instituciones estatales","Desafección hacia la clase política en su conjunto"] },
+    { key:"anticipacion", label:"Anticipación", active:true, intensity:2,
+      deg:225, color:["#FFEDD5","#FDba74","#C2410C"],
+      sublabel:"Vigilancia · Anticipación · Interés",
+      triggers:["Proceso electoral 2027 en curso (coordinaciones estatales ya definidas)","Expectativa ciudadana de una etapa 'poscrisis' señalada por la CEDH"],
+      consequences:["Movilización política anticipada","Ventana de oportunidad para actores no desgastados"] },
+    { key:"alegria", label:"Alegría", active:false, intensity:0,
+      deg:-90, color:["#FFF9C4","#FFF176","#F9A825"], sublabel:"Éxtasis · Alegría · Serenidad", triggers:[], consequences:[] },
+    { key:"confianza", label:"Confianza", active:true, intensity:1,
+      deg:-45, color:["#D1FAE5","#6EE7B7","#059669"], sublabel:"Admiración · Confianza · Aceptación",
+      triggers:["Labor de colectivos de búsqueda (Tesoros Perdidos, Por las Voces sin Justicia)","Periodismo local independiente documentando la crisis (Noroeste)"],
+      consequences:["Bolsas de capital social resiliente fuera de las instituciones formales"] },
+    { key:"sorpresa", label:"Sorpresa", active:true, intensity:1,
+      deg:45, color:["#DBEAFE","#93C5FD","#2563EB"], sublabel:"Asombro · Sorpresa · Distracción",
+      triggers:["Ataque directo a la casa del gobernador Rocha Moya","Explosivo lanzado contra una vivienda en Culiacán"],
+      consequences:["Sensación de que 'si le pasa a él, nos puede pasar a cualquiera'"] },
+  ],
+
+  secondary: [
+    { name:"Sorpresa reactiva", color:"#2563EB", text:"El ataque a la vivienda del propio gobernador y los explosivos caseros generan sobresaltos puntuales que reactivan el miedo de fondo cada pocas semanas." },
+    { name:"Confianza focalizada", color:"#059669", text:"No se dirige al gobierno ni a los partidos, sino a actores no institucionales: colectivos de búsqueda y periodismo local, vistos como los únicos que 'dicen la verdad'." },
+  ],
+
+  dyads: [
+    { name:"Ansiedad Cívica", formula:"Miedo + Anticipación", type:"Primaria",
+      text:"El miedo crónico se combina con la incertidumbre de la elección 2027, produciendo una ansiedad sostenida: la ciudadanía no sabe si el cambio de gobierno traerá alivio o solo continuidad del conflicto.", risk:"CRÍTICO", score:90 },
+    { name:"Desprecio Institucional", formula:"Ira + Asco", type:"Secundaria",
+      text:"La desconfianza hacia la autoridad y la percepción de impunidad se funden en un desprecio que ya no distingue partidos: se dirige a 'la clase política' como bloque.", risk:"ALTO", score:80 },
+    { name:"Duelo sin Cierre", formula:"Tristeza + Asco", type:"Secundaria",
+      text:"El luto colectivo por miles de víctimas y desaparecidos se mezcla con la desconfianza hacia las cifras oficiales, generando la sensación de que la tragedia se normaliza sin consecuencias para nadie.", risk:"MEDIO", score:60 },
+  ],
+  dyadInterp: "La ansiedad producida por el cruce entre Miedo y Anticipación domina el humor social sinaloense: la población vive en alerta permanente sin saber si el proceso electoral de 2027 traerá una salida real a la guerra interna del Cártel de Sinaloa. Esta emoción se ancla en la fundación de Cuidado —protección de la vida y la familia— y en una Lealtad percibida como rota, porque el ataque a la casa del propio gobernador simboliza que ni las élites están a salvo. En el relato colectivo el héroe sigue vacante: ningún actor político ha logrado ocupar el lugar de protector; el villano difuso es 'la guerra', y cada vez más también el gobierno estatal, por su manejo de cifras y su cercanía con el conflicto. El frame dominante es 'gobierno rebasado', que Morena intenta contener con el frame de 'reducción de homicidios' —una disputa de narrativas que hoy pierde el oficialismo. El Concepto Central, Miedo Naturalizado, resume una sociedad que aprendió a funcionar dentro del riesgo, pero que llega a 2027 con el termómetro emocional más alto de su historia reciente.",
+
+  problematics: [
+    "Guerra interna del Cártel de Sinaloa entre 'Los Chapitos' y 'La Mayiza' (activa desde septiembre 2024)",
+    "Crisis forense: fosas clandestinas y sistema de identificación humana rebasado",
+    "Robo de vehículos con violencia (más de 8,500 denuncias acumuladas)",
+    "Pérdida económica estimada en 36 mil millones de pesos y 35 mil empleos afectados",
+    "Ataques directos a colectivos de búsqueda de personas desaparecidas",
+    "Desconfianza en las cifras oficiales de homicidios pese a la 'reducción' reportada"
+  ],
+  fears: [
+    "Ser víctima de fuego cruzado al salir a la calle",
+    "Que un hijo o hija sea reclutado o desaparecido",
+    "Perder el negocio o el empleo por el cierre de la vida económica nocturna",
+    "Que la violencia se recrudezca tras el atentado contra la casa del gobernador",
+    "Viajar por carretera hacia comunidades alejadas de Culiacán",
+    "Que la elección de 2027 no traiga ningún cambio real"
+  ],
+  prides: [
+    "La organización y resistencia de los colectivos de búsqueda de personas desaparecidas",
+    "El periodismo local independiente documentando la crisis con rigor",
+    "La identidad cultural sinaloense: música, gastronomía y resiliencia histórica",
+    "La capacidad de reinvención de comercios y negocios pese al cierre y la violencia"
+  ],
+
+  quotes: [
+    { text:"Ya no nos sorprende oír balazos, lo que nos sorprende es un día de silencio.", topic:"Normalización de la violencia", emotion:"Miedo", territory:"Culiacán" },
+    { text:"Balearon la casa del gobernador y aquí seguimos esperando que alguien nos cuide a nosotros.", topic:"Desconfianza institucional", emotion:"Asco", territory:"Culiacán" },
+    { text:"Cerramos el negocio a las nueve porque después de esa hora las calles son de ellos.", topic:"Economía nocturna", emotion:"Miedo", territory:"Culiacán" },
+    { text:"Llevamos casi dos años buscando a los nuestros y el gobierno solo cuenta cadáveres.", topic:"Desapariciones", emotion:"Tristeza", territory:"Mazatlán" },
+    { text:"En 2027 no queremos promesas, queremos que alguien se atreva a decir la verdad.", topic:"Elección 2027", emotion:"Anticipación", territory:"Estado de Sinaloa" },
+    { text:"Si hacen eso frente a la autoridad armada, ¿qué esperamos los que viajamos por los pueblos?", topic:"Seguridad rural", emotion:"Miedo", territory:"Zona rural" },
+  ],
+
+  semaforo: [
+    { label:"Estado emocional general", val:"CRÍTICO", color:"#b91c1c" },
+    { label:"Riesgo de voto de castigo", val:"ALTO", color:"#c2410c" },
+    { label:"Potencial de protesta organizada", val:"ALTO", color:"#c2410c" },
+    { label:"Capital emocional positivo", val:"BAJO", color:"#b91c1c" },
+    { label:"Legitimidad institucional percibida", val:"BAJA", color:"#b91c1c" },
+    { label:"Disposición al diálogo ciudadano", val:"MEDIA", color:"#a16207" },
+  ],
+
+  preguntaPolitica: "¿Quién nos va a devolver la paz sin ser cómplice de quienes la destruyeron?",
+  preguntaDesc: "La ciudadanía sinaloense enfrenta una crisis de representación: el partido en el poder es señalado como incapaz de contener la guerra interna del Cártel de Sinaloa, mientras la oposición no logra consolidarse como alternativa creíble. La pregunta refleja la tensión entre continuidad y cambio de cara a la elección de 2027.",
+
+  govSemaforo: [
+    { label:"Manejo de la crisis de seguridad", val:"DEFICIENTE", color:"#b91c1c" },
+    { label:"Coordinación con la Federación", val:"REGULAR", color:"#a16207" },
+    { label:"Transparencia en cifras de violencia", val:"BAJA", color:"#b91c1c" },
+    { label:"Atención a colectivos de búsqueda", val:"INSUFICIENTE", color:"#b91c1c" },
+    { label:"Recuperación económica", val:"LENTA", color:"#c2410c" },
+    { label:"Comunicación de riesgos a la población", val:"REGULAR", color:"#a16207" },
+  ],
+
+  partidos: [
+    { nombre:"Morena", emocion:"Ira / Desconfianza (con base leal)", capital:"Medio-Alto", tendencia:"→ Estable con riesgo de erosión", color:"#8B1538" },
+    { nombre:"PAN", emocion:"Escepticismo", capital:"Bajo", tendencia:"↓ 41% no elegiría a ninguno de sus aspirantes", color:"#0055A4" },
+    { nombre:"PRI", emocion:"Indiferencia", capital:"Bajo", tendencia:"→ Estancado en tercer lugar", color:"#C8102E" },
+    { nombre:"MC / Voto disponible", emocion:"Interés latente", capital:"Potencial", tendencia:"↑ Espacio disponible por desconfianza generalizada", color:"#c2410c" },
+  ],
+  partidosChart: [[55,40,25],[35,50,15],[25,45,10],[10,15,70]],
+
+  actores: [
+    { name:"Imelda Castro Castro", role:"Senadora con licencia · Coordinadora Estatal de Defensa de la Transformación · Morena", partido:"Morena", borderColor:"#8B1538",
+      rows:[["Popularidad general","37% favorable / 31% desfavorable"],["Ventaja interna Morena","38.5% vs. Teresa Guerra (11%) y Juan de Dios Gámez (10%)"],
+            ["Intención de voto Morena","41.2% en escenario general"],["Reto narrativo","Distanciarse del desgaste de Rocha Moya sin romper con la 4T"],
+            ["Emoción que enfrenta","Desconfianza heredada (Asco/Ira hacia el gobierno saliente)"],["Fortaleza","Estructura territorial más amplia del estado"]] },
+    { name:"Mario Zamora Gastélum", role:"Diputado federal · Excandidato a gobernador 2021 · PRI", partido:"PRI", borderColor:"#C8102E",
+      rows:[["Preferencia interna PRI","23% vs. Paloma Sánchez (17%)"],["Intención de voto PRI","12.6%, tercer lugar estatal"],
+            ["Antecedente","Perdió la gubernatura ante Rocha Moya en 2021"],["Techo electoral","Limitado por desgaste histórico del PRI en el estado"],
+            ["Emoción que puede capturar","Nostalgia institucional / desencanto con Morena"],["Riesgo","Percepción de 'ya lo intentó y perdió'"]] },
+    { name:"Eduardo Ortiz", role:"Aspirante · PAN", partido:"PAN", borderColor:"#0055A4",
+      rows:[["Preferencia interna PAN","13% vs. Vanessa Sánchez (9%) y Roxana Rubio (8%)"],["Intención de voto PAN","14.8%, segundo lugar estatal"],
+            ["Reto principal","41.48% de encuestados no elegiría a ningún aspirante panista"],["Emoción que puede capturar","Hartazgo / Ira anti-oficialista"],
+            ["Techo de confianza","Bajo, sin figura consolidada en el PAN estatal"],["Fortaleza","Único partido que compite de forma consistente en segundo lugar"]] },
+    { name:"Jesús Estrada Ferreiro", role:"Ex alcalde de Culiacán · Ex-Morena · Aspirante (PAN, outsider)", partido:"PAN (outsider)", borderColor:"#c2410c",
+      rows:[["Estrategia","Confrontación directa al 'rochismo' y a su antiguo partido"],["Registro","Doble: gubernatura y presidencia municipal de Culiacán"],
+            ["Riesgo","Alto desgaste por cambio de partido y perfil confrontativo"],["Emoción que capitaliza","Ira anti-sistema / voto de castigo difuso"],
+            ["Techo dentro del PAN","Bajo, figura externa que genera desconfianza en la estructura tradicional"],["Función probable","Factor de presión más que candidatura consolidada"]] },
+  ],
+  actoresRadar: { labels:["Imelda Castro","Mario Zamora","Eduardo Ortiz","Jesús Estrada Ferreiro"],
+    data:[[55,70,45,60,50,48],[40,45,35,20,45,42],[30,35,25,15,30,30],[35,50,30,25,35,33]],
+    colors:["#8B1538","#C8102E","#0055A4","#c2410c"] },
+
+  gestionPrioridad: [["Miedo — atención inmediata",95,"#0E7490"],["Ira — canalizar hacia acción política",85,"#B91C1C"],["Asco — recuperar legitimidad institucional",70,"#15803D"],["Tristeza — acompañamiento simbólico",60,"#4C1D95"],["Anticipación — capitalizar hacia propuesta",55,"#C2410C"]],
+  temasChart: [["Seguridad / Violencia",45,"#B91C1C"],["Economía / Empleo",20,"#C2410C"],["Desapariciones / Justicia",18,"#4C1D95"],["Elección 2027 / Política",12,"#2563EB"],["Otros",5,"#475569"]],
+
+  segIntro: "Segmentación inferencial [ANÁLISIS INFERENCIAL] construida a partir de cobertura periodística, monitoreo digital abierto y el mapa emocional Plutchik de los últimos 6 meses (marzo–agosto 2026). No sustituye un levantamiento con ENCUESTA propia; se recomienda validar en campo, en especial los segmentos T4 y T6, que son los de mayor persuabilidad rumbo a 2027. Los 4 tipos se distribuyen a lo largo del eje Narrativa × Emoción × Identidad, y el tipo T1 —Leal Activo— se desarrolla aquí como base de Morena, partido en el gobierno del estado.",
+  segmentos: [
+    {
+      tipo:"T1", subtitulo:"Leal Activo · Morena", nombre:"El Comerciante Guinda de Tierra Blanca",
+      peso:30, persuabilidad:"YA ES NUESTRO", persuColor:"#166534", colorTipo:"#8B1538",
+      frase:"Antes nadie nos volteaba a ver; ahora al menos hay apoyos, aunque la violencia sea el precio.",
+      perfil:{ edad:"Hombre, 52 años", zona:"Colonia Tierra Blanca, Culiacán", ocupacion:"Comerciante de abarrotes, beneficiario de programas Bienestar",
+        escolaridad:"Secundaria · ingreso medio-bajo", digital:"Facebook y grupos de WhatsApp de la colonia; consume TV abierta y radio local",
+        historial:"Votó por AMLO (2018), Rocha Moya (2021) y Sheinbaum (2024) de forma consistente" },
+      emocional:{ emocion:"Confianza (media) + Ira defensiva ante críticas externas", descripcion:"Agradece los apoyos sociales pero también vive el miedo cotidiano de la violencia; resuelve la tensión atribuyendo la culpa al crimen organizado, no al gobierno.",
+        tension:"Lealtad partidista vs. exposición diaria a la violencia", dolor:"Sentir que su lealtad es cuestionada por quienes 'nunca han vivido aquí'",
+        miedo:"Que Morena pierda y se acaben los apoyos sociales", orgullo:"Identidad guinda y pertenencia al proyecto histórico de la 4T",
+        narrativa:"'Antes nadie nos volteaba a ver, ahora al menos hay apoyos, aunque la violencia sea el precio.'" },
+      problematicas:{ problemas:["Inseguridad (enmarcada como herencia del pasado)","Dependencia de programas sociales","Desconfianza hacia críticos externos"],
+        orgulloComunitario:"Programas sociales y organización vecinal en torno a los comités de Bienestar",
+        consumo:"Facebook, grupos de WhatsApp de programas sociales, TV abierta",
+        loQueLoAcerca:"Continuidad de programas sociales + mensaje de mano firme contra el crimen",
+        loQueLoAleja:"Que el candidato hable mal de AMLO, Sheinbaum o de los programas sociales",
+        frame:"'Lealtad ante todo, la 4T nos cuida'", palanca:"Reforzar identidad partidista + resultados tangibles y verificables de programas sociales" },
+      vector:{ canal:"Facebook + radio local + estructura territorial (casas de gestión)", tono:"Cercano, agradecido, orgulloso", formato:"Video testimonial corto y spots de radio" }
+    },
+    {
+      tipo:"T4", subtitulo:"Indeciso Evaluador", nombre:"La Cajera del Bulevar Zapata",
+      peso:28, persuabilidad:"MUY ALTA", persuColor:"#a16207", colorTipo:"#C2410C",
+      frase:"Le dimos la oportunidad al cambio, pero la violencia no bajó como prometieron.",
+      perfil:{ edad:"Mujer, 34 años", zona:"Colonia Las Quintas / corredor comercial del Bulevar Emiliano Zapata, Culiacán",
+        ocupacion:"Empleada de comercio, con horario reducido por la inseguridad", escolaridad:"Preparatoria/técnico · ingreso medio-bajo, golpeado por menos horas laborales",
+        digital:"Instagram y TikTok; grupos de WhatsApp vecinales con alertas de balaceras en tiempo real",
+        historial:"Votó por Morena en 2021 con esperanza; hoy indecisa sobre repetir el voto" },
+      emocional:{ emocion:"Ansiedad (Miedo + Anticipación), intensidad alta", descripcion:"Vive pendiente del celular por alertas de balaceras; cada hecho violento le cuesta un día de sueldo o de clientela.",
+        tension:"Economía vs. seguridad: la violencia le resta directamente el ingreso", dolor:"Sentir que trabajó y votó por un cambio que no llegó",
+        miedo:"Quedarse sin empleo si el negocio no resiste otro cierre prolongado", orgullo:"Sacar adelante a su familia pese a todo",
+        narrativa:"'Le dimos la oportunidad al cambio, pero la violencia no bajó como prometieron.'" },
+      problematicas:{ problemas:["Inseguridad","Economía golpeada por cierres","Falta de resultados visibles"],
+        orgulloComunitario:"Resiliencia de los negocios y comerciantes locales",
+        consumo:"TikTok, Instagram, grupos de alerta vecinal",
+        loQueLoAcerca:"Un plan concreto y verificable de seguridad y reactivación económica, no solo discurso",
+        loQueLoAleja:"Promesas vacías o minimizar la crisis con cifras oficiales",
+        frame:"'Denme resultados, no relatos'", palanca:"Mensajes de gestión concreta con métricas verificables y testimonios de zonas que mejoraron" },
+      vector:{ canal:"Instagram/TikTok + activación en centros comerciales", tono:"Directo, sin adornos, empático con la carga económica", formato:"Reels cortos con datos verificables y testimonios de comerciantes" }
+    },
+    {
+      tipo:"T6", subtitulo:"Apático Potencial", nombre:"El Repartidor de Tierra Blanca",
+      peso:24, persuabilidad:"ALTA (con dolor propio)", persuColor:"#c2410c", colorTipo:"#A16207",
+      frase:"Aquí no hay futuro, solo sobrevivencia; votar no cambia nada.",
+      perfil:{ edad:"Hombre, 22 años", zona:"Colonia periférica del norte de Culiacán, sin transporte seguro constante",
+        ocupacion:"Repartidor de aplicación (delivery), trabajo informal", escolaridad:"Bachillerato trunco · ingreso variable por jornada",
+        digital:"TikTok y X; memes políticos; poco consumo de noticias formales",
+        historial:"No votó en 2021 ni en 2024; percibe que 'todos son lo mismo'" },
+      emocional:{ emocion:"Desánimo + Enojo latente", descripcion:"Esquiva retenes y zonas de riesgo en su ruta diaria de trabajo; normaliza el peligro como parte del oficio.",
+        tension:"Precariedad laboral + exposición directa a la violencia en la calle", dolor:"Sentir que su generación no tiene futuro en el estado",
+        miedo:"Ser confundido con un objetivo durante una balacera mientras trabaja", orgullo:"Su independencia económica pese a la falta de oportunidades formales",
+        narrativa:"'Aquí no hay futuro, solo sobrevivencia; votar no cambia nada.'" },
+      problematicas:{ problemas:["Falta de empleo formal","Inseguridad en las calles","Desesperanza generacional"],
+        orgulloComunitario:"Cultura urbana y musical local, contenido digital propio",
+        consumo:"TikTok, memes, streamers locales",
+        loQueLoAcerca:"Un mensaje sobre empleo real y futuro tangible para jóvenes, no discurso institucional",
+        loQueLoAleja:"La política tradicional, discursos largos, figuras percibidas como 'del sistema'",
+        frame:"'Ustedes allá arriba, nosotros aquí abajo sobreviviendo'", palanca:"Activación vía formalización laboral + voceros jóvenes creíbles, no políticos tradicionales" },
+      vector:{ canal:"TikTok + streamers e influencers locales", tono:"Directo, sin tecnicismos, validando el hartazgo", formato:"Contenido corto, humor ácido, retos y testimonios reales" }
+    },
+    {
+      tipo:"T5", subtitulo:"Adversario Simbólico", nombre:"El Empresario Anti-4T de Las Quintas",
+      peso:18, persuabilidad:"NULA", persuColor:"#475569", colorTipo:"#334155",
+      frase:"Esto empezó a fallar cuando llegó Morena al poder, y no hay forma de arreglarlo desde adentro.",
+      perfil:{ edad:"Hombre, 58 años", zona:"Las Quintas / Chapultepec, Culiacán (zona residencial alta)",
+        ocupacion:"Empresario del sector servicios/construcción", escolaridad:"Universidad · ingreso alto",
+        digital:"X (Twitter), foros empresariales, columnas de opinión en medios tradicionales",
+        historial:"Voto constante por PAN/PRI; activo en redes con crítica al gobierno estatal y federal" },
+      emocional:{ emocion:"Convicción + Pertenencia (identidad opositora), con Ira dirigida a la 4T", descripcion:"Interpreta la crisis de seguridad como consecuencia directa de decisiones 'populistas', no como fenómeno criminal autónomo.",
+        tension:"Percepción de pérdida de viabilidad económica del estado bajo administraciones Morena", dolor:"Sentir que el Sinaloa que conocía se perdió con la llegada de la 4T",
+        miedo:"Que la violencia y la política actual ahuyenten más inversión", orgullo:"Identidad empresarial sinaloense e historia de gobiernos previos PRI/PAN",
+        narrativa:"'Esto empezó a fallar cuando llegó Morena al poder, y no hay forma de arreglarlo desde adentro.'" },
+      problematicas:{ problemas:["Inseguridad atribuida al modelo de gobierno","Percepción de corrupción","Fuga de inversión"],
+        orgulloComunitario:"Cámaras empresariales e historia comercial de Culiacán y Mazatlán",
+        consumo:"X, columnas de opinión, medios nacionales críticos al gobierno",
+        loQueLoAcerca:"Un candidato opositor con perfil técnico/empresarial y capacidad real de disputar el poder",
+        loQueLoAleja:"Cualquier gesto de acercamiento o negociación con Morena",
+        frame:"'Hay que sacar a Morena como sea'", palanca:"Ninguna inversión directa — solo monitoreo de fracturas internas del adversario" },
+      vector:{ canal:"X y medios tradicionales", tono:"No aplica (sin inversión de campaña)", formato:"No aplica" }
+    },
+  ],
+};
+
+/* ── RISK CONFIG ─────────────────────────────────────────────────── */
+const RC={CRÍTICO:{bg:"var(--red-bg)",tx:"var(--red-s)",hex:"#ef4444"},
+          ALTO:   {bg:"var(--org-bg)",tx:"var(--org-s)",hex:"#f97316"},
+          MEDIO:  {bg:"var(--ylw-bg)",tx:"#854d0e",    hex:"#eab308"},
+          BAJO:   {bg:"var(--grn-bg)",tx:"var(--grn-s)",hex:"#22c55e"}};
+const rc=RC[D.riskLevel]||RC.ALTO;
+
+/* ── TABS ────────────────────────────────────────────────────────── */
+function ST(id,el){
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pnl-'+id).classList.add('on');
+  el.classList.add('on');
+}
+
+/* ── SVG WHEEL ───────────────────────────────────────────────────── */
+const CX=220,CY=220,R=[62,108,154,200],GAP=1.4;
+const rad=d=>d*Math.PI/180;
+const pt=(r,d)=>[CX+r*Math.cos(rad(d)),CY+r*Math.sin(rad(d))];
+function arc(r1,r2,s,e){
+  const a=s+GAP,b=e-GAP;
+  const[x1,y1]=pt(r1,a),[x2,y2]=pt(r2,a),[x3,y3]=pt(r2,b),[x4,y4]=pt(r1,b);
+  return`M${x1.toFixed(2)},${y1.toFixed(2)}L${x2.toFixed(2)},${y2.toFixed(2)}A${r2},${r2} 0 0,1 ${x3.toFixed(2)},${y3.toFixed(2)}L${x4.toFixed(2)},${y4.toFixed(2)}A${r1},${r1} 0 0,0 ${x1.toFixed(2)},${y1.toFixed(2)}Z`;
+}
+const IN=["#cbd5e1","#94a3b8","#64748b"];
+
+function buildWheel(){
+  let p="";
+  D.emotions.forEach(em=>{
+    const{active:ac,intensity:iv,color,deg,key,label}=em;
+    [1,2,3].forEach(i=>{
+      const fill=ac&&iv>=i?color[i-1]:IN[i-1];
+      p+=`<path d="${arc(R[i-1],R[i],deg,deg+45)}" fill="${fill}" stroke="#ffffff" stroke-width="2" ${ac?`onclick="toggleEm('${key}')" style="cursor:pointer"`:''}/>`;
+    });
+    const md=deg+22.5,lr=R[3]+23;
+    const[lx,ly]=pt(lr,md);
+    const an=Math.cos(rad(md))>.12?"start":Math.cos(rad(md))<-.12?"end":"middle";
+    p+=`<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${an}" dominant-baseline="middle" font-size="11" font-family="-apple-system,sans-serif" fill="${ac?"#0f172a":"#64748b"}" font-weight="${ac?"700":"400"}" style="pointer-events:none">${label}</text>`;
+    if(ac&&iv===3){
+      const[bx,by]=pt(R[3]+6,md);
+      p+=`<circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="5" fill="${color[2]}" style="pointer-events:none"><animate attributeName="opacity" values="1;.25;1" dur="1.6s" repeatCount="indefinite"/></circle>`;
+    }
+  });
+  return`<svg width="440" height="440" viewBox="0 0 440 440">${p}<circle cx="${CX}" cy="${CY}" r="${R[0]-4}" fill="#d5d1d1" stroke="#b0abab" stroke-width="1.5"/><text x="${CX}" y="${CY-7}" text-anchor="middle" font-size="9.5" font-family="-apple-system,sans-serif" fill="#334155" font-weight="700" letter-spacing="2">HUMOR</text><text x="${CX}" y="${CY+7}" text-anchor="middle" font-size="9.5" font-family="-apple-system,sans-serif" fill="#334155" font-weight="700" letter-spacing="2">SOCIAL</text></svg>`;
+}
+
+function toggleEm(key){
+  const d=document.getElementById("emd-"+key);
+  if(!d)return;
+  const open=d.classList.contains("open");
+  document.querySelectorAll(".emd-box").forEach(x=>x.classList.remove("open"));
+  if(!open)d.classList.add("open");
+}
+
+/* ── CHART DEFAULTS ──────────────────────────────────────────────── */
+const CD={responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{backgroundColor:"#ffffff",titleColor:"#0f172a",bodyColor:"#334155",borderColor:"#b0abab",borderWidth:1}},
+  scales:{x:{ticks:{color:"#334155",font:{size:11}},grid:{color:"rgba(0,0,0,.08)"}},
+          y:{ticks:{color:"#334155",font:{size:11}},grid:{color:"rgba(0,0,0,.08)"}}}};
+
+/* ── RENDER ──────────────────────────────────────────────────────── */
+function init(){
+  /* header text exact copy */
+  document.getElementById("hdr-meta").innerHTML=`<div>● MONITOREO ACTIVO · Marzo – Agosto 2026</div><div style="color:#94a3b8">SINALOA</div>`;
+  document.getElementById("hdr-date").textContent="Marzo – Agosto 2026";
+  document.getElementById("whl-territory").textContent=D.territory;
+  document.getElementById("hdr-title").innerHTML="Sinaloa";
+  document.getElementById("hdr-sub").textContent="Gobierno estatal · Rubén Rocha Moya (licencia) / Morena · Rumbo a la gubernatura 2027";
+
+  /* badges */
+  const rLabel=`● ${D.riskLevel}`;
+  const activeEm=D.emotions.filter(e=>e.active);
+  const neg=activeEm.filter(e=>["miedo","ira","tristeza","asco"].includes(e.key)).length;
+  const pos=activeEm.filter(e=>["alegria","confianza","anticipacion"].includes(e.key)).length;
+  const cap=neg+pos>0?Math.round(pos/(neg+pos)*100):0;
+  const hiEms=activeEm.filter(e=>e.intensity===3).map(e=>e.label).join(" + ");
+  document.getElementById("hdr-badges").innerHTML=`
+    <span class="badge b-red pulse">${rLabel}</span>
+    ${hiEms?`<span class="badge b-red">${hiEms}: DOMINANTES</span>`:""}
+    <span class="badge b-org">DÍADAS: ${D.dyads.filter(d=>d.risk==="CRÍTICO").length} CRÍTICAS</span>
+    <span class="badge b-blu">CAPITAL POSITIVO: ${cap}%</span>
+    <span class="badge b-pur">CONCEPTO: ${D.concept.toUpperCase()}</span>`;
+
+  /* Wheel */
+  document.getElementById("wheel-wrap").innerHTML=buildWheel();
+  const hiColor=activeEm.filter(e=>e.intensity===3)[0];
+  const mdColor=activeEm.filter(e=>e.intensity===2)[0];
+  if(hiColor)document.getElementById("leg-hi").style.background=hiColor.color[2];
+  if(mdColor)document.getElementById("leg-md").style.background=mdColor.color[1];
+
+  /* Emotion list */
+  const emList=document.getElementById("em-list");
+  emList.innerHTML=activeEm.map(em=>{
+    const iv=em.intensity;
+    const riskTx=iv===3?"#991b1b":iv===2?"#9a3412":"#854d0e";
+    const dots="●".repeat(iv)+'<span style="color:#94a3b8">'+"○".repeat(3-iv)+"</span>";
+    return`<div class="emr" onclick="toggleEm('${em.key}')">
+      <div class="emh">
+        <div style="width:10px;height:10px;border-radius:50%;background:${em.color[2]};box-shadow:0 0 6px ${em.color[2]}55;flex-shrink:0"></div>
+        <span style="font-size:13px;font-weight:700;color:var(--tx1)">${em.label}</span>
+        <span style="margin-left:auto;font-size:13px;color:${riskTx}">${dots}</span>
+      </div>
+      <div style="font-size:10.5px;color:var(--tx3);margin-top:2px;margin-left:17px">${em.sublabel}</div>
+      <div class="emd-box" id="emd-${em.key}">
+        ${em.triggers.length?`<div class="edk">Detonantes:</div><div class="edv">${em.triggers.join(" · ")}</div>`:""}
+        ${em.consequences.length?`<div class="edk" style="margin-top:5px">Consecuencias:</div><div class="edv">${em.consequences.join(" · ")}</div>`:""}
+      </div>
+    </div>`;
+  }).join("");
+
+  /* Secondary */
+  document.getElementById("em-sec").innerHTML=D.secondary.map(s=>`
+    <div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--brd)">
+      <div style="width:7px;height:7px;border-radius:50%;background:${s.color};flex-shrink:0;margin-top:4px"></div>
+      <div><div style="font-size:12px;font-weight:700;color:var(--tx1)">${s.name}</div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:2px;line-height:1.55">${s.text}</div></div>
+    </div>`).join("");
+
+  /* Concepto */
+  document.getElementById("concepto-box").innerHTML=`<div class="cbox-label">Concepto Central del Territorio</div><div class="cbox-name">"${D.concept}"</div><div class="cbox-text">${D.conceptDesc}</div>`;
+
+  /* Mapa */
+  const makeMP=(arr,dc)=>arr.map(t=>`<div class="mpi"><div class="mpd" style="background:${dc}"></div>${t}</div>`).join("");
+  document.getElementById("mapa-cols").innerHTML=`
+    <div class="mpc"><div class="mptt" style="color:#a16207">⚠ Problemáticas</div>${makeMP(D.problematics,"#a16207")}</div>
+    <div class="mpc"><div class="mptt" style="color:#b91c1c">⬡ Miedos</div>${makeMP(D.fears,"#b91c1c")}</div>
+    <div class="mpc"><div class="mptt" style="color:#166534">★ Orgullos</div>${makeMP(D.prides,"#166534")}</div>`;
+
+  /* Quotes */
+  document.getElementById("quotes").innerHTML=D.quotes.map(q=>`<div class="qi"><div class="qt">${q.text}</div><div class="qm">${q.topic} · ${q.emotion} · ${q.territory}</div></div>`).join("");
+
+  /* Semaforo */
+  const makeSem=(arr,id)=>{ document.getElementById(id).innerHTML=arr.map(s=>`<div class="sem"><div class="semd" style="background:${s.color}"></div><div class="seml">${s.label}</div><div class="semv" style="color:${s.color}">${s.val}</div></div>`).join(""); };
+  makeSem(D.semaforo,"semaforo");
+
+  /* Dyads */
+  const riskHex={CRÍTICO:"#b91c1c",ALTO:"#c2410c",MEDIO:"#a16207"};
+  const riskBg={CRÍTICO:"#fee2e2",ALTO:"#ffedd5",MEDIO:"#fef9c3"};
+  document.getElementById("dyad-cards").innerHTML=D.dyads.map(d=>`<div class="dyc" style="border-top-color:${riskHex[d.risk]||"#64748b"}">
+    <span class="dybadge" style="background:${riskBg[d.risk]};color:${riskHex[d.risk]}">${d.risk}</span>
+    <div class="dyn" style="color:${riskHex[d.risk]||"#0f172a"}">${d.name}</div>
+    <div class="dyf">Díada ${d.type} · ${d.formula}</div>
+    <div class="dyt">${d.text}</div>
+  </div>`).join("");
+  document.getElementById("dyad-interp").innerHTML=D.dyadInterp;
+
+  /* Identidad */
+  document.getElementById("id-pregunta").innerHTML=`<div class="cbox-label">Pregunta Política del Territorio</div><div class="cbox-name" style="font-size:18px">"${D.preguntaPolitica}"</div><div class="cbox-text">${D.preguntaDesc}</div>`;
+  makeSem(D.govSemaforo,"gov-sem");
+  document.getElementById("partidos-tbl").innerHTML=D.partidos.map(p=>`<div style="display:grid;grid-template-columns:1.2fr 2fr 1fr 1fr;gap:.5rem;padding:8px 0;border-bottom:1px solid var(--brd);font-size:12px">
+    <div style="font-weight:700;color:var(--tx1)">${p.nombre}</div>
+    <div style="color:var(--tx2)">${p.emocion}</div>
+    <div style="color:var(--tx3)">${p.capital}</div>
+    <div style="color:${p.tendencia.includes("↓")?"#b91c1c":p.tendencia.includes("↑")?"#166534":"#475569"};font-weight:600">${p.tendencia}</div>
+  </div>`).join("");
+
+  /* Actores */
+  document.getElementById("actores-grid").innerHTML=D.actores.map(a=>`<div class="ac">
+    <div class="ach" style="border-left:4px solid ${a.borderColor||"#2563eb"}">
+      <div class="acn">${a.name}</div><div class="acr">${a.role}</div>
+    </div>
+    <div class="acb">${a.rows.map(([k,v])=>`<div class="acrow"><span class="ack">${k}</span><span class="acv">${v}</span></div>`).join("")}</div>
+  </div>`).join("");
+
+  /* Segmentos y Perfiles (SEGMENTA) */
+  document.getElementById("seg-intro").innerHTML=`<div class="cbox-label">Segmentación N × E × I — Narrativa · Emoción · Identidad</div><div class="cbox-name" style="font-size:16px">Electorado sinaloense rumbo a 2027</div><div class="cbox-text">${D.segIntro}</div>`;
+  document.getElementById("segmentos-list").innerHTML=D.segmentos.map(s=>`
+    <div class="bp">
+      <div class="bp-hdr" style="background:linear-gradient(135deg,${s.colorTipo},${s.colorTipo}cc)">
+        <div>
+          <div class="bp-tipo" style="color:#fff">${s.tipo} · ${s.subtitulo}</div>
+          <div class="bp-nombre">${s.nombre}</div>
+        </div>
+        <div>
+          <div class="bp-peso">${s.peso}%</div>
+          <div class="bp-pesol">peso estimado</div>
+        </div>
+      </div>
+      <div class="bp-frase" style="border-left-color:${s.colorTipo}">${s.frase}</div>
+      <div class="bp-body">
+        <div>
+          <div class="bp-col-t">Perfil sociodemográfico</div>
+          <div class="bp-row"><b>Edad / Género</b>${s.perfil.edad}</div>
+          <div class="bp-row"><b>Zona</b>${s.perfil.zona}</div>
+          <div class="bp-row"><b>Ocupación</b>${s.perfil.ocupacion}</div>
+          <div class="bp-row"><b>Escolaridad / Ingresos</b>${s.perfil.escolaridad}</div>
+          <div class="bp-row"><b>Presencia digital</b>${s.perfil.digital}</div>
+          <div class="bp-row"><b>Historia electoral</b>${s.perfil.historial}</div>
+        </div>
+        <div>
+          <div class="bp-col-t">Mundo emocional y tensiones</div>
+          <div class="bp-row"><b>Emoción Plutchik</b>${s.emocional.emocion}</div>
+          <div class="bp-row"><b>Vida cotidiana</b>${s.emocional.descripcion}</div>
+          <div class="bp-row"><b>Tensión social activa</b>${s.emocional.tension}</div>
+          <div class="bp-row"><b>Dolor profundo</b>${s.emocional.dolor}</div>
+          <div class="bp-row"><b>Miedo</b>${s.emocional.miedo}</div>
+          <div class="bp-row"><b>Orgullo</b>${s.emocional.orgullo}</div>
+          <div class="bp-row"><b>Narrativa maestra</b>${s.emocional.narrativa}</div>
+        </div>
+        <div>
+          <div class="bp-col-t">Problemáticas, orgullos y palancas</div>
+          <div class="bp-row"><b>Problemas críticos</b><div class="bp-tags">${s.problematicas.problemas.map(p=>`<span class="bp-tag">${p}</span>`).join("")}</div></div>
+          <div class="bp-row"><b>Orgullo comunitario</b>${s.problematicas.orgulloComunitario}</div>
+          <div class="bp-row"><b>Consumo digital</b>${s.problematicas.consumo}</div>
+          <div class="bp-row"><b>Qué lo acerca al voto</b>${s.problematicas.loQueLoAcerca}</div>
+          <div class="bp-row"><b>Qué lo aleja</b>${s.problematicas.loQueLoAleja}</div>
+          <div class="bp-row"><b>Frame cognitivo</b>${s.problematicas.frame}</div>
+          <div class="bp-row"><b>Palanca</b>${s.problematicas.palanca}</div>
+        </div>
+      </div>
+      <div class="bp-foot">
+        <div class="bp-vec"><b>Vector:</b> ${s.vector.canal} · <b>Tono:</b> ${s.vector.tono} · <b>Formato:</b> ${s.vector.formato}</div>
+        <span class="bp-badge" style="background:${s.persuColor}22;color:${s.persuColor};border:1px solid ${s.persuColor}">PERSUABILIDAD: ${s.persuabilidad}</span>
+      </div>
+    </div>`).join("");
+
+  /* ── CHARTS ─────────────────────────────────────────────────────── */
+  /* 1. Intensidades */
+  const acEm=D.emotions.filter(e=>e.active);
+  new Chart(document.getElementById("ch-intens"),{type:"bar",
+    data:{labels:acEm.map(e=>e.label),datasets:[{data:acEm.map(e=>e.intensity),backgroundColor:acEm.map(e=>e.color[2]+"cc"),borderColor:acEm.map(e=>e.color[2]),borderWidth:1,borderRadius:5,borderSkipped:false}]},
+    options:{...CD,indexAxis:"y",plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{label:c=>" "+["Inactiva","Baja","Media","Alta"][c.raw]}}},
+      scales:{x:{...CD.scales.x,min:0,max:3,ticks:{...CD.scales.x.ticks,stepSize:1,callback:v=>["○○○","●○○","●●○","●●●"][v]}},y:{...CD.scales.y}}}
+  });
+  /* 2. Temas */
+  new Chart(document.getElementById("ch-temas"),{type:"doughnut",
+    data:{labels:D.temasChart.map(t=>t[0]),datasets:[{data:D.temasChart.map(t=>t[1]),backgroundColor:D.temasChart.map(t=>t[2]),borderColor:"#ffffff",borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"right",labels:{color:"#334155",font:{size:11},boxWidth:12,padding:10}},tooltip:{...CD.plugins.tooltip,callbacks:{label:c=>" "+c.label+": "+c.raw+"%"}}}}
+  });
+  /* 3. Díadas */
+  new Chart(document.getElementById("ch-diadas"),{type:"bar",
+    data:{labels:D.dyads.map(d=>d.name),datasets:[{label:"Score de riesgo",data:D.dyads.map(d=>d.score),backgroundColor:D.dyads.map(d=>riskHex[d.risk]+"cc"),borderColor:D.dyads.map(d=>riskHex[d.risk]),borderWidth:1,borderRadius:6,borderSkipped:false}]},
+    options:{...CD,plugins:{...CD.plugins,legend:{display:false}},scales:{x:{...CD.scales.x},y:{...CD.scales.y,min:0,max:100,ticks:{...CD.scales.y.ticks,callback:v=>v+"/100"}}}}
+  });
+  /* 4. Partidos */
+  const pLabels=D.partidos.map(p=>p.nombre);
+  new Chart(document.getElementById("ch-partidos"),{type:"bar",
+    data:{labels:pLabels,datasets:[
+      {label:"Ira/Asco",data:D.partidosChart.map(x=>x[0]),backgroundColor:"#B91C1Caa",borderRadius:4,borderSkipped:false},
+      {label:"Decepción/Tristeza",data:D.partidosChart.map(x=>x[1]),backgroundColor:"#4C1D95aa",borderRadius:4,borderSkipped:false},
+      {label:"Interés disponible",data:D.partidosChart.map(x=>x[2]),backgroundColor:"#059669aa",borderRadius:4,borderSkipped:false},
+    ]},
+    options:{...CD,plugins:{...CD.plugins,legend:{display:true,labels:{color:"#334155",font:{size:10},boxWidth:10}}},
+      scales:{x:{...CD.scales.x},y:{...CD.scales.y,min:0,max:100,ticks:{...CD.scales.y.ticks,callback:v=>v+"%"}}}}
+  });
+  /* 5. Actores radar */
+  const radarLabels=["Legitimidad ciudadana","Presencia territorial","Capital positivo","Riesgo castigo","Cap. gestión","Credibilidad"];
+  new Chart(document.getElementById("ch-actores"),{type:"radar",
+    data:{labels:radarLabels,datasets:D.actoresRadar.labels.map((lbl,i)=>({label:lbl,data:D.actoresRadar.data[i],borderColor:D.actoresRadar.colors[i],backgroundColor:D.actoresRadar.colors[i]+"22",pointBackgroundColor:D.actoresRadar.colors[i],pointRadius:4}))},
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{r:{ticks:{color:"#334155",font:{size:9},stepSize:20},grid:{color:"rgba(0,0,0,.1)"},pointLabels:{color:"#1e293b",font:{size:10}},angleLines:{color:"rgba(0,0,0,.1)"},min:0,max:100}},
+      plugins:{legend:{display:true,labels:{color:"#334155",font:{size:11},boxWidth:10}},tooltip:{...CD.plugins.tooltip}}}
+  });
+}
+
+init();
+</script>
+</body>
+</html>
