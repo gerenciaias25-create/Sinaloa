@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SESGO · Sinaloa</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 24px; background: #f3f4f6; font-family: 'Inter', system-ui, sans-serif; }
+  
+  .report-container {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  }
+
+  /* ENCABEZADO SOLICITADO (#1C2738) */
+  .header {
+    background: #1C2738;
+    color: #ffffff;
+    padding: 1.25rem 1.5rem;
+  }
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+  }
+  .header-title { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #94A3B8; }
+  .header-sub { font-size: 18px; font-weight: 700; color: #ffffff; margin-top: 2px; }
+  .header-meta { font-size: 12px; color: #94A3B8; margin-top: 2px; }
+  .status-badge { font-weight: 600; color: #4ADE80; }
+  .header-right { text-align: right; }
+  .persuasion-label { font-size: 11px; color: #94A3B8; }
+  .persuasion-val { font-size: 22px; font-weight: 800; color: #60A5FA; }
+
+  /* CUERPO DEL REPORTE DE FONDO BLANCO */
+  .report-body {
+    padding: 1.5rem;
+    background: #ffffff;
+  }
+
+  /* TÍTULOS DE SECCIÓN */
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1C2738;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-top: 1.5rem;
+    margin-bottom: .75rem;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #1C2738;
+  }
+  .section-title:first-child { margin-top: 0; }
+
+  /* CAJAS Y TARJETAS COLOR #d5d1d1 */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .75rem; }
+  .box-card { background: #d5d1d1; border-radius: 10px; padding: .85rem 1rem; }
+  
+  /* FILAS DE LISTADO */
+  .item-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .item-row:last-child { border-bottom: none; }
+
+  .badge-category { font-size: 10px; font-weight: 700; color: #fff; padding: 2px 7px; border-radius: 5px; flex-shrink: 0; }
+  .tag-pill { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600; flex-shrink: 0; margin-top: 1px; }
+
+  /* PIE DE PÁGINA (FOOTER REQUERIDO) */
+  .footer {
+    background:#1C2738;
+    border-top:1px solid rgba(255,255,255,.1);
+    padding:14px 24px;
+    font-size:11px;
+    color:#94A3B8;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:40px;
+    border-radius:0 0 8px 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="report-container">
+
+  <!-- ENCABEZADO -->
+  <div class="header">
+    <div class="header-content">
+      <div>
+        <div class="header-title">
+          Sesgos Cognitivos Electorales
+        </div>
+        <div class="header-sub">
+          Sinaloa · Electorado general (sucesión gubernatura 2027)
+        </div>
+        <div class="header-meta">
+          Periodo: mar–sep 2026 · Fuentes: 9 · <span class="status-badge">ROBUSTO</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="persuasion-label">Ventana de Persuasión</div>
+        <div class="persuasion-val">Abierta</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO DEL REPORTE -->
+  <div class="report-body">
+
+    <!-- MÉTRICAS CLAVE -->
+    <div class="card-grid" style="margin-bottom: 1rem;">
+      <div class="box-card">
+        <div style="font-size:11px;color:#334155;font-weight:600">Sesgos Críticos (SAS≥81)</div>
+        <div style="font-size:22px;font-weight:700;color:#DC2626;margin-top:2px">3</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">Negatividad · Disponibilidad · Aversión a pérdida</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;color:#334155;font-weight:600">Sesgos Activos Altos (61–80)</div>
+        <div style="font-size:22px;font-weight:700;color:#D97706;margin-top:2px">5</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">Retrospectivo · Autoridad · Identidad · Confirmación · V. Ilusoria</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;color:#334155;font-weight:600">SRI · Riesgo Cognitivo (continuidad Morena)</div>
+        <div style="font-size:22px;font-weight:700;color:#D97706;margin-top:2px">78 · Alto</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">Oposición explota S11/S18/S20 vs. relevo Castro</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;color:#334155;font-weight:600">Sistema Dominante</div>
+        <div style="font-size:22px;font-weight:700;color:#DC2626;margin-top:2px">Sistema 1 🔴</div>
+        <div style="font-size:11px;color:#475569;margin-top:2px">Procesamiento emocional/reactivo por encima del deliberativo</div>
+      </div>
+    </div>
+
+    <!-- RANKING DE SESGOS -->
+    <div class="section-title">Sesgos con Mayor Activación</div>
+    <div style="margin-bottom: 1.5rem;">
+      <div class="item-row">
+        <div class="badge-category" style="background:#0EA5E9;">II</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S11 Negatividad</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">22 meses de guerra "Chapitos vs. Mayitos", desplazamiento y cierre de comercios saturan el frame emocional</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#DC2626;flex-shrink:0">88</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEE2E2;color:#991B1B">Crítico</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#0EA5E9;">II</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S08 Disponibilidad</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">Cobertura nacional e internacional sostenida (CNN, Infobae) desplaza cualquier otro tema de agenda pública</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#DC2626;flex-shrink:0">85</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEE2E2;color:#991B1B">Crítico</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#EF4444;">V</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S20 Aversión a la pérdida</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">+3,000 negocios cerrados en Culiacán y miles de familias desplazadas en la sierra: el miedo es a perder lo que queda, no a no ganar</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#DC2626;flex-shrink:0">82</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEE2E2;color:#991B1B">Crítico</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#F59E0B;">IV</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S18 Retrospectivo</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">Mayoría exige salida definitiva de Rocha Moya tras la acusación de EE.UU.; se atribuye la crisis directamente a su gestión</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#D97706;flex-shrink:0">79</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF3C7;color:#92400E">Alto</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#8B5CF6;">VI</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S25 Autoridad (invertido)</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">La acusación de EE.UU. y el desafío público de Rocha erosionan la transferencia de autoridad institucional hacia Morena-Sinaloa</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#D97706;flex-shrink:0">75</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF3C7;color:#92400E">Alto</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#10B981;">III</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S15 Identidad social</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">Polarización Morena/anti-Morena y fractura territorial (capital vs. sierra vs. sur) organizan la lectura del conflicto</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#D97706;flex-shrink:0">70</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF3C7;color:#92400E">Alto</div>
+      </div>
+
+      <div class="item-row">
+        <div class="badge-category" style="background:#0EA5E9;">II</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:#111827">S07 Confirmación</div>
+          <div style="font-size:11px;color:#475569;margin-top:1px">La base dura de Morena procesa la acusación como "guerra sucia"; la oposición la procesa como prueba definitiva — mismo hecho, lecturas opuestas</div>
+        </div>
+        <div style="font-size:16px;font-weight:800;color:#D97706;flex-shrink:0">68</div>
+        <div style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:#FEF3C7;color:#92400E">Alto</div>
+      </div>
+    </div>
+
+    <!-- GRÁFICA SCORE SAS -->
+    <div class="section-title">Score de Activación de Sesgo (SAS)</div>
+    <div class="box-card" style="position:relative; height:346px; margin-bottom: 1.5rem;">
+      <canvas id="sesgosChart" role="img" aria-label="Gráfica de activación de sesgos cognitivos en el electorado de Sinaloa"></canvas>
+    </div>
+
+    <!-- MAPA POR SEGMENTO -->
+    <div class="section-title">Sesgos Dominantes por Perfil Electoral</div>
+    <div class="card-grid" style="margin-bottom: 1.5rem;">
+      <div class="box-card">
+        <div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px">Duro (Morena)</div>
+        <div style="font-size:12px;font-weight:600;color:#111827">S07 Confirmación</div>
+        <div style="font-size:11px;color:#334155">S15 Identidad social</div>
+        <div style="font-size:11px;color:#475569;margin-top:4px;font-style:italic">Lee la acusación de EE.UU. como persecución; se cierra en cámara de eco</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;font-weight:700;color:#1D4ED8;margin-bottom:4px">Blando</div>
+        <div style="font-size:12px;font-weight:600;color:#111827">S18 Retrospectivo</div>
+        <div style="font-size:11px;color:#334155">S20 Aversión a la pérdida</div>
+        <div style="font-size:11px;color:#475569;margin-top:4px;font-style:italic">Decepción medible; atribuye la crisis a la gestión saliente y teme que continúe</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;font-weight:700;color:#B45309;margin-bottom:4px">Persuadible</div>
+        <div style="font-size:12px;font-weight:600;color:#111827">S11 Negatividad</div>
+        <div style="font-size:11px;color:#334155">S08 Disponibilidad</div>
+        <div style="font-size:11px;color:#475569;margin-top:4px;font-style:italic">El segmento más movido por el frame de miedo mediático; foco central de la disputa narrativa</div>
+      </div>
+      <div class="box-card">
+        <div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:4px">Abstencionista</div>
+        <div style="font-size:12px;font-weight:600;color:#111827">S12 Statu quo / fatiga</div>
+        <div style="font-size:11px;color:#334155">Desconexión</div>
+        <div style="font-size:11px;color:#475569;margin-top:4px;font-style:italic">"22 meses igual" instala resignación; riesgo de abstención por hartazgo, no por conformidad</div>
+      </div>
+    </div>
+
+    <!-- VENTANAS DE PERSUASIÓN -->
+    <div class="section-title">Ventanas de Persuasión Activas</div>
+    <div style="display:flex; flex-direction:column; gap:.6rem; margin-bottom: 1.5rem;">
+      <div class="box-card">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#16A34A;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:14px;font-weight:800;color:#fff">1</span>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">Familias desplazadas de la sierra (Rosario y zona serrana)</div>
+            <div style="font-size:11px;color:#334155;margin-top:2px;font-weight:600;">Sesgo activo: S11 Negatividad + S20 Aversión a la pérdida · IVP: Amplia</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Reconocimiento explícito del desplazamiento + plan verificable de retorno seguro, no promesa genérica de "paz"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box-card">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#2563EB;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:14px;font-weight:800;color:#fff">2</span>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">Comerciantes y clase media de Culiacán</div>
+            <div style="font-size:11px;color:#334155;margin-top:2px;font-weight:600;">Sesgo activo: S20 Aversión a la pérdida · IVP: Abierta</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">"Lo que ya se perdió no debe seguir perdiéndose" — exigir resultados económicos concretos y verificables, no discurso de crecimiento</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box-card">
+        <div style="display:flex;gap:.75rem;align-items:flex-start;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#D97706;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-size:14px;font-weight:800;color:#fff">3</span>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">Jóvenes urbanos expuestos a narcocultura digital</div>
+            <div style="font-size:11px;color:#334155;margin-top:2px;font-weight:600;">Sesgo activo: S08 Disponibilidad + S26 Verdad ilusoria · IVP: Entreabierta</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Contra-narrativa de futuro/oportunidad con presencia sostenida en el mismo canal que satura hoy el contenido narco</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARQUITECTURA DE MENSAJES -->
+    <div class="section-title">Arquitectura de Mensajes</div>
+    <div style="display:flex; flex-direction:column; gap:.6rem;">
+      <div class="box-card">
+        <div style="display:flex;gap:7px;align-items:flex-start;">
+          <span class="tag-pill" style="background:#FEF3C7;color:#92400E">Diferenciación</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">S20 Aversión a la pérdida → sector empresarial de Culiacán</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Testimonios cortos de comerciantes + prensa económica local; evitar el discurso oficial de "crecimiento" que la audiencia ya percibe como desmentido por los datos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box-card">
+        <div style="display:flex;gap:7px;align-items:flex-start;">
+          <span class="tag-pill" style="background:#DBEAFE;color:#1E40AF">Posicionamiento</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">S18 Retrospectivo + S25 Autoridad → electorado blando</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Rendición de cuentas verificable con voceros técnicos (no solo políticos); el deslinde retórico sin datos no revierte el juicio retrospectivo ya instalado</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="box-card">
+        <div style="display:flex;gap:7px;align-items:flex-start;">
+          <span class="tag-pill" style="background:#EDE9FE;color:#4C1D95">Lanzamiento</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:#111827">S01 Halo + S23 Mera exposición → segmento persuadible en zonas de crisis</div>
+            <div style="font-size:11px;color:#475569;margin-top:2px">Presencia física documentada en sierra y sur de Sinaloa (no solo declaraciones desde la capital); la exposición repetida en el territorio afectado pesa más que el spot nacional</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    .footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+new Chart(document.getElementById('sesgosChart'), {
+  type: 'bar',
+  data: {
+    labels: [
+      'S11 Negatividad',
+      'S08 Disponibilidad',
+      'S20 Aversión a la pérdida',
+      'S18 Retrospectivo',
+      'S25 Autoridad (inv.)',
+      'S15 Identidad social',
+      'S07 Confirmación'
+    ],
+    datasets: [{
+      label: 'SAS',
+      data: [88, 85, 82, 79, 75, 70, 68],
+      backgroundColor: ['#DC2626','#DC2626','#DC2626','#D97706','#D97706','#D97706','#D97706'],
+      borderRadius: 5,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: c => ' SAS: ' + c.raw + ' / 100' } }
+    },
+    scales: {
+      x: { min: 0, max: 100,
+           ticks: { color: '#475569', font: { size: 11 }, stepSize: 20 },
+           grid: { color: 'rgba(0,0,0,0.08)' } },
+      y: { ticks: { color: '#1C2738', font: { size: 11, weight: '600' } },
+           grid: { display: false } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

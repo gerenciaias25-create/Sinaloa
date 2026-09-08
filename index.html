@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      background-color: #f4f6f8;
+    }
+
+    /* BARRA LATERAL (SIDEBAR) */
+    .sidebar {
+      width: 260px;
+      background-color: #0b112c;
+      color: #a0aec0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-menu {
+      padding-top: 20px;
+    }
+
+    /* Botones de navegación */
+    .nav-item {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #a0aec0;
+      padding: 14px 20px;
+      text-align: left;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-item:hover {
+      background-color: #151d3b;
+      color: #ffffff;
+    }
+
+    .nav-item.active {
+      background-color: #ffffff;
+      color: #0b112c;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .nav-item.active i {
+      color: #0b112c;
+    }
+
+    /* Submenú desplegable para módulos con varios dashboards */
+    .submenu {
+      display: none;
+      background-color: #070b1e;
+      padding-left: 15px;
+    }
+
+    .submenu.open {
+      display: block;
+    }
+
+    .submenu-item {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #718096;
+      padding: 10px 15px 10px 35px;
+      text-align: left;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    .submenu-item:hover {
+      color: #2dd4bf;
+    }
+
+    .submenu-item.active {
+      color: #2dd4bf;
+      font-weight: 700;
+    }
+
+    /* Footer del Sidebar */
+    .sidebar-footer {
+      padding: 20px;
+      border-top: 1px solid #1a2342;
+      font-size: 0.75rem;
+    }
+
+    .subscription-badge {
+      margin-bottom: 15px;
+    }
+
+    .subscription-badge span {
+      display: block;
+      color: #718096;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    .subscription-badge strong {
+      color: #ffffff;
+      font-size: 0.85rem;
+    }
+
+    .logout-btn {
+      background: transparent;
+      border: none;
+      color: #a0aec0;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+    }
+
+    .logout-btn:hover {
+      color: #ffffff;
+    }
+
+    /* ÁREA DE CONTENIDO PRINCIPAL */
+    .content-container {
+      flex: 1;
+      height: 100vh;
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+    }
+
+    iframe.active {
+      display: block;
+    }
+
+    .arrow-icon {
+      transition: transform 0.3s ease;
+      font-size: 0.7rem;
+    }
+
+    .arrow-icon.rotate {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVEGACIÓN LATERAL -->
+  <aside class="sidebar">
+    <div class="sidebar-menu">
+      
+      <!-- Módulo 1 -->
+      <button class="nav-item active" onclick="showDashboard('dash-radar', this)">
+        <div class="nav-item-content">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Radar</span>
+        </div>
+      </button>
+
+      <!-- Módulo 2 -->
+      <button class="nav-item" onclick="showDashboard('dash-humor-social', this)">
+        <div class="nav-item-content">
+          <i class="fa-solid fa-users"></i>
+          <span>Humor Social</span>
+        </div>
+      </button>
+
+      <!-- Módulo 3 -->
+      <button class="nav-item" onclick="showDashboard('dash-tensiones', this)">
+        <div class="nav-item-content">
+          <i class="fa-solid fa-file-lines"></i>
+          <span>Tensiones Sociales</span>
+        </div>
+      </button>
+
+      <!-- Módulo 4: OPOSITOR (2 DASHBOARDS) -->
+      <button class="nav-item" onclick="toggleSubmenu('submenu-opositor', this)">
+        <div class="nav-item-content">
+          <i class="fa-solid fa-user-ninja"></i>
+          <span>Análisis Opositor</span>
+        </div>
+        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+      </button>
+      
+      <!-- Submenú de Análisis Opositor -->
+      <div id="submenu-opositor" class="submenu">
+        <button class="submenu-item" onclick="showDashboard('dash-opositor-1', this)">
+          • Opositor 1
+        </button>
+        <button class="submenu-item" onclick="showDashboard('dash-opositor-2', this)">
+          • Opositor 2
+        </button>
+      </div>
+
+      <!-- Módulo 6: ESTUDIOS EXTRAS (3 DASHBOARDS) -->
+      <button class="nav-item" onclick="toggleSubmenu('submenu-extras', this)">
+        <div class="nav-item-content">
+          <i class="fa-solid fa-folder"></i>
+          <span>Estudios Extras</span>
+        </div>
+        <i class="fa-solid fa-chevron-down arrow-icon"></i>
+      </button>
+      
+      <!-- Submenú de Estudios Extras -->
+      <div id="submenu-extras" class="submenu">
+        <button class="submenu-item" onclick="showDashboard('dash-extra-1', this)">
+          • Estudio Extra 1
+        </button>
+        <button class="submenu-item" onclick="showDashboard('dash-extra-2', this)">
+          • Estudio Extra 2
+        </button>
+        <button class="submenu-item" onclick="showDashboard('dash-extra-3', this)">
+          • Estudio Extra 3
+        </button>
+      </div>
+
+    </div>
+
+    <!-- PIE DEL SIDEBAR -->
+   
+  </aside>
+
+  <!-- CONTENEDOR DE VISUALIZACIÓN DE DASHBOARDS -->
+  <main class="content-container">
+    <!-- Ajusta el atributo 'src' de cada iframe con la ruta real de tus archivos .html -->
+    <iframe id="dash-radar" class="active" src="radar.html"></iframe>
+    <iframe id="dash-humor-social" src="humor_social.html"></iframe>
+    <iframe id="dash-tensiones" src="tensiones_sociales.html"></iframe>
+    
+    <!-- Dashboards del Módulo Análisis Opositor -->
+    <iframe id="dash-opositor-1" src="opositor_part1.html"></iframe>
+    <iframe id="dash-opositor-2" src="opositor_part2.html"></iframe>
+
+    
+    <!-- Dashboards del Módulo Estudios Extras -->
+    <iframe id="dash-extra-1" src="estudio_extra_1.html"></iframe>
+    <iframe id="dash-extra-2" src="estudio_extra_2.html"></iframe>
+    <iframe id="dash-extra-3" src="estudio_extra_3.html"></iframe>
+  </main>
+
+  <script>
+    function showDashboard(iframeId, element) {
+      // 1. Ocultar todos los iframes
+      const iframes = document.querySelectorAll('.content-container iframe');
+      iframes.forEach(iframe => iframe.classList.remove('active'));
+
+      // 2. Remover clase 'active' de todos los botones e ítems de submenú
+      const navButtons = document.querySelectorAll('.nav-item, .submenu-item');
+      navButtons.forEach(btn => btn.classList.remove('active'));
+
+      // 3. Mostrar el iframe seleccionado
+      const targetIframe = document.getElementById(iframeId);
+      if(targetIframe) {
+        targetIframe.classList.add('active');
+      }
+
+      // 4. Activar el botón o submenú presionado
+      element.classList.add('active');
+
+      // Si el botón presionado es de submenú, resalta también el módulo padre
+      if (element.classList.contains('submenu-item')) {
+        const parentNav = element.closest('.submenu').previousElementSibling;
+        if (parentNav) parentNav.classList.add('active');
+      }
+    }
+
+    function toggleSubmenu(submenuId, element) {
+      const submenu = document.getElementById(submenuId);
+      const arrow = element.querySelector('.arrow-icon');
+      
+      // Alternar la visibilidad del submenú
+      submenu.classList.toggle('open');
+      if (arrow) {
+        arrow.classList.toggle('rotate');
+      }
+    }
+  </script>
+
+</body>
+</html>

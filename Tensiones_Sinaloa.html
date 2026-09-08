@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TENSIONES - Sinaloa 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#ffffff;--bg2:#ffffff;--bg3:#d5d1d1;--bg4:#c5c1c1;
+  --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.15);
+  --text:#1e293b;--muted:#475569;--dim:#64748b;
+  --red:#E24B4A;--red-bg:rgba(226,75,74,.15);--red-br:rgba(226,75,74,.4);
+  --org:#EF9F27;--org-bg:rgba(239,159,39,.15);--org-br:rgba(239,159,39,.4);
+  --yel:#b48200;--yel-bg:rgba(250,199,117,.25);--yel-br:rgba(250,199,117,.5);
+  --grn:#16a34a;--grn-bg:rgba(74,222,128,.2);--grn-br:rgba(74,222,128,.5);
+  --cyan:#0891b2;--acc:#162e96;--acc-bg:rgba(99,102,241,.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#ffffff;color:var(--text);min-height:100vh}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;animation:blink 1.4s infinite;flex-shrink:0}
+.topbar{background:#1C2738;border-bottom:1px solid rgba(255,255,255,.1);padding:1rem 2rem;color:#ffffff}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header-title-main{font-size:16px;font-weight:700;color:#2042db;letter-spacing:.05em}
+.header-title-sub{font-size:13px;color:#94A3B8;margin-top:2px}
+.header-title-meta{font-size:13px;font-weight:600;color:#38BDF8}
+
+.eyebrow{font-size:10px;letter-spacing:.14em;color:var(--dim);font-weight:600;margin-bottom:.7rem}
+.h1{font-size:40px;font-weight:700;color:var(--bg);margin-bottom:.3rem;line-height:1.15}
+.h1 em{color:var(--bg);font-style:normal}
+.hsub{font-size:12.5px;color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
+.tag{padding:3px 10px;border-radius:4px;font-size:10.5px;font-weight:600;letter-spacing:.04em}
+.tr{background:var(--red-bg);color:var(--red);border:1px solid var(--red-br)}
+.to{background:var(--org-bg);color:var(--org);border:1px solid var(--org-br)}
+.td{background:#d5d1d1;color:var(--text);border:1px solid var(--border)}
+.ta{background:var(--acc-bg);color:#4f46e5;border:1px solid rgba(99,102,241,.3)}
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.kpi{background:#d5d1d1;border:1px solid var(--border);border-radius:10px;padding:.85rem 1rem}
+.kl{font-size:9.5px;letter-spacing:.1em;color:var(--dim);font-weight:600;text-transform:uppercase;margin-bottom:5px}
+.kv{font-size:22px;font-weight:700;line-height:1}
+.ks{font-size:10px;color:var(--muted);margin-top:4px}
+.kr{color:var(--red)}.ko{color:var(--org)}.ky{color:var(--yel)}.kg{color:var(--grn)}.kc{color:var(--cyan)}
+.nav{background:#f1f5f9;border-bottom:1px solid var(--border);padding:0 2rem;display:flex;overflow-x:auto;gap:0;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nb{padding:14px 18px;font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;border:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;background:none}
+.nb:hover{color:var(--text)}
+.nb.on{color:#1C2738;border-bottom-color:var(--red);font-weight:700}
+.ct{padding:1.75rem 2rem;background:#ffffff}
+.hero{padding:1.5rem 2rem 1.75rem;background:#ffffff;border-bottom:1px solid var(--border)}
+.view{display:none}
+.view.on{display:block;animation:fadeIn .2s ease}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.mb{margin-bottom:1.25rem}
+.card{background:#d5d1d1;border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem}
+.ctit{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.9rem;display:flex;align-items:center;gap:6px}
+.cdot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.stit{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;display:inline-block}
+.semstrip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.25rem}
+.sembox{border-radius:10px;padding:.85rem 1rem;text-align:center;border:1px solid}
+.seml{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.semv{font-size:22px;font-weight:700}
+.sems{font-size:10px;margin-top:4px;opacity:.8}
+.trow{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:8px;cursor:pointer;transition:background .15s;margin-bottom:3px;border:1px solid transparent;background:#d5d1d1}
+.trow:hover{background:#c5c1c1}
+.trow.sel{background:#c5c1c1;border-color:var(--border2)}
+.tnum{font-size:11px;color:var(--dim);width:14px;text-align:center;flex-shrink:0}
+.tname{font-size:12.5px;flex:1;color:var(--text)}
+.tbar{width:90px;height:6px;background:#b8b4b4;border-radius:3px;flex-shrink:0}
+.tbar-f{height:6px;border-radius:3px}
+.tsco{font-size:12px;font-weight:700;width:26px;text-align:right;flex-shrink:0}
+.tniv{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0}
+.tdelta{font-size:11px;font-weight:700;width:36px;text-align:right;flex-shrink:0}
+.tbadge{font-size:9px;padding:1px 5px;border-radius:4px;flex-shrink:0}
+.dg{display:grid;grid-template-columns:108px 1fr;gap:5px 10px;font-size:12.5px}
+.dk{color:var(--muted);font-weight:600}
+.dv{color:var(--text);line-height:1.5}
+.drec{margin-top:.85rem;padding:.8rem;background:#c5c1c1;border-radius:8px;font-size:12.5px;line-height:1.6;border-left:3px solid var(--org)}
+.dempty{font-size:12px;color:var(--dim);line-height:1.7;padding:.5rem 0}
+.ch260{position:relative;height:260px;width:100%}
+.ch300{position:relative;height:300px;width:100%}
+.ch320{position:relative;height:320px;width:100%}
+.ebar{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ebar:last-child{border-bottom:none}
+.enam{font-size:12.5px;width:150px;flex-shrink:0;color:var(--text)}
+.ebg{flex:1;height:8px;background:#c5c1c1;border-radius:4px;overflow:hidden}
+.efill{height:8px;border-radius:4px}
+.epts{font-size:11px;width:34px;text-align:right;flex-shrink:0}
+.ter{border-radius:10px;margin-bottom:8px;border:1px solid;cursor:pointer;overflow:hidden;background:#d5d1d1}
+.ter-h{padding:10px 12px;display:flex;align-items:flex-start;gap:8px}
+.ter-info{flex:1}
+.ter-name{font-size:13px;font-weight:600}
+.ter-sub{font-size:11px;opacity:.85;margin-top:3px}
+.ter-arr{font-size:11px;margin-top:2px;transition:transform .2s;flex-shrink:0}
+.ter-arr.op{transform:rotate(180deg)}
+.ter-body{display:none;padding:10px 12px;padding-top:0;font-size:12px;line-height:1.65;color:var(--text)}
+.ter-body.op{display:block;animation:fadeIn .2s ease}
+.nar{background:#d5d1d1;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer}
+.nar-h{padding:10px 12px;display:flex;align-items:flex-start;gap:8px}
+.nar-info{flex:1}
+.nar-name{font-size:12.5px;font-weight:600;color:var(--text)}
+.nar-meta{font-size:11px;color:var(--dim);margin-top:2px}
+.nar-arr{font-size:11px;color:var(--dim);flex-shrink:0;margin-top:2px;transition:transform .2s}
+.nar-arr.op{transform:rotate(180deg)}
+.nar-body{display:none;padding:10px 12px;border-top:1px solid var(--border);font-size:12.5px;color:var(--text);line-height:1.55}
+.nar-body.op{display:block;animation:fadeIn .2s ease}
+.nfrase{font-size:12px;font-style:italic;color:var(--cyan);margin-top:6px;font-weight:600}
+.seg{background:#d5d1d1;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer}
+.seg-h{padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
+.seg-info{flex:1}
+.seg-name{font-size:12.5px;font-weight:600;color:var(--text)}
+.seg-meta{font-size:11px;color:var(--dim);margin-top:2px}
+.seg-emo{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;flex-shrink:0;height:fit-content}
+.seg-arr{font-size:11px;color:var(--dim);flex-shrink:0;margin-top:2px;transition:transform .2s}
+.seg-arr.op{transform:rotate(180deg)}
+.seg-body{display:none;padding:10px 12px;border-top:1px solid var(--border);font-size:12.5px;color:var(--text);line-height:1.55}
+.seg-body.op{display:block;animation:fadeIn .2s ease}
+.abox{background:#d5d1d1;border:1px solid var(--red-br);border-radius:12px;padding:1.1rem 1.25rem;margin-bottom:1rem;cursor:pointer}
+.abox:last-child{margin-bottom:0}
+.abox-h{display:flex;align-items:center;justify-content:space-between}
+.abox-t{font-size:13px;font-weight:700;color:var(--red);display:flex;align-items:center;gap:8px}
+.abox-arr{color:var(--red);font-size:12px;transition:transform .2s}
+.abox-arr.op{transform:rotate(180deg)}
+.abox-body{display:none;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);animation:fadeIn .2s ease}
+.abox-body.op{display:block}
+.ag{display:grid;grid-template-columns:130px 1fr;gap:5px 10px;font-size:12px}
+.ak{color:#991b1b;font-weight:700}
+.av{color:var(--text);line-height:1.55}
+.traj-table{width:100%;border-collapse:collapse;font-size:12px}
+.traj-table th{text-align:left;padding:7px 10px;color:var(--dim);font-weight:600;font-size:10px;letter-spacing:.07em;text-transform:uppercase;border-bottom:1px solid var(--border2)}
+.traj-table td{padding:8px 10px;border-bottom:1px solid var(--border)}
+.traj-table tr:last-child td{border-bottom:none}
+.traj-table tr:hover td{background:#c5c1c1}
+.vchip{font-size:9.5px;padding:2px 7px;border-radius:4px;font-weight:700}
+.vr{background:var(--org-bg);color:var(--org);border:1px solid var(--org-br)}
+.vo{background:rgba(0,0,0,.06);color:var(--muted);border:1px solid var(--border)}
+.vg{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn-br)}
+.hallazgo{margin-top:1.1rem;padding:1rem 1.25rem;background:#d5d1d1;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--org)}
+
+.footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}.g2,.g3{grid-template-columns:1fr}.semstrip{grid-template-columns:repeat(3,1fr)}.enam{width:110px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <div class="header-title-main">//TENSIONES SOCIALES</div>
+        <div class="h1">SINALOA, <em>MEXICO</em></div>
+        <div class="header-title-sub">ANALISIS ESTATAL &middot; ULTIMOS 6 MESES
+  <br>Ejecutivo estatal: Ruben Rocha Moya (licencia indefinida desde el 25 de agosto de 2026) &middot; Gobernadora interina: Graciela Dominguez Nava &middot; Morena &middot; Periodo analizado: marzo - agosto 2026<br>
+  <span style="font-size:11px;color:var(--dim)">Fuentes verificadas: Noroeste &middot; El Universal &middot; El Financiero &middot; Infobae &middot; CNN en Espanol &middot; El Sol de Mazatlan &middot; Debate &middot; Meganoticias &middot; El Informador &middot; MVS Noticias &middot; Comision Estatal de Derechos Humanos de Sinaloa &middot; INEGI-ENSU</span></div>
+      </div>
+    </div>
+  </div>
+       </div>
+
+<div class="hero">
+ 
+
+
+<div class="nav" id="main-nav">
+  <button class="nb on" data-tab="tensiones">Tensiones</button>
+  <button class="nb" data-tab="emociones">Emociones</button>
+  <button class="nb" data-tab="narrativas">Narrativas</button>
+  <button class="nb" data-tab="territorios">Territorios</button>
+  <button class="nb" data-tab="riesgos">Riesgos</button>
+  <button class="nb" data-tab="segmentos">Segmentos</button>
+  <button class="nb" data-tab="trayectoria">Trayectoria</button>
+  <button class="nb" data-tab="alertas">Alertas prioritarias</button>
+</div>
+
+<div class="ct">
+
+<div class="view on" id="v-tensiones">
+  <div class="stit"><span class="sdot"></span>Ranking de tensiones sociales &middot; clic en fila para analisis completo</div>
+  <div class="g2 mb">
+    <div><div id="tens-list"></div></div>
+    <div><div id="tens-detail"><div class="card"><div class="dempty">Selecciona una tension del ranking para ver el analisis completo: narrativa, emocion dominante, actor responsabilizado, evidencia verificada y recomendacion accionable.</div></div></div></div>
+  </div>
+  <div class="card"><div class="ctit"><span class="cdot"></span>Scores de tension social &mdash; Sinaloa, marzo-agosto 2026</div><div class="ch300"><canvas id="cTensH" role="img" aria-label="Grafica de scores de tension social por tema, Sinaloa, marzo a agosto 2026"></canvas></div><div style="font-size:11px;color:var(--dim);text-align:center;margin-top:6px">Haz clic en una barra para ver la narrativa dominante asociada</div><div id="panel-narrv" style="font-size:11.5px;color:var(--muted);font-style:italic;text-align:center;margin-top:4px"></div></div>
+</div>
+
+<div class="view" id="v-emociones">
+  <div class="stit"><span class="sdot"></span>Mapa emocional del estado &middot; escala 1-5</div>
+  <div class="g2 mb">
+    <div class="card"><div class="ctit"><span class="cdot"></span>Intensidad emocional &middot; lectura politica</div><div id="emo-bars"></div></div>
+    <div class="card"><div class="ctit"><span class="cdot"></span>Distribucion emocional del estado</div><div class="ch260"><canvas id="cEmoD" role="img" aria-label="Grafica de distribucion emocional del estado de Sinaloa"></canvas></div></div>
+  </div>
+  <div class="hallazgo">
+    <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--org);margin-bottom:.5rem;text-transform:uppercase">Hallazgo estrategico emocional</div>
+    <div style="font-size:12.5px;line-height:1.75;color:var(--text)">El miedo en Sinaloa ya no es un pico de crisis sino una <strong style="color:var(--org)">condicion estructural sostenida durante 23 meses</strong>, desde que inicio la disputa interna del Cartel de Sinaloa en septiembre de 2024. Lo nuevo del ciclo marzo-agosto 2026 no es la intensidad del miedo, sino la aparicion de una segunda capa emocional -- incertidumbre y desconfianza institucional -- detonada por la licencia de Ruben Rocha Moya y los senalamientos de Estados Unidos. Esto genera un patron dificil de gestionar: la ciudadania ya no solo teme al crimen organizado, sino que empieza a dudar de que exista una linea clara entre la autoridad y el poder criminal.</div>
+  </div>
+</div>
+
+<div class="view" id="v-narrativas">
+  <div class="stit"><span class="sdot"></span>Narrativas emergentes &middot; ordenadas por potencial politico</div>
+  <div id="nar-list"></div>
+</div>
+
+<div class="view" id="v-territorios">
+  <div class="stit"><span class="sdot"></span>Territorios sensibles &middot; clic para ver evidencia documentada</div>
+  <div id="ter-list"></div>
+</div>
+
+<div class="view" id="v-riesgos">
+  <div class="stit"><span class="sdot"></span>Riesgos reputacionales &middot; Score de Riesgo Reputacional (SRR) por tension</div>
+  <div class="card mb"><div class="ch300"><canvas id="cSRR" role="img" aria-label="Grafica de Score de Riesgo Reputacional por tension, Sinaloa"></canvas></div></div>
+  <div id="riesgo-list"></div>
+</div>
+
+<div class="view" id="v-segmentos">
+  <div class="stit"><span class="sdot"></span>Distribucion emocional por segmento &middot; clic para ver frase representativa</div>
+  <div id="seg-list"></div>
+</div>
+
+<div class="view" id="v-trayectoria">
+  <div class="stit"><span class="sdot"></span>Trayectoria de tensiones &middot; evolucion 4 periodos, marzo-agosto 2026</div>
+  <div class="card mb"><table class="traj-table"><thead><tr><th>Tension</th><th>Mar-Abr</th><th>May-Jun</th><th>Jul</th><th>Ago</th><th>Delta</th><th>Velocidad</th><th>Tipo</th></tr></thead><tbody id="traj-body"></tbody></table></div>
+  <div class="card mb"><div class="ctit"><span class="cdot"></span>Evolucion comparada &mdash; marzo a agosto 2026</div><div class="ch320"><canvas id="cTraj" role="img" aria-label="Grafica de evolucion de tensiones sociales en Sinaloa, marzo a agosto 2026"></canvas></div></div>
+  <div class="hallazgo">
+    <div style="font-size:9.5px;font-weight:700;letter-spacing:.12em;color:var(--org);margin-bottom:.5rem;text-transform:uppercase">Hallazgo estrategico de trayectoria</div>
+    <div style="font-size:12.5px;line-height:1.75;color:var(--text)">La crisis politica por el relevo del Ejecutivo es la tension con la trayectoria mas abrupta del ciclo: paso de no existir en marzo a un STS de 82 en agosto (+51 puntos en cuatro meses), superando en apenas dos semanas a tensiones que llevan 23 meses acumulando malestar, como la guerra interna del carter y las desapariciones. Esto no significa que la violencia haya dejado de ser el problema de fondo -- sigue siendo la tension mas alta del radar -- sino que <strong style="color:var(--org)">la crisis de legitimidad institucional se monta encima de una crisis de seguridad ya cronica</strong>, y ambas se retroalimentan: cada nuevo senalamiento judicial contra funcionarios reactiva la desconfianza sobre si el propio aparato de gobierno protege o encubre a las estructuras criminales.</div>
+  </div>
+</div>
+
+<div class="view" id="v-alertas">
+  <div class="stit"><span class="sdot"></span>Alertas prioritarias &middot; analisis completo &middot; clic para expandir</div>
+  <div id="alertas-list"></div>
+</div>
+
+</div>
+
+<div class="footer">
+  <span>Sistema TENSIONES v2 &middot; Radar de Tensiones Sociales &middot; Sinaloa, Mexico &middot; marzo - agosto 2026</span>
+  <span>CONFIDENCIAL &middot; Uso estrategico exclusivo &middot; ICF promedio ponderado: 4.1/5</span>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+var T = [
+  {n:"Guerra interna del Cartel de Sinaloa (Los Chapitos vs La Mayiza)",s:88,c:"#E24B4A",bg:"rgba(226,75,74,.15)",br:"rgba(226,75,74,.4)",niv:"Critico",delta:"+4",emo:"Miedo + Hartazgo",int:5,nar:"Guerra sin fin, aqui no hay paz posible",act:"Facciones de Los Chapitos y La Mayiza del Cartel de Sinaloa - Gobierno estatal y federal (Grupo Interinstitucional, SSPC)",ter:"Culiacan (zona urbana y rural) - Mazatlan - corredor Culiacan-Navolato",pol:"Crisis social sostenida - riesgo de fatiga civica y desplazamiento interno de comercios y familias",ev:"Desde el inicio de la disputa en septiembre de 2024, el estado acumula 2,419 asesinatos, 2,839 personas privadas de la libertad y 8,567 vehiculos robados, segun datos recabados por Noroeste a partir de colectivos de busqueda y autoridades (ICF 4.4) - En agosto de 2026 se registraron 23 asesinatos solo en Mazatlan, la principal preocupacion del puerto segun organismos empresariales (El Sol de Mazatlan, ICF 4.2) - Dirigentes de Coparmex y Canaco senalan que la violencia sostenida y la falta de respuesta gubernamental mantienen en riesgo a los negocios locales (El Sol de Mazatlan, ICF 4.0) - El gobernador Rocha Moya reconocio reduccion en homicidios dolosos y robo de vehiculos, pero admitio que el estado 'aun no puede considerarse seguro' (Infobae, ICF 4.3)",rec:"Diferenciar comunicacionalmente los avances reales en reduccion de homicidios y robo de vehiculos frente a la percepcion ciudadana de que la guerra interna no cede; evitar declaraciones que minimicen el impacto cotidiano en comercio y movilidad."},
+  {n:"Crisis politica por el relevo del Ejecutivo estatal",s:82,c:"#E24B4A",bg:"rgba(226,75,74,.15)",br:"rgba(226,75,74,.4)",niv:"Critico",delta:"+51",emo:"Incertidumbre + Desconfianza",int:4,nar:"Gobierno capturado",act:"Gobernador con licencia Ruben Rocha Moya - Gobernadora interina Graciela Dominguez Nava - Gobierno federal (Presidencia de Sheinbaum)",ter:"Estatal - alta resonancia en Culiacan (Congreso y Palacio de Gobierno)",pol:"Erosion de legitimidad institucional - riesgo de voto de castigo de cara al proceso electoral 2027",ev:"Rocha Moya solicito licencia indefinida el 25 de agosto de 2026, tras una investigacion de la FGR y presion de Estados Unidos que pidio su detencion con fines de extradicion junto a otros nueve funcionarios activos y retirados (El Informador / CNN en Espanol, ICF 4.5) - El Congreso de Sinaloa, con mayoria de Morena, nombro a Graciela Dominguez Nava como gobernadora interina; PAN y PRI votaron en contra alegando que se trata de una continuacion de Rocha Moya en el poder (CNN en Espanol, ICF 4.4) - La presidenta Sheinbaum califico de 'imprudente' el regreso previo de Rocha Moya al cargo y exigio que su reemplazo tuviera 'capacidad, honestidad, profesionalismo y entrega al pueblo' (Impacto Latino, ICF 4.2) - La Constitucion de Sinaloa establece que ninguna licencia puede concederse por mas de seis meses sin una renuncia aceptada, por lo que juridicamente Rocha Moya conserva la posibilidad de reincorporarse (El Financiero, ICF 4.3)",rec:"Voceria institucional inmediata y verificable de la gobernadora interina que se distinga con hechos, no solo con discurso, de la gestion anterior; comunicar con total transparencia el estatus legal de la licencia (temporal vs. definitiva) antes de que la ambiguedad juridica alimente la narrativa de simulacion."},
+  {n:"Desapariciones e impunidad",s:74,c:"#EF9F27",bg:"rgba(239,159,39,.15)",br:"rgba(239,159,39,.4)",niv:"Alto",delta:"+5",emo:"Indignacion + Dolor",int:5,nar:"Comunidad olvidada",act:"Fiscalia General del Estado - Comision de Busqueda de Personas - sistema de justicia estatal",ter:"Culiacan (Catedral, Fiscalia General) - puntos de busqueda en zonas rurales del estado",pol:"Movilizacion sostenida de colectivos - alto potencial de indignacion acumulada, bajo riesgo de unificacion politica inmediata con otros frentes",ev:"El 10 de mayo de 2026 colectivos de madres buscadoras convocaron la XIV Marcha de la Dignidad Nacional en Culiacan bajo la narrativa '#HastaEncontrarles' (Infobae / Posta Mexico, ICF 4.2) - Maria Isabel Cruz, fundadora del colectivo Sabuesos Guerreras, senalo publicamente a la entonces nueva gobernadora que 'la desaparicion de mis hijos no se modifica con el cambio de gobernador' y exigio no enfriar las busquedas (El Universal, ICF 4.3) - Un reporte anonimo llevo en agosto al colectivo Por las Voces Sin Justicia hasta una zona donde se encontraron restos a la intemperie y dentro de una fosa (El Sol de Mazatlan, ICF 4.0) - El estado acumula 2,839 personas privadas de la libertad desde el inicio de la crisis en 2024 (Noroeste, ICF 4.4)",rec:"Reunion publica periodica y verificable entre la Fiscalia y los colectivos de busqueda, con metricas de avance disponibles; el silencio institucional alimenta la narrativa de que cada cambio de gobierno es cosmetico para las familias buscadoras."},
+  {n:"Crisis economica y cierre de negocios",s:68,c:"#EF9F27",bg:"rgba(239,159,39,.15)",br:"rgba(239,159,39,.4)",niv:"Alto",delta:"+5",emo:"Ansiedad economica + Frustracion",int:4,nar:"Normalidad impuesta",act:"Secretaria de Economia estatal - Coparmex - Canaco Culiacan y Mazatlan",ter:"Culiacan - Mazatlan (zonas comerciales y turisticas)",pol:"Malestar economico cotidiano - bajo riesgo de movilizacion directa, alto desgaste de confianza institucional",ev:"La Secretaria de Economia de Sinaloa aseguro en agosto de 2026 que no hay registro de empresas que se retiren por la violencia y que existen nuevos proyectos de inversion (Noroeste, ICF 4.1) - Frente a esa version oficial, el Inegi y organizaciones civiles documentan una tendencia de desaceleracion y perdida de plazas laborales entre el primer trimestre de 2024 (previo al repunte de violencia) y el primer trimestre de 2026 (MVS Noticias, ICF 4.3) - Dirigentes de Coparmex y Canaco coinciden en que la violencia sostenida y la falta de respuesta gubernamental mantienen en riesgo a los negocios locales, con cierres y reduccion de horarios documentados en Culiacan (El Sol de Mazatlan / Grupo Animal, ICF 4.0) - A 23 meses del inicio del conflicto, Culiacan mantiene afectaciones comerciales mientras Mazatlan enfrenta un nuevo repunte de violencia (Meganoticias, ICF 4.1)",rec:"Reconocer publicamente el impacto documentado por el Inegi en el empleo y el comercio en lugar de centrar el mensaje solo en nuevas inversiones; un relato oficial que no coincide con la experiencia cotidiana del comerciante erosiona mas la credibilidad que el dato negativo en si."},
+  {n:"Desconfianza hacia el binomio gobierno-crimen organizado",s:63,c:"#EF9F27",bg:"rgba(239,159,39,.15)",br:"rgba(239,159,39,.4)",niv:"Alto",delta:"+29",emo:"Desconfianza + Cinismo",int:4,nar:"El sistema completo, no un solo culpable",act:"Gobierno estatal - clase politica sinaloense en su conjunto",ter:"Estatal",pol:"Erosion de confianza transversal - se reactiva con cada nuevo senalamiento judicial",ev:"Los senalamientos de Estados Unidos contra Rocha Moya y otros nueve funcionarios activos y retirados por presuntos vinculos con el narcotrafico reactivaron una desconfianza que habia bajado de intensidad desde inicios de 2026 (El Informador, ICF 4.3) - La diputada local Paola Garate senalo en tribuna que, mientras no exista una renuncia aceptada, 'Rocha conserva la posibilidad juridica de reincorporarse en cualquier momento, porque ya lo hizo una vez' (CNN en Espanol, ICF 4.2) - Analistas politicos senalan que el gobierno federal buscaria con Dominguez Nava 'un nuevo perfil' distinto al de la gestion anterior, lo que evidencia el reconocimiento implicito de un problema de percepcion sobre el vinculo gobierno-crimen (UdgTV, ICF 3.8)",rec:"Cualquier respuesta oficial debe evitar el patron de justificacion extensa ante senalamientos judiciales -- cada explicacion adicional sin evidencia verificable retroalimenta la narrativa de captura del Estado por el crimen organizado."},
+  {n:"Extension de la violencia armada al norte del estado",s:58,c:"#b48200",bg:"rgba(250,199,117,.25)",br:"rgba(250,199,117,.5)",niv:"Relevante",delta:"+14",emo:"Alarma + Miedo repentino",int:4,nar:"Ningun lugar es seguro",act:"Guardia Nacional - civiles armados no identificados",ter:"Los Mochis, sector Scally",pol:"Contagio territorial de la narrativa de inseguridad generalizada - bajo pero creciente potencial de movilizacion vecinal",ev:"La noche del 9 de agosto de 2026, civiles armados se enfrentaron con elementos de la Guardia Nacional en el sector Scally de Los Mochis; el saldo oficial fue de ocho personas detenidas y cuatro presuntos agresores lesionados, ademas del aseguramiento de armas (Meganoticias, ICF 4.1) - El hecho ocurre en una zona del norte del estado que historicamente habia registrado una frecuencia de violencia menor en comparacion con Culiacan y Mazatlan (Meganoticias, ICF 4.1) - El sur de Sinaloa registra en paralelo su propia escalada de violencia en agosto, lo que sugiere una dispersion geografica del conflicto mas alla de sus focos tradicionales (Debate, ICF 3.9)",rec:"Comunicar de forma especifica el operativo de seguridad para Los Mochis, evitando que se diluya en el discurso generico estatal; una zona historicamente tranquila que empieza a vivir hechos de alto impacto necesita una respuesta visible y localizada, no solo cifras agregadas a nivel estado."},
+  {n:"Normalizacion del miedo cotidiano",s:52,c:"#b48200",bg:"rgba(250,199,117,.25)",br:"rgba(250,199,117,.5)",niv:"Relevante",delta:"-1",emo:"Resignacion + Miedo naturalizado",int:3,nar:"Uno se acostumbra, pero no deberia",act:"Sistema completo - vida cotidiana de la poblacion sinaloense",ter:"Culiacan - Mazatlan - Los Mochis",pol:"Cinismo civico - bajo riesgo de movilizacion, alto riesgo de apatia electoral de cara a 2027",ev:"A 23 meses del inicio del conflicto criminal en septiembre de 2024, medios locales documentan de forma recurrente la reduccion de horarios comerciales y la restriccion de movilidad nocturna como parte de la rutina de comerciantes y familias (Grupo Animal / El Sol de Mazatlan, ICF 4.0) - El presidente de la Comision Estatal de Derechos Humanos, Oscar Loza Ochoa, advirtio que 'no hay elementos' para asegurar que la crisis de seguridad mejorara, describiendo un panorama de 'grandes claroscuros' (Yahoo Noticias / Grupo Animal, ICF 4.1)",rec:"Vigilar este indicador como termometro de fatiga civica: una poblacion que deja de discutir el miedo no esta en calma, esta en resignacion, lo cual reduce la presion social sobre las autoridades pero incrementa el riesgo de desconexion democratica de cara a 2027."}
+];
+
+var E = [
+  {n:"Miedo",i:5,c:"#E24B4A",chg:"Estructural, sostenido 23 meses",lec:"Violencia cotidiana en Culiacan y Mazatlan, mas el nuevo foco en Los Mochis",p:26},
+  {n:"Indignacion",i:4,c:"#E24B4A",chg:"Sostenida, reactivada por fosas y marchas",lec:"Ancla en desapariciones e impunidad -- el frente mas movilizable del estado",p:20},
+  {n:"Desconfianza",i:4,c:"#EF9F27",chg:"Repunte fuerte desde el 25 de agosto",lec:"Detonada por la licencia de Rocha Moya y los senalamientos de Estados Unidos",p:19},
+  {n:"Incertidumbre",i:4,c:"#EF9F27",chg:"Nueva, ligada al relevo del Ejecutivo",lec:"La ambiguedad legal entre licencia temporal y renuncia definitiva alimenta la duda",p:15},
+  {n:"Frustracion economica",i:3,c:"#b48200",chg:"Sostenida desde 2024",lec:"Cierre de negocios y reduccion de horarios en Culiacan y Mazatlan",p:12},
+  {n:"Resignacion",i:3,c:"#b48200",chg:"Estable, normalizacion del riesgo",lec:"Vida cotidiana adaptada al miedo tras 23 meses de crisis sostenida",p:6},
+  {n:"Esperanza cautelosa",i:1,c:"#16a34a",chg:"Baja pero presente",lec:"Vinculada a la nueva gobernadora interina y a la expectativa de un estilo distinto",p:2}
+];
+
+var TER = [
+  {n:"Culiacan -- zona urbana y periferia",niv:"Rojo",c:"#E24B4A",bg:"rgba(226,75,74,.15)",br:"rgba(226,75,74,.4)",emo:"Miedo - Hartazgo",ten:"Guerra interna del carter y cierre de negocios",obs:"Epicentro historico de la disputa Chapitos-Mayiza desde septiembre de 2024. Comercios documentan cierres y reduccion de horarios por riesgo de balaceras. Concentra la mayor parte de los 2,419 asesinatos y 2,839 personas privadas de la libertad acumulados en el estado. (Noroeste / MVS Noticias, ICF 4.1-4.4)"},
+  {n:"Culiacan institucional -- Congreso y Palacio de Gobierno",niv:"Rojo",c:"#E24B4A",bg:"rgba(226,75,74,.15)",br:"rgba(226,75,74,.4)",emo:"Incertidumbre - Desconfianza",ten:"Crisis politica por relevo del Ejecutivo",obs:"Sede del nombramiento de Graciela Dominguez Nava como gobernadora interina el 25 de agosto de 2026, tras la licencia indefinida de Rocha Moya en medio de senalamientos de Estados Unidos. PAN y PRI votaron en contra por considerarlo continuidad del gobierno saliente. (CNN en Espanol / El Informador, ICF 4.3-4.5)"},
+  {n:"Culiacan -- Catedral y Fiscalia General del Estado",niv:"Naranja",c:"#EF9F27",bg:"rgba(239,159,39,.15)",br:"rgba(239,159,39,.4)",emo:"Indignacion - Dolor",ten:"Desapariciones e impunidad",obs:"Punto de partida de la XIV Marcha de la Dignidad Nacional (10 de mayo de 2026) y de las protestas recurrentes de colectivos de busqueda como Sabuesos Guerreras, que exigen resultados y no discursos a cada nueva administracion. (Infobae / El Universal, ICF 4.2-4.3)"},
+  {n:"Mazatlan -- zona turistica y comercial",niv:"Naranja",c:"#EF9F27",bg:"rgba(239,159,39,.15)",br:"rgba(239,159,39,.4)",emo:"Frustracion - Miedo",ten:"Repunte de homicidios y golpe al turismo",obs:"23 asesinatos registrados solo en agosto de 2026, principal preocupacion citada por organismos empresariales del puerto. Coparmex y Canaco advierten riesgo sostenido para negocios locales por violencia y falta de respuesta gubernamental. (El Sol de Mazatlan, ICF 4.0-4.2)"},
+  {n:"Los Mochis -- sector Scally",niv:"Amarillo",c:"#b48200",bg:"rgba(250,199,117,.25)",br:"rgba(250,199,117,.5)",emo:"Alarma - Miedo repentino",ten:"Nuevo foco de violencia armada",obs:"Enfrentamiento armado entre civiles y Guardia Nacional el 9 de agosto de 2026, con 8 detenidos y 4 presuntos agresores lesionados. Zona historicamente con menor frecuencia de violencia frente a Culiacan y Mazatlan, lo que intensifica la narrativa de que 'ningun lugar es seguro'. (Meganoticias, ICF 4.1)"}
+];
+
+var NAR = [
+  {n:"Gobierno capturado",tema:"Crisis politica / relevo del Ejecutivo",act:"Gobierno estatal (Morena) - Gobierno federal",pol:"Erosion de legitimidad institucional -- riesgo de voto de castigo en 2027",f:"Si el propio gobernador esta senalado por Estados Unidos, quien nos protege de verdad",orig:"Sintesis de reaccion ciudadana y opositora tras la licencia de Rocha Moya -- El Informador / CNN en Espanol, agosto 2026 -- ICF 4.4"},
+  {n:"Comunidad olvidada",tema:"Desapariciones e impunidad",act:"Fiscalia General del Estado - sistema de justicia",pol:"Movilizacion sostenida de colectivos -- alto potencial de indignacion acumulada",f:"La desaparicion de mis hijos no se modifica con el cambio de gobernador",orig:"Maria Isabel Cruz, fundadora de Sabuesos Guerreras -- El Universal, mayo 2026 -- ICF 4.3"},
+  {n:"Sinaloa como moneda de cambio",tema:"Crisis politica / presion de Estados Unidos",act:"Gobierno federal (Presidencia de Sheinbaum)",pol:"Rechazo reputacional -- percepcion de que el estado se negocia desde fuera",f:"A Sinaloa la usan para negociar con Estados Unidos, no para resolver lo de aqui",orig:"Sintesis de analisis periodistico sobre la crisis politica -- Impacto Latino, agosto 2026 -- ICF 4.0"},
+  {n:"Guerra sin fin",tema:"Violencia / disputa interna del carter",act:"Facciones Los Chapitos y La Mayiza - Gobierno estatal y federal",pol:"Fatiga civica sostenida -- bajo riesgo de movilizacion unificada, alto desgaste de confianza",f:"Ya no sabemos a que hora es seguro salir",orig:"Sintesis de testimonios comerciales -- El Sol de Mazatlan / Grupo Animal, 2026 -- ICF 4.0"},
+  {n:"Normalidad impuesta",tema:"Economia / discurso oficial vs. realidad comercial",act:"Secretaria de Economia estatal",pol:"Desgaste de confianza institucional -- bajo riesgo de movilizacion directa",f:"Dicen que nadie se va a ir de Sinaloa, pero cierran los negocios uno a uno",orig:"Sintesis de contraste entre version oficial e indicadores del Inegi -- MVS Noticias, junio 2026 -- ICF 4.3"},
+  {n:"El sistema completo, no un solo culpable",tema:"Desconfianza gobierno-crimen organizado",act:"Clase politica sinaloense en su conjunto",pol:"Erosion de confianza transversal -- se reactiva con cada senalamiento judicial",f:"Ya no se si el que gobierna o el que manda son la misma persona",orig:"Sintesis de humor social digital tras senalamientos de EE.UU. -- El Informador, agosto 2026 -- ICF 3.9"},
+  {n:"Ningun lugar es seguro",tema:"Extension de la violencia al norte del estado",act:"Guardia Nacional - Grupo Interinstitucional",pol:"Contagio territorial de la narrativa de inseguridad generalizada",f:"Aqui nunca pasaba esto, ahora tampoco nos sentimos seguros",orig:"Sintesis de reaccion vecinal tras el enfrentamiento del 9 de agosto -- Meganoticias, agosto 2026 -- ICF 4.1"}
+];
+
+var RG = [
+  {n:"Crisis politica por relevo del Ejecutivo",srr:88,act:"Gobierno estatal (Morena) - Gobierno federal",tipo:"Organica + Amplificada legitima",prob:"Alta",accion:"Voceria institucional inmediata de la gobernadora interina; deslinde claro y verificable frente a la gestion de Rocha Moya.",c:"#E24B4A"},
+  {n:"Desapariciones e impunidad",srr:76,act:"Fiscalia General del Estado - sistema de justicia",tipo:"Organica",prob:"Alta",accion:"Reunion publica periodica con colectivos de busqueda; reporte de avances con cifras verificables.",c:"#EF9F27"},
+  {n:"Guerra interna del carter",srr:74,act:"Gobierno estatal y federal - Grupo Interinstitucional",tipo:"Organica + Amplificada legitima",prob:"Alta",accion:"Diferenciar comunicacionalmente los avances estadisticos reales de la percepcion cotidiana de inseguridad persistente.",c:"#EF9F27"},
+  {n:"Negacion oficial del dano economico",srr:61,act:"Secretaria de Economia estatal",tipo:"Amplificada legitima (medios / Coparmex / Canaco)",prob:"Media-Alta",accion:"Reconocer el impacto documentado por el Inegi y presentar un plan de apoyo, no solo cifras de inversion nueva.",c:"#EF9F27"},
+  {n:"Desconfianza gobierno-crimen organizado",srr:58,act:"Clase politica sinaloense en su conjunto",tipo:"Organica",prob:"Media",accion:"Evitar justificaciones extensas ante senalamientos judiciales; priorizar evidencia verificable sobre discurso defensivo.",c:"#b48200"},
+  {n:"Extension de la violencia al norte del estado",srr:52,act:"Guardia Nacional - Grupo Interinstitucional",tipo:"Organica (ICF 4.1, prensa regional)",prob:"Media",accion:"Comunicar operativo especifico para Los Mochis antes de que la narrativa de inseguridad generalizada se consolide.",c:"#b48200"}
+];
+
+var SEG = [
+  {n:"Comerciantes y trabajadores informales",emo:"Miedo activo",emoc:"#E24B4A",det:"Cierre forzado de horarios comerciales por riesgo de balaceras",ter:"Culiacan",f:"Bajamos la cortina antes de que oscurezca, asi perdemos clientes pero cuidamos la vida",orig:"Sintesis de testimonios comerciales -- El Sol de Mazatlan / Grupo Animal, 2026"},
+  {n:"Madres buscadoras y colectivos",emo:"Indignacion + Dolor",emoc:"#E24B4A",det:"Hallazgo de fosas clandestinas sin avances judiciales visibles",ter:"Culiacan",f:"No venimos a agradecer discursos, venimos a exigir resultados",orig:"Maria Isabel Cruz, Sabuesos Guerreras -- El Universal, mayo 2026"},
+  {n:"Sector turistico y restaurantero",emo:"Frustracion",emoc:"#EF9F27",det:"Repunte de homicidios en agosto en plena temporada alta",ter:"Mazatlan",f:"Cada balacera nos cuesta reservaciones canceladas por semanas",orig:"Sintesis de declaraciones de Coparmex y Canaco -- El Sol de Mazatlan, agosto 2026"},
+  {n:"Clase media urbana y lideres de opinion",emo:"Desconfianza",emoc:"#EF9F27",det:"Licencia de Rocha Moya en medio de senalamientos de Estados Unidos",ter:"Estatal",f:"Ya no se si el que gobierna o el que manda son la misma persona",orig:"Sintesis de humor social digital -- El Informador, agosto 2026"},
+  {n:"Familias y jovenes del norte del estado",emo:"Alarma / miedo repentino",emoc:"#b48200",det:"Enfrentamiento armado con Guardia Nacional en sector Scally",ter:"Los Mochis",f:"Aqui nunca pasaba esto, ahora tampoco nos sentimos seguros",orig:"Sintesis de reaccion vecinal -- Meganoticias, agosto 2026"},
+  {n:"Beneficiarios de programas sociales",emo:"Resignacion con lealtad condicionada",emoc:"#16a34a",det:"Temor a que la crisis politica reduzca los apoyos sociales",ter:"Estatal",f:"Con tal de que no se acaben los apoyos, uno aguanta lo demas",orig:"Sintesis de humor social en zonas beneficiarias de programas Bienestar -- monitoreo digital, 2026"}
+];
+
+var TRAJ = [
+  {n:"Guerra interna del carter",t3:81,t2:84,t1:86,ta:88,tipo:"Persistente",vel:"Creciendo",vc:"o"},
+  {n:"Crisis politica por relevo del Ejecutivo",t3:0,t2:12,t1:31,ta:82,tipo:"Nueva",vel:"Acelerada",vc:"o"},
+  {n:"Desapariciones e impunidad",t3:64,t2:69,t1:71,ta:74,tipo:"Persistente",vel:"Creciendo",vc:"o"},
+  {n:"Crisis economica",t3:58,t2:63,t1:66,ta:68,tipo:"Persistente",vel:"Creciendo",vc:"o"},
+  {n:"Desconfianza gobierno-crimen",t3:40,t2:36,t1:34,ta:63,tipo:"Recurrente",vel:"Acelerada",vc:"o"},
+  {n:"Violencia en el norte del estado",t3:0,t2:8,t1:15,ta:58,tipo:"Nueva",vel:"Acelerada",vc:"o"},
+  {n:"Normalizacion del miedo",t3:50,t2:53,t1:53,ta:52,tipo:"Persistente",vel:"Estable",vc:"g"}
+];
+
+var ALRT = [
+  {t:"Licencia indefinida de Rocha Moya y nombramiento de gobernadora interina",rows:[
+    ["Territorio","Estatal -- alta resonancia en Culiacan (Congreso y Palacio de Gobierno)"],
+    ["Emocion","Incertidumbre 4/5 - Desconfianza 4/5"],
+    ["Actor expuesto","Gobierno estatal (Morena) - Gobierno federal (Presidencia de Sheinbaum)"],
+    ["Que ocurrio","El 25 de agosto de 2026, Ruben Rocha Moya solicito licencia indefinida en medio de una investigacion de la FGR y senalamientos de Estados Unidos que pidio su detencion con fines de extradicion junto a otros nueve funcionarios. El Congreso de Sinaloa, con mayoria de Morena, nombro a Graciela Dominguez Nava como gobernadora interina; PAN y PRI votaron en contra por considerarlo continuidad del gobierno saliente."],
+    ["Narrativa activa","Gobierno capturado / Sinaloa como moneda de cambio"],
+    ["Fuente verificadora","El Informador / CNN en Espanol -- 25 agosto 2026 -- ICF 4.4-4.5"],
+    ["Riesgo","Alto -- SRR 88 -- Cobertura nacional e internacional, coincide con presion diplomatica activa de Estados Unidos"],
+    ["Escalamiento","Probabilidad alta si avanza el proceso de extradicion o si Rocha Moya intenta reincorporarse conforme a la ambiguedad juridica de su licencia"],
+    ["Accion inmediata","Comunicado claro sobre el estatus legal de la licencia (temporal vs. definitiva) y agenda publica de la gobernadora interina que se distinga visiblemente de la gestion anterior en sus primeras semanas."]
+  ]},
+  {t:"Fosas clandestinas y estancamiento de la busqueda de desaparecidos",rows:[
+    ["Territorio","Culiacan y zonas rurales del estado"],
+    ["Emocion","Indignacion 5/5 - Dolor 4/5"],
+    ["Actor expuesto","Fiscalia General del Estado - Comision de Busqueda de Personas"],
+    ["Que ocurrio","En agosto de 2026, un reporte anonimo llevo al colectivo Por las Voces Sin Justicia hasta una zona donde se encontraron restos a la intemperie y dentro de una fosa. El hallazgo se suma a la XIV Marcha de la Dignidad Nacional del 10 de mayo, donde colectivos exigieron a la entonces nueva administracion no enfriar las busquedas."],
+    ["Narrativa activa","Comunidad olvidada"],
+    ["Fuente verificadora","El Sol de Mazatlan / El Universal -- mayo-agosto 2026 -- ICF 4.0-4.3"],
+    ["Riesgo","Alto -- SRR 76 -- Antecedente de movilizaciones recurrentes y de alta carga simbolica en fechas conmemorativas"],
+    ["Escalamiento","Probabilidad media-alta si se documentan nuevos hallazgos sin respuesta institucional visible antes de la siguiente fecha conmemorativa"],
+    ["Accion inmediata","Reunion publica con colectivos de busqueda con fecha fija y reporte de avances verificable, evitando que el cambio de administracion se perciba como pretexto para pausar las investigaciones."]
+  ]},
+  {t:"Enfrentamiento armado en Los Mochis: la violencia se extiende al norte",rows:[
+    ["Territorio","Los Mochis, sector Scally"],
+    ["Emocion","Alarma 4/5 - Miedo repentino 4/5"],
+    ["Actor expuesto","Guardia Nacional - Grupo Interinstitucional de seguridad"],
+    ["Que ocurrio","La noche del 9 de agosto de 2026, civiles armados se enfrentaron con elementos de la Guardia Nacional en el sector Scally de Los Mochis. El saldo oficial fue de ocho personas detenidas y cuatro presuntos agresores lesionados, ademas del aseguramiento de armas. El hecho ocurre en una zona historicamente con menor frecuencia de violencia comparada con Culiacan y Mazatlan."],
+    ["Narrativa activa","Ningun lugar es seguro"],
+    ["Fuente verificadora","Meganoticias -- 9-19 agosto 2026 -- ICF 4.1"],
+    ["Riesgo","Medio-Alto -- SRR 52 -- Contagio territorial de la narrativa de inseguridad generalizada hacia zonas antes consideradas tranquilas"],
+    ["Escalamiento","Probabilidad media si se registran nuevos hechos de alto impacto en el norte del estado sin una respuesta de seguridad visible y localizada"],
+    ["Accion inmediata","Comunicar un operativo especifico y verificable para el sector Scally y la zona de Los Mochis, evitando que la respuesta se diluya en el discurso generico de seguridad estatal."]
+  ]}
+];
+
+// ============================================================
+// RENDER
+// ============================================================
+function switchTab(id) {
+  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('on')});
+  document.getElementById('v-' + id).classList.add('on');
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.toggle('on', b.dataset.tab === id)});
+  if (id === 'emociones') setTimeout(buildEmoD, 50);
+  if (id === 'tensiones') setTimeout(buildTensH, 50);
+  if (id === 'riesgos') setTimeout(buildSRR, 50);
+  if (id === 'trayectoria') setTimeout(buildTraj, 50);
+}
+document.getElementById('main-nav').addEventListener('click', function(e){
+  var b = e.target.closest('.nb');
+  if (b) switchTab(b.dataset.tab);
+});
+
+var CR = {};
+function buildEmoD() {
+  if (CR.emoD) return;
+  var ctx = document.getElementById('cEmoD');
+  if (!ctx) return;
+  CR.emoD = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: E.map(function(e){return e.n}),
+      datasets: [{ label:'Distribucion emocional (%)', data: E.map(function(e){return e.p}),
+        backgroundColor: E.map(function(e){return e.c}), borderRadius:5, borderSkipped:false }]},
+    options: { indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){return ' '+c.raw+'% de las senales'} } } },
+      scales:{ x:{ min:0, max:35, ticks:{color:'#64748b',font:{size:11}}, grid:{color:'rgba(0,0,0,0.06)'} },
+               y:{ ticks:{color:'#1e293b',font:{size:11}}, grid:{display:false} } } }
+  });
+}
+
+function buildTensH() {
+  if (CR.tensH) return;
+  var ctx = document.getElementById('cTensH');
+  if (!ctx) return;
+  CR.tensH = new Chart(ctx, {
+    type:'bar',
+    data:{ labels:T.map(function(t){return t.n}),
+      datasets:[{ label:'Score de Tension Social', data:T.map(function(t){return t.s}),
+        backgroundColor:T.map(function(t){return t.c}), borderRadius:5, borderSkipped:false }]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      onClick:function(evt, els){
+        if (!els.length) return;
+        var idx = els[0].index;
+        var t = T[idx];
+        document.getElementById('panel-narrv').textContent = 'Narrativa dominante: ' + t.nar;
+      },
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){return ' STS: '+c.raw+' / 100'} } } },
+      scales:{ x:{ min:0, max:100, ticks:{color:'#64748b',font:{size:11},stepSize:20}, grid:{color:'rgba(0,0,0,0.06)'} },
+               y:{ ticks:{color:'#1e293b',font:{size:11}}, grid:{display:false} } } }
+  });
+}
+
+function buildSRR() {
+  if (CR.srr) return;
+  var ctx = document.getElementById('cSRR');
+  if (!ctx) return;
+  CR.srr = new Chart(ctx, {
+    type:'bar',
+    data:{ labels:RG.map(function(r){return r.n}),
+      datasets:[{ label:'Score de Riesgo Reputacional', data:RG.map(function(r){return r.srr}),
+        backgroundColor:RG.map(function(r){return r.c}), borderRadius:5, borderSkipped:false }]},
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label:function(c){return ' SRR: '+c.raw+' / 100'} } } },
+      scales:{ x:{ min:0, max:100, ticks:{color:'#64748b',font:{size:11},stepSize:20}, grid:{color:'rgba(0,0,0,0.06)'} },
+               y:{ ticks:{color:'#1e293b',font:{size:11}}, grid:{display:false} } } }
+  });
+}
+
+function buildTraj() {
+  if (CR.traj) return;
+  var ctx = document.getElementById('cTraj');
+  if (!ctx) return;
+  var palette = ['#E24B4A','#EF9F27','#b48200','#0891b2','#16a34a','#6366F1','#db2777'];
+  CR.traj = new Chart(ctx, {
+    type:'line',
+    data:{ labels:['Mar-Abr','May-Jun','Jul','Ago'],
+      datasets: TRAJ.map(function(row, i){
+        return { label: row.n, data:[row.t3,row.t2,row.t1,row.ta], borderColor:palette[i%palette.length],
+          backgroundColor:'transparent', tension:.3, borderWidth:2, pointRadius:3 };
+      }) },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'bottom', labels:{ color:'#1e293b', font:{size:10}, boxWidth:10 } } },
+      scales:{ x:{ ticks:{color:'#64748b',font:{size:11}}, grid:{display:false} },
+               y:{ min:0, max:100, ticks:{color:'#64748b',font:{size:11}}, grid:{color:'rgba(0,0,0,0.06)'} } } }
+  });
+}
+
+function selT(i) {
+  var rows = document.querySelectorAll('#tens-list .trow');
+  for (var k=0;k<rows.length;k++) rows[k].classList.remove('sel');
+  var row = document.querySelector('#tens-list .trow[data-idx="'+i+'"]');
+  if (row) row.classList.add('sel');
+  var t = T[i];
+  document.getElementById('tens-detail').innerHTML =
+    '<div class="card" style="border-color:'+t.br+';animation:fadeIn .2s ease">'
+    + '<div class="ctit" style="color:'+t.c+'"><span style="width:5px;height:5px;border-radius:50%;background:'+t.c+';display:inline-block;flex-shrink:0"></span>&nbsp;'+t.n+' &mdash; STS '+t.s+'</div>'
+    + '<div class="dg">'
+    + '<span class="dk">Nivel</span><span class="dv" style="color:'+t.c+';font-weight:600">'+t.niv+' &middot; '+t.s+'/100</span>'
+    + '<span class="dk">Emocion</span><span class="dv">'+t.emo+' &middot; '+t.int+'/5</span>'
+    + '<span class="dk">Narrativa</span><span class="dv">'+t.nar+'</span>'
+    + '<span class="dk">Actor</span><span class="dv">'+t.act+'</span>'
+    + '<span class="dk">Territorio</span><span class="dv">'+t.ter+'</span>'
+    + '<span class="dk">Potencial</span><span class="dv">'+t.pol+'</span>'
+    + '<span class="dk">Evidencia</span><span class="dv" style="font-size:11.5px">'+t.ev+'</span>'
+    + '</div><div class="drec">'+t.rec+'</div></div>';
+}
+
+function renderAll() {
+  // Ranking de tensiones
+  var th='';
+  for (var i=0;i<T.length;i++){
+    var t=T[i];
+    var dcolor = t.delta.indexOf('+')===0 ? (parseInt(t.delta)>10?'#E24B4A':'#EF9F27') : (parseInt(t.delta)<-5?'#16a34a':'var(--muted)');
+    th += '<div class="trow" data-idx="'+i+'">'
+        + '<span class="tnum">'+(i+1)+'</span>'
+        + '<span class="tname">'+t.n+'</span>'
+        + '<span class="tdelta" style="color:'+dcolor+'">'+t.delta+'</span>'
+        + '<span class="tbar"><span class="tbar-f" style="width:'+t.s+'%;background:'+t.c+';display:block"></span></span>'
+        + '<span class="tsco" style="color:'+t.c+'">'+t.s+'</span>'
+        + '<span class="tniv" style="background:'+t.bg+';color:'+t.c+'">'+t.niv+'</span>'
+        + '</div>';
+  }
+  document.getElementById('tens-list').innerHTML = th;
+
+  // Emociones (barras)
+  var eh='';
+  for (var i=0;i<E.length;i++){
+    var e=E[i];
+    var dots='';
+    for (var d=1; d<=5; d++) dots += (d<=e.i ? '\u25CF' : '\u25CB');
+    eh += '<div class="ebar"><span class="enam">'+e.n+'</span>'
+        + '<span class="ebg"><span class="efill" style="width:'+(e.i*20)+'%;background:'+e.c+';display:block"></span></span>'
+        + '<span class="epts" style="color:'+e.c+'">'+dots+'</span></div>'
+        + '<div style="font-size:11px;color:var(--dim);margin:-4px 0 8px 0;padding-left:0">'+e.chg+' &middot; '+e.lec+'</div>';
+  }
+  document.getElementById('emo-bars').innerHTML = eh;
+
+  // Territorios
+  var tr='';
+  for (var i=0;i<TER.length;i++){
+    var z=TER[i];
+    tr += '<div class="ter" style="border-color:'+z.br+'" data-ter="'+i+'">'
+        + '<div class="ter-h" style="background:'+z.bg+'"><div class="ter-info">'
+        + '<div class="ter-name" style="color:'+z.c+'">'+z.n+'</div>'
+        + '<div class="ter-sub" style="color:'+z.c+'">'+z.ten+' &middot; Emocion: '+z.emo+'</div>'
+        + '</div><span class="tniv" style="background:'+z.bg+';color:'+z.c+';flex-shrink:0">'+z.niv+'</span>'
+        + '<span class="ter-arr" id="ta'+i+'">&#9660;</span></div>'
+        + '<div class="ter-body" id="tb'+i+'">'+z.obs+'</div></div>';
+  }
+  document.getElementById('ter-list').innerHTML = tr;
+
+  // Narrativas
+  var nh='';
+  for (var i=0;i<NAR.length;i++){
+    var n=NAR[i];
+    nh += '<div class="nar" data-nar="'+i+'"><div class="nar-h"><div class="nar-info">'
+        + '<div class="nar-name">'+n.n+'</div>'
+        + '<div class="nar-meta">'+n.tema+' &middot; Actor: '+n.act+'</div>'
+        + '</div><span class="nar-arr" id="na'+i+'">&#9660;</span></div>'
+        + '<div class="nar-body" id="nb'+i+'"><div><b>Potencial politico:</b> '+n.pol+'</div>'
+        + '<div class="nfrase">&ldquo;'+n.f+'&rdquo;</div>'
+        + '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+n.orig+'</div></div></div>';
+  }
+  document.getElementById('nar-list').innerHTML = nh;
+
+  // Riesgos
+  var rh='';
+  for (var i=0;i<RG.length;i++){
+    var r=RG[i];
+    rh += '<div class="card mb"><div class="dg">'
+        + '<span class="dk">Tension</span><span class="dv" style="font-weight:600">'+r.n+'</span>'
+        + '<span class="dk">SRR</span><span class="dv" style="color:'+r.c+';font-weight:700">'+r.srr+' / 100</span>'
+        + '<span class="dk">Actor expuesto</span><span class="dv">'+r.act+'</span>'
+        + '<span class="dk">Tipo de senal</span><span class="dv">'+r.tipo+'</span>'
+        + '<span class="dk">Prob. de escalar</span><span class="dv">'+r.prob+'</span>'
+        + '</div><div class="drec">'+r.accion+'</div></div>';
+  }
+  document.getElementById('riesgo-list').innerHTML = rh;
+
+  // Segmentos (distribucion emocional por segmento)
+  var sh='';
+  for (var i=0;i<SEG.length;i++){
+    var s=SEG[i];
+    sh += '<div class="seg" data-seg="'+i+'"><div class="seg-h"><div class="seg-info">'
+        + '<div class="seg-name">'+s.n+'</div>'
+        + '<div class="seg-meta">Territorio: '+s.ter+' &middot; Detonante: '+s.det+'</div>'
+        + '</div><span class="seg-emo" style="background:'+s.emoc+'22;color:'+s.emoc+';border:1px solid '+s.emoc+'55">'+s.emo+'</span>'
+        + '<span class="seg-arr" id="sa'+i+'">&#9660;</span></div>'
+        + '<div class="seg-body" id="sb'+i+'"><div class="nfrase">&ldquo;'+s.f+'&rdquo;</div>'
+        + '<div style="font-size:11px;color:var(--dim);margin-top:4px">'+s.orig+'</div></div></div>';
+  }
+  document.getElementById('seg-list').innerHTML = sh;
+
+  // Trayectoria (tabla)
+  var tj='';
+  for (var i=0;i<TRAJ.length;i++){
+    var j=TRAJ[i];
+    var delta = j.ta - j.t1;
+    var dsign = delta>0 ? '+'+delta : String(delta);
+    var vclass = j.vel==='Acelerada' ? 'vr' : (j.vel==='Creciendo' ? 'vo' : 'vg');
+    var arrow = delta>10 ? '\u2191' : (delta>=1 ? '\u2192' : (delta<=-6 ? '\u2193' : '\u2014'));
+    var tipoClass = j.tipo==='Nueva' ? 'vr' : (j.tipo==='Recurrente' ? 'vo' : 'vg');
+    tj += '<tr><td>'+j.n+'</td><td style="text-align:center;color:var(--muted)">'+(j.t3||'&mdash;')+'</td>'
+        + '<td style="text-align:center;color:var(--muted)">'+j.t2+'</td>'
+        + '<td style="text-align:center;color:var(--muted)">'+j.t1+'</td>'
+        + '<td style="text-align:center;font-weight:700">'+j.ta+'</td>'
+        + '<td style="text-align:center;font-weight:700">'+arrow+' '+dsign+'</td>'
+        + '<td><span class="vchip '+vclass+'">'+j.vel+'</span></td>'
+        + '<td><span class="vchip '+tipoClass+'">'+j.tipo+'</span></td></tr>';
+  }
+  document.getElementById('traj-body').innerHTML = tj;
+
+  // Alertas
+  var al='';
+  for (var i=0;i<ALRT.length;i++){
+    var a=ALRT[i];
+    var rowsHtml='';
+    for (var j=0;j<a.rows.length;j++){
+      rowsHtml += '<span class="ak">'+a.rows[j][0]+'</span><span class="av">'+a.rows[j][1]+'</span>';
+    }
+    al += '<div class="abox" data-al="'+i+'"><div class="abox-h"><div class="abox-t"><span class="pulse"></span>Alerta '+(i+1)+' &mdash; '+a.t+'</div>'
+        + '<span class="abox-arr" id="aa'+i+'">&#9658;</span></div>'
+        + '<div class="abox-body" id="ab'+i+'"><div class="ag">'+rowsHtml+'</div></div></div>';
+  }
+  document.getElementById('alertas-list').innerHTML = al;
+}
+
+// ============================================================
+// INTERACTIONS -- event delegation, no inline onclick
+// ============================================================
+document.addEventListener('click', function(e){
+  var row = e.target.closest('#tens-list .trow[data-idx]');
+  if (row) { selT(parseInt(row.dataset.idx,10)); return; }
+
+  var ter = e.target.closest('[data-ter]');
+  if (ter) {
+    var gi = ter.dataset.ter;
+    var b = document.getElementById('tb'+gi), a = document.getElementById('ta'+gi);
+    if (!b || !a) return;
+    var op = b.classList.contains('op');
+    b.classList.toggle('op', !op); a.classList.toggle('op', !op);
+    a.innerHTML = op ? '&#9660;' : '&#9650;';
+    return;
+  }
+  var nar = e.target.closest('[data-nar]');
+  if (nar) {
+    var gi = nar.dataset.nar;
+    var b = document.getElementById('nb'+gi), a = document.getElementById('na'+gi);
+    if (!b || !a) return;
+    var op = b.classList.contains('op');
+    b.classList.toggle('op', !op); a.classList.toggle('op', !op);
+    a.innerHTML = op ? '&#9660;' : '&#9650;';
+    return;
+  }
+  var seg = e.target.closest('[data-seg]');
+  if (seg) {
+    var gi = seg.dataset.seg;
+    var b = document.getElementById('sb'+gi), a = document.getElementById('sa'+gi);
+    if (!b || !a) return;
+    var op = b.classList.contains('op');
+    b.classList.toggle('op', !op); a.classList.toggle('op', !op);
+    a.innerHTML = op ? '&#9660;' : '&#9650;';
+    return;
+  }
+  var al = e.target.closest('[data-al]');
+  if (al) {
+    var gi = al.dataset.al;
+    var b = document.getElementById('ab'+gi), a = document.getElementById('aa'+gi);
+    if (!b || !a) return;
+    var op = b.classList.contains('op');
+    b.classList.toggle('op', !op); a.classList.toggle('op', !op);
+    a.innerHTML = op ? '&#9658;' : '&#9660;';
+    return;
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderAll();
+setTimeout(buildTensH, 80);
+</script>
+</body>
+</html>

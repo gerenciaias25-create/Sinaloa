@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartografía Socioafectiva de Sinaloa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --page:#ffffff;
+    --surface:#ffffff;
+    --card-bg:#d5d1d1;
+    --header-bg:#1C2738;
+    --text-primary:#1c1712;
+    --text-secondary:#333333;
+    --text-muted:#555555;
+    --border:rgba(28,23,18,0.15);
+    --border-strong:rgba(28,23,18,0.3);
+    --accent:#a85a1c;
+    --accent-ink:#7a4114;
+    --accent-soft:#e2dede;
+    --accent-2:#1f6b61;
+    --accent-2-soft:#dcece8;
+    --violet:#5b4a94;
+    --violet-soft:#e6e1f3;
+    --good:#0ca30c;
+    --good-soft:#dff3df;
+    --warning:#c98500;
+    --warning-soft:#faecc9;
+    --serious:#c9612f;
+    --serious-soft:#f8ddcb;
+    --critical:#d03b3b;
+    --critical-soft:#f9dcdc;
+    --shadow: 0 2px 4px rgba(0,0,0,0.08);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--page);}
+  body{background:var(--page);color:var(--text-primary);font-family:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,h4{font-family:"Fraunces", Georgia, serif;font-weight:600;text-wrap:balance;margin:0;letter-spacing:-0.01em;}
+  .mono{font-family:"IBM Plex Mono", ui-monospace, monospace;}
+  .tabular{font-variant-numeric:tabular-nums;}
+  a{color:var(--accent-ink);}
+  ::selection{background:var(--accent-soft);}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;background:var(--page);}
+
+  /* Encabezado */
+  .brandbar{background:var(--header-bg);color:#ffffff;padding:16px 0;border-bottom:none;}
+  .brandbar-inner{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .brand{font-family:"Fraunces",serif;font-weight:600;font-size:15px;color:#ffffff;}
+  .brand span{color:#ffffff;}
+  .brand-tag{font-size:11.5px;color:#94A3B8;}
+
+  .hero{padding:40px 0 0;}
+  .hero-eyebrow{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent-ink);margin-bottom:16px;}
+  .hero-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .hero h1{font-size:clamp(28px,4vw,40px);line-height:1.08;max-width:20ch;}
+  .hero-sub{color:var(--text-secondary);font-size:15.5px;max-width:66ch;margin-top:14px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+  .meta-pill{display:flex;align-items:center;gap:7px;background:var(--card-bg);border:1px solid var(--border);padding:7px 13px;border-radius:99px;font-size:12.5px;color:var(--text-secondary);}
+  .meta-pill b{color:var(--text-primary);font-weight:600;}
+
+  /* Cards y Contenedores */
+  .index-panel{display:grid;grid-template-columns:280px 1fr;gap:16px;margin-top:28px;}
+  .gauge-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+  .gauge-wrap{position:relative;width:150px;height:150px;}
+  .gauge-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .gauge-num b{font-family:"Fraunces",serif;font-size:34px;line-height:1;color:var(--critical);}
+  .gauge-num span{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+  .gauge-label{font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);}
+  .band-chip{font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px;background:var(--serious-soft);color:var(--serious);}
+  .brutal-card{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:24px 26px;display:flex;flex-direction:column;justify-content:center;}
+  .brutal-card .tag-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-ink);margin-bottom:10px;}
+  .brutal-card p{font-family:"Fraunces",serif;font-size:19px;line-height:1.5;margin:0;color:var(--text-primary);}
+  .brutal-card p b{color:var(--accent-ink);}
+
+  /* Tabs */
+  .tabs-nav{display:flex;gap:6px;margin-top:34px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+  .tabs-nav::-webkit-scrollbar{display:none;}
+  .tab-btn{
+    appearance:none;border:none;background:transparent;cursor:pointer;
+    font-family:"IBM Plex Sans";font-size:13.5px;font-weight:600;color:var(--text-muted);
+    padding:12px 16px;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px;
+  }
+  .tab-btn:hover{color:var(--text-primary);}
+  .tab-btn.active{color:var(--accent-ink);border-bottom-color:var(--accent);}
+  .tab-panel{display:none;padding:32px 0 60px;background:var(--page);}
+  .tab-panel.active{display:block;}
+
+  .sec-num{font-family:"IBM Plex Mono";font-size:12px;color:var(--accent-ink);font-weight:600;margin-bottom:6px;letter-spacing:0.04em;}
+  .sec-head h2{font-size:clamp(20px,2.4vw,25px);}
+  .sec-dek{color:var(--text-secondary);font-size:14px;max-width:76ch;margin-top:8px;margin-bottom:26px;}
+  section.block{margin-bottom:46px;}
+
+  /* Issue cards */
+  .issue-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .issue-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);}
+  .issue-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .issue-card h4{font-size:15.5px;line-height:1.25;}
+  .issue-idx{font-family:"IBM Plex Mono";font-size:11px;color:var(--text-muted);flex:none;}
+  .issue-card .quote{font-size:12.5px;font-style:italic;color:var(--text-secondary);border-left:2px solid var(--accent);padding-left:10px;}
+  .issue-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;}
+  .issue-meta span{font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:99px;}
+
+  /* Findings table */
+  .find-table{width:100%;border-collapse:collapse;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .find-table th,.find-table td{padding:12px 15px;text-align:left;font-size:12.5px;border-bottom:1px solid var(--border);}
+  .find-table th{background:#c4c0c0;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-primary);font-weight:700;}
+  .find-table tr:last-child td{border-bottom:none;}
+  .find-table td:first-child{font-weight:600;color:var(--text-primary);}
+  .find-table td{color:var(--text-secondary);}
+
+  /* Emotion bars */
+  .emo-list{display:flex;flex-direction:column;gap:10px;}
+  .emo-row{display:grid;grid-template-columns:170px 1fr 40px;gap:12px;align-items:center;background:var(--card-bg);padding:10px 14px;border-radius:8px;border:1px solid var(--border);}
+  .emo-name{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;}
+  .emo-dot{width:9px;height:9px;border-radius:3px;flex:none;}
+  .emo-track{height:22px;background:#c4c0c0;border-radius:6px;overflow:hidden;}
+  .emo-fill{height:100%;border-radius:6px;}
+  .emo-score{font-family:"IBM Plex Mono";font-size:12.5px;font-weight:600;text-align:right;}
+  .emo-detail{font-size:11.5px;color:var(--text-muted);margin-top:2px;grid-column:1/4;padding-left:0;}
+  .emo-synth{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-top:18px;font-size:13px;color:var(--text-secondary);}
+  .emo-synth b{color:var(--text-primary);}
+
+  /* Dolores */
+  .pain-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .pain-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:15px 16px;}
+  .pain-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .pain-top b{font-size:13.5px;}
+  .pain-score{font-family:"IBM Plex Mono";font-size:12px;color:var(--critical);font-weight:700;}
+  .pain-card .quote{font-size:12px;font-style:italic;color:var(--text-secondary);margin:6px 0;}
+  .pain-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .pain-tags span{font-size:10px;background:#c4c0c0;color:var(--text-primary);padding:2px 8px;border-radius:99px;}
+
+  /* Territorio */
+  .zone-grid{display:flex;flex-direction:column;gap:10px;}
+  .zone-row{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:14px;align-items:center;}
+  .zone-name{font-weight:600;font-size:13.5px;}
+  .zone-name span{display:block;font-weight:400;font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+  .zone-dolor{font-size:12px;color:var(--text-secondary);}
+  .zone-tension{display:flex;flex-direction:column;gap:4px;}
+  .zone-tension .lbl{font-size:10px;color:var(--text-muted);text-transform:uppercase;}
+  .tbar-mini{height:7px;border-radius:99px;background:#c4c0c0;overflow:hidden;}
+  .tbar-mini i{display:block;height:100%;background:var(--critical);border-radius:99px;}
+  .zone-score{font-family:"IBM Plex Mono";font-weight:700;font-size:15px;color:var(--critical);text-align:right;}
+
+  /* Segmentos */
+  .seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .seg-card{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:17px;display:flex;flex-direction:column;gap:8px;}
+  .seg-card h4{font-size:14.5px;}
+  .seg-card .profile{font-size:11.5px;color:var(--text-muted);}
+  .seg-row{display:flex;gap:8px;font-size:12px;color:var(--text-secondary);}
+  .seg-row b{color:var(--text-primary);font-weight:600;flex:none;width:64px;}
+
+  /* Actores */
+  .actor-table{width:100%;border-collapse:collapse;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .actor-table th,.actor-table td{padding:12px 15px;font-size:12.5px;border-bottom:1px solid var(--border);text-align:left;}
+  .actor-table th{background:#c4c0c0;font-size:10.5px;text-transform:uppercase;color:var(--text-primary);font-weight:700;}
+  .actor-table tr:last-child td{border-bottom:none;}
+  .trust-bar{width:70px;height:8px;background:#c4c0c0;border-radius:99px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:8px;}
+  .trust-bar i{display:block;height:100%;border-radius:99px;}
+
+  /* Narrativas */
+  .narr-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;}
+  table.narr{width:100%;border-collapse:collapse;min-width:820px;background:var(--card-bg);}
+  table.narr th{background:#c4c0c0;font-size:10.5px;text-transform:uppercase;color:var(--text-primary);padding:11px 14px;text-align:left;}
+  table.narr td{padding:11px 14px;font-size:12.5px;color:var(--text-secondary);border-top:1px solid var(--border);}
+  table.narr td:first-child{color:var(--text-primary);font-weight:600;}
+  table.narr td.quote-cell{font-style:italic;}
+
+  .mother-panel{background:var(--card-bg);border-left:4px solid var(--accent);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-top:20px;}
+  .mother-panel .tag-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent-ink);margin-bottom:10px;}
+  .mother-panel p.quote{font-family:"Fraunces",serif;font-size:19px;color:var(--text-primary);margin:0 0 16px;}
+  .mother-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;margin-top:14px;}
+  .mother-grid div{font-size:12.5px;color:var(--text-secondary);padding:8px 0;border-top:1px solid var(--border-strong);}
+  .mother-grid div b{display:block;color:var(--text-primary);font-size:11px;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:3px;}
+  .force-msgs{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
+  .force-msgs li{list-style:none;background:#ffffff;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;font-style:italic;}
+
+  /* Riesgos */
+  .risk-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;}
+  table.risk{width:100%;border-collapse:collapse;min-width:760px;background:var(--card-bg);}
+  table.risk th{background:#c4c0c0;font-size:10.5px;text-transform:uppercase;color:var(--text-primary);padding:11px 14px;text-align:left;}
+  table.risk td{padding:11px 14px;font-size:12.5px;color:var(--text-secondary);border-top:1px solid var(--border);}
+  table.risk td:first-child{color:var(--text-primary);font-weight:600;}
+  .pill{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;}
+  .pill.alta,.pill.muyalto{background:var(--critical-soft);color:var(--critical);}
+  .pill.mediaalta,.pill.alto{background:var(--serious-soft);color:var(--serious);}
+  .pill.media,.pill.medio{background:var(--warning-soft);color:var(--warning);}
+  .pill.baja{background:var(--good-soft);color:var(--good);}
+
+  .opp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:20px;}
+  .opp-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;}
+  .opp-card b{display:block;font-size:13.5px;margin-bottom:6px;color:var(--accent-2);}
+  .opp-card p{margin:0;font-size:12.5px;color:var(--text-secondary);}
+
+  .reco-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px;}
+  .reco-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:15px 16px;}
+  .reco-card .dim{font-size:10.5px;text-transform:uppercase;letter-spacing:0.04em;color:var(--accent-ink);font-weight:700;margin-bottom:6px;}
+  .reco-card p{margin:0 0 6px;font-size:13px;color:var(--text-primary);}
+  .reco-card span{font-size:11.5px;color:var(--text-muted);}
+
+  /* 9 preguntas */
+  .qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;}
+  .qa-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+  .qa-card .q{font-size:11.5px;font-weight:700;color:var(--accent-ink);margin-bottom:6px;}
+  .qa-card .a{font-size:12.5px;color:var(--text-secondary);}
+  .conclusion-box{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-top:20px;}
+  .conclusion-box .tag-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--critical);margin-bottom:10px;}
+  .conclusion-box p{font-family:"Fraunces",serif;font-size:17px;color:var(--text-primary);margin:0;}
+
+  /* Fuentes */
+  .sources-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 28px;}
+  .source-item{font-size:12.5px;padding:9px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;}
+  .source-item .n{color:var(--text-muted);font-family:"IBM Plex Mono";font-size:11px;flex:none;width:18px;}
+  .source-item a{color:var(--text-secondary);text-decoration:none;}
+  .source-item a:hover{color:var(--accent-ink);text-decoration:underline;}
+
+  /* Footer Modificado */
+  .footer{background:#1C2738;border-top:1px solid rgba(255,255,255,.1);padding:14px 24px;font-size:11px;color:#94A3B8;display:flex;flex-wrap:wrap;gap:8px;margin-top:40px;border-radius:0 0 8px 8px}
+
+  @media (max-width:1020px){
+    .index-panel{grid-template-columns:1fr;}
+    .issue-grid{grid-template-columns:repeat(2,1fr);}
+    .pain-grid{grid-template-columns:1fr;}
+    .seg-grid{grid-template-columns:repeat(2,1fr);}
+    .zone-row{grid-template-columns:1fr 1fr;grid-template-areas:"n n" "d d" "t s";}
+    .mother-grid{grid-template-columns:1fr;}
+    .opp-grid{grid-template-columns:1fr;}
+    .reco-grid{grid-template-columns:1fr;}
+    .qa-grid{grid-template-columns:1fr;}
+    .sources-grid{grid-template-columns:1fr;}
+    .emo-row{grid-template-columns:120px 1fr 34px;}
+  }
+  @media (max-width:680px){
+    .issue-grid{grid-template-columns:1fr;}
+    .seg-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <div class="brandbar-inner">
+    <div class="brand">SOCIOAFECTIVA <span>· Sinaloa</span></div>
+    <div class="brand-tag">Cartografía del clima emocional colectivo · corte 01 sep 2026</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-eyebrow"><span class="dot"></span>Cartografía Socioafectiva Territorial</div>
+    <h1>Lo que Sinaloa siente frente a sus problemas centrales</h1>
+    <p class="hero-sub">Diagnóstico del clima emocional colectivo del estado frente a sus seis problemas prioritarios — seguridad, colapso económico, crisis forense, desplazamiento, vulnerabilidad digital y desconfianza institucional — traducido en arquitectura narrativa accionable para gobierno, campaña o consultoría.</p>
+    <div class="hero-meta">
+      <div class="meta-pill">Territorio: <b>&nbsp;Sinaloa, México</b></div>
+      <div class="meta-pill">Ventana: <b>&nbsp;mar–sep 2026 (6 meses)</b></div>
+      <div class="meta-pill">Modalidad: <b>&nbsp;Multitemática · 6 issues</b></div>
+      <div class="meta-pill">Fuentes revisadas: <b>&nbsp;22 digitales públicas</b></div>
+    </div>
+
+    <div class="index-panel">
+      <div class="gauge-card">
+        <div class="gauge-label">Índice general socioafectivo</div>
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 150 150" width="150" height="150">
+            <circle cx="75" cy="75" r="62" fill="none" stroke="#c4c0c0" stroke-width="14"/>
+            <circle id="gauge-arc" cx="75" cy="75" r="62" fill="none" stroke="var(--critical)" stroke-width="14" stroke-linecap="round" transform="rotate(-90 75 75)"/>
+          </svg>
+          <div class="gauge-num"><b class="tabular">6.9</b><span>de 10</span></div>
+        </div>
+        <div class="band-chip">🟠 Banda Alta</div>
+      </div>
+      <div class="brutal-card">
+        <div class="tag-label">Lectura brutalmente clara</div>
+        <p>Sinaloa no está en shock: está <b>agotado</b>. Veintiún meses de guerra interna del cártel, un gobernador acusado por EE. UU. y un aparato forense colapsado por cuerpos sin identificar produjeron un estado que ya no espera que "todo esté en calma" — <b>espera que le muestren, con nombres y fechas, quién le está regresando lo que perdió.</b> Mientras eso no ocurra, cada nuevo hallazgo en una fosa o cada nuevo negocio cerrado es una mecha corta hacia una crisis social mayor.</p>
+      </div>
+    </div>
+
+    <nav class="tabs-nav" id="tabsNav">
+      <button class="tab-btn active" data-tab="resumen">Resumen</button>
+      <button class="tab-btn" data-tab="emociones">Emociones </button>
+      <button class="tab-btn" data-tab="territorio">Territorio</button>
+      <button class="tab-btn" data-tab="segmentos">Segmentos y actores</button>
+      <button class="tab-btn" data-tab="narrativas">Narrativas</button>
+      <button class="tab-btn" data-tab="riesgos">Riesgos y acción</button>
+      <button class="tab-btn" data-tab="fuentes">Fuentes</button>
+    </nav>
+  </header>
+
+  <!-- ============ TAB: RESUMEN ============ -->
+  <div class="tab-panel active" id="tab-resumen">
+
+    <section class="block">
+      <div class="sec-num">Sección 04</div>
+      <div class="sec-head"><h2>Los 6 problemas estatales prioritarios</h2></div>
+      <p class="sec-dek">Issues que concentran hoy la mayor activación emocional del territorio, con la frase ciudadana que mejor los resume.</p>
+      <div class="issue-grid" id="issue-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 03</div>
+      <div class="sec-head"><h2>Radiografía territorial sintética</h2></div>
+      <table class="find-table">
+        <tbody id="radiografia-body"></tbody>
+      </table>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 01</div>
+      <div class="sec-head"><h2>Hallazgos centrales</h2></div>
+      <table class="find-table">
+        <thead><tr><th>Hallazgo central</th><th>Lectura socioafectiva</th></tr></thead>
+        <tbody id="hallazgos-body"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ TAB: EMOCIONES ============ -->
+  <div class="tab-panel" id="tab-emociones">
+    <section class="block">
+      <div class="sec-num">Sección 05</div>
+      <div class="sec-head"><h2>Mapa emocional colectivo</h2></div>
+      <p class="sec-dek">Intensidad de cada emoción dominante, grupo donde aparece con mayor fuerza y detonante inmediato.</p>
+      <div class="emo-list" id="emo-list"></div>
+      <div class="emo-synth" id="emo-synth"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 06</div>
+      <div class="sec-head"><h2>Mapa de dolores sociales</h2></div>
+      <p class="sec-dek">Dolores concretos detrás de cada emoción, con su narrativa ciudadana y su lectura de riesgo/oportunidad.</p>
+      <div class="pain-grid" id="pain-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 07</div>
+      <div class="sec-head"><h2>Mapa simbólico del territorio</h2></div>
+      <p class="sec-dek">Objetos, lugares y actores concretos que condensan el estado emocional colectivo — la materia prima de cualquier narrativa efectiva.</p>
+      <table class="find-table">
+        <thead><tr><th>Símbolo</th><th>Emoción que activa</th><th>Uso estratégico</th></tr></thead>
+        <tbody id="symbol-body"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ TAB: TERRITORIO ============ -->
+  <div class="tab-panel" id="tab-territorio">
+    <section class="block">
+      <div class="sec-num">Sección 09</div>
+      <div class="sec-head"><h2>Mapa territorial por zonas</h2></div>
+      <p class="sec-dek">Tensión socioafectiva por zona (0–10), ordenada de mayor a menor. El estado no vive un solo Sinaloa: cada zona necesita su propia intervención.</p>
+      <div class="zone-grid" id="zone-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 10</div>
+      <div class="sec-head"><h2>Enemigos simbólicos y fracturas sociales</h2></div>
+      <table class="find-table">
+        <thead><tr><th>Enemigo / fractura</th><th>Riesgo</th><th>Cómo neutralizarlo</th></tr></thead>
+        <tbody id="enemy-body"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ TAB: SEGMENTOS Y ACTORES ============ -->
+  <div class="tab-panel" id="tab-segmentos">
+    <section class="block">
+      <div class="sec-num">Sección 08</div>
+      <div class="sec-head"><h2>Segmentación socioafectiva</h2></div>
+      <p class="sec-dek">Seis segmentos con distinta emoción dominante, dolor principal y narrativa que los activa.</p>
+      <div class="seg-grid" id="seg-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 11</div>
+      <div class="sec-head"><h2>Actores afectivos del territorio</h2></div>
+      <p class="sec-dek">Confianza ciudadana estimada (0–10) y potencial estratégico de cada actor relevante.</p>
+      <table class="actor-table">
+        <thead><tr><th>Actor</th><th>Confianza</th><th>Emoción asociada</th><th>Potencial estratégico</th></tr></thead>
+        <tbody id="actor-body"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ TAB: NARRATIVAS ============ -->
+  <div class="tab-panel" id="tab-narrativas">
+    <section class="block">
+      <div class="sec-num">Sección 12</div>
+      <div class="sec-head"><h2>Narrativas dominantes en competencia</h2></div>
+      <div class="narr-table-wrap">
+        <table class="narr">
+          <thead><tr><th>Narrativa</th><th>Quién la impulsa</th><th>Frase representativa</th><th>Penetración</th><th>Oportunidad</th></tr></thead>
+          <tbody id="narr-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 16</div>
+      <div class="sec-head"><h2>Narrativa madre recomendada</h2></div>
+      <div class="mother-panel">
+        <div class="tag-label">Frase rectora</div>
+        <p class="quote">"Resultados que se puedan contar, no promesas que hay que creer."</p>
+        <div class="mother-grid">
+          <div><b>Herida central</b>Abandono institucional tras 21 meses de guerra interna del cártel y una crisis forense sin resolver.</div>
+          <div><b>Enemigo simbólico</b>La promesa sin evidencia — el discurso oficial de "calma" sin datos verificables.</div>
+          <div><b>Promesa emocional</b>Protección real y medible, no épica ni discurso de resiliencia forzada.</div>
+          <div><b>Protagonista</b>La familia sinaloense que aguanta, trabaja y busca a los suyos.</div>
+          <div><b>Futuro deseado</b>La calle recuperada, el negocio reabierto, el cuerpo identificado y devuelto con dignidad.</div>
+          <div><b>Tono narrativo</b>Directo, sobrio, sin épica hueca ni minimización del dolor.</div>
+          <div><b>Símbolos a usar</b>La cortina que vuelve a abrir, la tambora, el Carnaval, el campo en cosecha.</div>
+          <div><b>Símbolos a evitar</b>La camioneta blindada oficial, el discurso de "todo está en calma".</div>
+        </div>
+        <ul class="force-msgs">
+          <li>"No pedimos discursos, pedimos fechas."</li>
+          <li>"Cada cuerpo identificado es una familia que puede parar de buscar."</li>
+          <li>"Un negocio que reabre es una calle que se recupera."</li>
+          <li>"Sinaloa no es lo que le pasó, es lo que sigue construyendo."</li>
+          <li>"La tambora no calla, pero tampoco tapa lo que falta resolver."</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ TAB: RIESGOS Y ACCION ============ -->
+  <div class="tab-panel" id="tab-riesgos">
+    <section class="block">
+      <div class="sec-num">Sección 14</div>
+      <div class="sec-head"><h2>Riesgos estratégicos</h2></div>
+      <div class="risk-table-wrap">
+        <table class="risk">
+          <thead><tr><th>Riesgo</th><th>Probabilidad</th><th>Impacto</th><th>Detonante posible</th><th>Recomendación preventiva</th></tr></thead>
+          <tbody id="risk-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 15</div>
+      <div class="sec-head"><h2>Oportunidades estratégicas</h2></div>
+      <div class="opp-grid" id="opp-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 18</div>
+      <div class="sec-head"><h2>Recomendaciones de intervención</h2></div>
+      <div class="reco-grid" id="reco-grid"></div>
+    </section>
+
+    <section class="block">
+      <div class="sec-num">Sección 19</div>
+      <div class="sec-head"><h2>Conclusión ejecutiva — las 9 preguntas</h2></div>
+      <div class="qa-grid" id="qa-grid"></div>
+      <div class="conclusion-box">
+        <div class="tag-label">Conclusión brutalmente clara</div>
+        <p>Sinaloa no necesita que le repitan que es fuerte — ya lo sabe, lo demuestra aguantando. Necesita que alguien, por fin, le muestre resultados que se puedan contar: cuerpos identificados, negocios reabiertos, calles sin bala perdida. Mientras eso no llegue, cualquier discurso de calma se va a leer como una mentira más.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ TAB: FUENTES ============ -->
+  <div class="tab-panel" id="tab-fuentes">
+    <section class="block">
+      <div class="sec-num">Sección 20</div>
+      <div class="sec-head"><h2>Fuentes digitales consultadas</h2></div>
+      <p class="sec-dek">Cifras sin validación institucional precisa (ej. conteos periodísticos de homicidios/desapariciones) se presentan como estimaciones sujetas a corroboración oficial, no como dato duro cerrado.</p>
+      <div class="sources-grid" id="sources-list"></div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div>Estudio elaborado con la metodología SOCIOAFECTIVA del ecosistema SIE — Sistema de Inteligencia Estratégica. Compatible con SEMIÓTICA, TENSIONES, EMOCIONES y ACTORES para el mismo territorio.</div>
+    <div>Corte: 01 de septiembre de 2026.</div>
+  </footer>
+</div>
+
+<script>
+// ---- Tabs ----
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top: document.querySelector('.tabs-nav').offsetTop - 12, behavior:'smooth'});
+  });
+});
+
+// ---- Gauge ----
+(function(){
+  const r=62, c=2*Math.PI*r, val=6.9, pct=val/10;
+  const arc=document.getElementById('gauge-arc');
+  arc.style.strokeDasharray = c;
+  arc.style.strokeDashoffset = c*(1-pct);
+})();
+
+// ---- Issues prioritarios ----
+const issues = [
+  {n:"01", t:"Seguridad — guerra interna del cártel", q:"\"Ya perdimos la cuenta de cuántos meses llevamos así.\"", tags:[["Miedo","critical"],["9.2/10","muted"]]},
+  {n:"02", t:"Colapso económico y del empleo formal", q:"\"934 empresas desaparecieron en un año en Culiacán.\"", tags:[["Resentimiento","serious"],["8.4/10","muted"]]},
+  {n:"03", t:"Crisis forense y desaparición de personas", q:"\"Hay cientos de cuerpos sin identificar en el Semefo de Mazatlán.\"", tags:[["Impotencia","violet"],["9.0/10","muted"]]},
+  {n:"04", t:"Desplazamiento forzado interno", q:"\"Las Víboras dejó de ser un lugar para vivir en paz.\"", tags:[["Duelo","violet"],["7.6/10","muted"]]},
+  {n:"05", t:"Vulnerabilidad digital de jóvenes e influencers", q:"\"El siguiente narcovolante puede tener tu nombre.\"", tags:[["Miedo","critical"],["7.8/10","muted"]]},
+  {n:"06", t:"Desconfianza institucional y crisis de legitimidad", q:"\"67% de los sinaloenses ya no confía en la autoridad.\"", tags:[["Desconfianza","serious"],["8.9/10","muted"]]},
+];
+document.getElementById('issue-grid').innerHTML = issues.map(i=>`
+  <div class="issue-card">
+    <div class="issue-top"><h4>${i.t}</h4><span class="issue-idx">${i.n}</span></div>
+    <div class="quote">${i.q}</div>
+    <div class="issue-meta">${i.tags.map(t=>`<span style="background:var(--${t[1]}-soft,#c4c0c0);color:var(--${t[1]},var(--text-muted))">${t[0]}</span>`).join('')}</div>
+  </div>
+`).join('');
+
+// ---- Radiografia ----
+const radiografia = [
+  ["Territorio","Sinaloa (18 municipios); foco en Culiacán, Mazatlán y corredor sur"],
+  ["Issues centrales","Seguridad, economía, crisis forense, desplazamiento, vulnerabilidad digital, confianza institucional"],
+  ["Emoción dominante","Miedo/vulnerabilidad sostenido, con desconfianza institucional como emoción secundaria"],
+  ["Herida central","Abandono institucional — el Estado no protege ni resuelve al ritmo que la crisis exige"],
+  ["Símbolos principales","La cortina cerrada, el narcovolante, la cubeta de búsqueda, la tambora"],
+  ["Zonas con conversación crítica","Culiacán (colonias de alta incidencia), Las Víboras, Semefo de Mazatlán, corredor sur (Concordia)"],
+  ["Actor institucional clave","Gobierno estatal (Rocha Moya) y Fiscalía General de Sinaloa — ambos con confianza crítica"],
+  ["Oportunidad estratégica","Convertir a madres buscadoras y sector empresarial en interlocutores legítimos de una narrativa de resultados verificables"],
+];
+document.getElementById('radiografia-body').innerHTML = radiografia.map(r=>`<tr><td style="width:230px">${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+
+const hallazgos = [
+  ["67% de desconfianza institucional", "La crisis ya no es solo de seguridad: es de legitimidad. El regreso desafiante de Rocha Moya al cargo tras la acusación de EE. UU. profundizó la fractura."],
+  ["3,000+ homicidios y 4,000+ desapariciones en la guerra interna", "La cifra deja de ser estadística y se vuelve identidad: cada familia sinaloense conoce, de cerca o de lejos, un caso sin resolver."],
+  ["934 empresas cerradas en un año en Culiacán; 24 mil empleos formales perdidos", "El miedo ya tiene un costo medible y cotidiano — no es abstracto, es el negocio del vecino."],
+  ["Semefo de Mazatlán con \"cientos de cuerpos\" sin identificar", "El duelo colectivo no puede cerrarse porque el aparato institucional no da abasto — la herida se mantiene abierta por diseño, no por fatalidad."],
+  ["Protestas \"Fuera Rocha\" y bloqueos ciudadanos en aumento (ago 2026)", "El enojo pasó de las redes a la calle — la ventana para canalizarlo hacia exigencias concretas se está cerrando."],
+  ["Hoteles de Mazatlán bajan tarifas hasta 40% para sostener ocupación", "La violencia ya perforó incluso la \"Sinaloa protegida\" — el contraste Culiacán/Mazatlán que sostenía la economía turística se está erosionando."],
+];
+document.getElementById('hallazgos-body').innerHTML = hallazgos.map(h=>`<tr><td style="width:280px">${h[0]}</td><td>${h[1]}</td></tr>`).join('');
+
+// ---- Emociones ----
+const emoColor = {critical:'var(--critical)',serious:'var(--serious)',violet:'var(--violet)',warning:'var(--warning)',muted:'var(--text-muted)',accent:'var(--accent)',good:'var(--good)'};
+const emociones = [
+  {e:"Miedo / vulnerabilidad", s:9, g:"Población general", d:"Balaceras en tiempo real, toque de queda autoimpuesto", c:'critical'},
+  {e:"Desconfianza institucional", s:9, g:"Población general", d:"Acusación de EE. UU. y regreso desafiante de Rocha Moya al cargo", c:'serious'},
+  {e:"Impotencia / duelo", s:8, g:"Familias buscadoras", d:"Crisis forense en el Semefo de Mazatlán", c:'violet'},
+  {e:"Enojo / furia organizada", s:7, g:"Ciudadanía movilizada y empresarios", d:"Cierre de negocios, protestas \"Fuera Rocha\"", c:'warning'},
+  {e:"Cansancio / fatiga", s:7, g:"Población general (21+ meses de conflicto)", d:"Normalización cotidiana de la violencia", c:'muted'},
+  {e:"Resentimiento territorial", s:6, g:"Colonias postergadas vs. zonas turísticas", d:"Comparación Culiacán vs. Mazatlán protegido", c:'accent'},
+  {e:"Orgullo herido", s:6, g:"Identidad regional", d:"Estigmatización externa de \"sinaloense = narco\"", c:'accent'},
+  {e:"Esperanza vigilante", s:4, g:"Jóvenes y sector cultural", d:"Tambora y Carnaval como resistencia identitaria", c:'good'},
+];
+document.getElementById('emo-list').innerHTML = emociones.map(e=>`
+  <div class="emo-row">
+    <div class="emo-name"><span class="emo-dot" style="background:${emoColor[e.c]}"></span>${e.e}</div>
+    <div class="emo-track"><div class="emo-fill" style="width:${e.s*10}%;background:${emoColor[e.c]}"></div></div>
+    <div class="emo-score tabular">${e.s}/10</div>
+    <div class="emo-detail">${e.g} · ${e.d}</div>
+  </div>
+`).join('');
+document.getElementById('emo-synth').innerHTML = `<b>Lectura emocional:</b> dominante = <b>miedo/vulnerabilidad</b>; secundaria = <b>desconfianza institucional</b>; la más peligrosa = <b>impotencia/duelo</b> (riesgo de radicalización de colectivos de búsqueda); la más movilizable = <b>enojo/furia organizada</b> (ya se tradujo en protestas y bloqueos); la más desaprovechada = <b>orgullo herido / esperanza vigilante</b> — identidad cultural como activo narrativo que ningún actor político está capitalizando bien todavía.`;
+
+// ---- Dolores ----
+const dolores = [
+  {t:"Pérdida de un ser querido sin resolver", s:9, q:"\"Toda desaparición es forzada.\"", tags:["Familias","Crisis forense"]},
+  {t:"Cuerpos sin identificar acumulados", s:8, q:"\"Hay cientos de cuerpos en el Semefo Mazatlán.\"", tags:["Familias buscadoras","Salud pública"]},
+  {t:"Cierre del negocio propio", s:8, q:"\"934 empresas desaparecieron en un año.\"", tags:["Comerciantes","Economía"]},
+  {t:"Desempleo", s:8, q:"\"36 mil desempleados y contando.\"", tags:["Trabajadores","Economía"]},
+  {t:"Desplazamiento del hogar", s:7, q:"\"Ya no podíamos seguir viviendo ahí.\"", tags:["Familias desplazadas","Las Víboras"]},
+  {t:"Exposición pública sin protección", s:7, q:"\"El siguiente narcovolante puede tener tu nombre.\"", tags:["Influencers","Jóvenes"]},
+  {t:"Pérdida de ingresos turísticos", s:6, q:"\"Bajamos tarifas 40% y aun así no llenamos.\"", tags:["Hotelería","Mazatlán"]},
+];
+document.getElementById('pain-grid').innerHTML = dolores.map(d=>`
+  <div class="pain-card">
+    <div class="pain-top"><b>${d.t}</b><span class="pain-score tabular">${d.s}/10</span></div>
+    <div class="quote">${d.q}</div>
+    <div class="pain-tags">${d.tags.map(x=>`<span>${x}</span>`).join('')}</div>
+  </div>
+`).join('');
+
+// ---- Simbolos ----
+const symbols = [
+  ["El narcovolante", "Miedo", "Denunciar la censura por miedo sin exponer a nadie de forma directa"],
+  ["La cubeta / lona de búsqueda", "Impotencia / dignidad", "Humanizar la cifra de desaparecidos sin caer en el morbo"],
+  ["El negocio con la cortina cerrada", "Resentimiento económico", "Visibilizar el costo cotidiano del miedo"],
+  ["El Semefo de Mazatlán", "Duelo / impotencia", "Exigir política forense pública y auditable"],
+  ["La tambora en el Carnaval", "Orgullo / esperanza", "Narrativa de resistencia cultural, nunca de negación del dolor"],
+  ["Las 16 colonias \"rojas\" de Culiacán", "Miedo / resentimiento territorial", "Exigir equidad en la intervención de seguridad"],
+  ["El malecón sin turistas", "Resentimiento económico", "Visibilizar la pérdida incluso en la \"Sinaloa protegida\""],
+  ["La camioneta blindada oficial", "Desconfianza", "Símbolo a evitar en cualquier comunicación institucional"],
+];
+document.getElementById('symbol-body').innerHTML = symbols.map(s=>`<tr><td style="width:220px">${s[0]}</td><td style="width:170px">${s[1]}</td><td>${s[2]}</td></tr>`).join('');
+
+// ---- Zonas ----
+const zonas = [
+  {n:"Culiacán — 16 colonias de alta incidencia", sub:"Tierra Blanca y corredor centro-poniente", d:"Bala perdida y extorsión cotidiana", t:9},
+  {n:"Semefo de Mazatlán", sub:"Zona forense estatal", d:"Cuerpos sin identificar, colapso de capacidad", t:8},
+  {n:"Las Víboras, Culiacán", sub:"Colonia con desplazamiento forzado documentado", d:"Familias que abandonaron su hogar", t:8},
+  {n:"Corredor sur (Concordia y alrededores)", sub:"Zona rural, hallazgo de fosas clandestinas", d:"Miedo a nuevos hallazgos y presencia armada", t:7},
+  {n:"Zonas de pérdida de empleo formal (14 municipios)", sub:"Fuera del corredor agroexportador principal", d:"Cierre de fuentes de trabajo", t:7},
+  {n:"Corredor agrícola de Culiacán", sub:"Costa Rica, Bachigualato y alrededores", d:"Freno a inversión agroexportadora", t:6},
+  {n:"Mazatlán turístico (Zona Dorada / Malecón)", sub:"Corredor hotelero", d:"Caída de reservaciones y tarifas a la baja", t:6},
+];
+document.getElementById('zone-grid').innerHTML = zonas.map(z=>`
+  <div class="zone-row">
+    <div class="zone-name">${z.n}<span>${z.sub}</span></div>
+    <div class="zone-dolor">${z.d}</div>
+    <div class="zone-tension"><span class="lbl">Tensión</span><div class="tbar-mini"><i style="width:${z.t*10}%"></i></div></div>
+    <div class="zone-score tabular">${z.t}/10</div>
+  </div>
+`).join('');
+
+// ---- Enemigos ----
+const enemigos = [
+  ["\"El gobernador que no se va\"", "Erosión total de legitimidad institucional", "Relevo con resultados verificables, no solo cambio de discurso"],
+  ["El Semefo colapsado", "Crisis humanitaria mediática de alcance nacional", "Inversión forense visible y auditable (banco genético estatal)"],
+  ["Fractura Culiacán (guerra) vs. Mazatlán (turismo protegido)", "Percepción de abandono del \"Sinaloa que no vende postal\"", "Plan económico específico para zonas fuera del corredor turístico"],
+  ["\"Los que se van\" vs. \"los que aguantan\"", "Fractura generacional y resentimiento interno", "Narrativa de futuro con hechos verificables, no solo apelación al orgullo"],
+];
+document.getElementById('enemy-body').innerHTML = enemigos.map(e=>`<tr><td style="width:280px">${e[0]}</td><td style="width:260px">${e[1]}</td><td>${e[2]}</td></tr>`).join('');
+
+// ---- Segmentos ----
+const segmentos = [
+  {t:"Madres y familias buscadoras", p:"Colectivos de búsqueda en todo el estado", dolor:"Pérdida sin resolver", deseo:"Identificación digna de restos", miedo:"Que nunca aparezcan", narr:"\"Toda desaparición es forzada\""},
+  {t:"Comerciantes y empresarios", p:"CANACO, Core 33, negocios familiares", dolor:"Cierre del negocio", deseo:"Plan de emergencia económica", miedo:"Perder el patrimonio familiar", narr:"\"Sin seguridad no hay economía\""},
+  {t:"Jóvenes creadores digitales", p:"Influencers y usuarios activos de redes", dolor:"Visibilidad = riesgo de vida", deseo:"Expresarse sin miedo", miedo:"Ser el próximo narcovolante", narr:"Autocensura como sobrevivencia"},
+  {t:"Familias en colonias de alta incidencia", p:"Adultos mayores y jefas de familia", dolor:"Encierro y aislamiento", deseo:"Recuperar la calle", miedo:"La bala perdida", narr:"\"Aquí ya no se puede vivir igual\""},
+  {t:"Sector turístico de Mazatlán", p:"Hotelería, restaurantes, guías", dolor:"Cancelaciones y tarifas a la baja", deseo:"Temporada recuperada", miedo:"Perder la marca \"Mazatlán seguro\"", narr:"Distancia narrativa de Culiacán"},
+  {t:"Clase media urbana / votante moderado", p:"Electorado no polarizado", dolor:"Desconfianza institucional", deseo:"Gobierno con autoridad moral", miedo:"Normalizar la colusión", narr:"\"Fuera Rocha\" / exigencia de plan"},
+];
+document.getElementById('seg-grid').innerHTML = segmentos.map(s=>`
+  <div class="seg-card">
+    <h4>${s.t}</h4>
+    <div class="profile">${s.p}</div>
+    <div class="seg-row"><b>Dolor</b>${s.dolor}</div>
+    <div class="seg-row"><b>Deseo</b>${s.deseo}</div>
+    <div class="seg-row"><b>Miedo</b>${s.miedo}</div>
+    <div class="seg-row"><b>Narrativa</b>${s.narr}</div>
+  </div>
+`).join('');
+
+// ---- Actores ----
+const actores = [
+  {n:"Gobierno estatal (Rocha Moya)", c:2, e:"Desconfianza", pot:"Bajo mientras no haya resultados verificables"},
+  {n:"Fiscalía General del Estado", c:2, e:"Impotencia / indignación", pot:"Alto si muestra avance forense auditable"},
+  {n:"Madres buscadoras / colectivos", c:8, e:"Dignidad en el duelo", pot:"Alto — interlocutor con mayor legitimidad moral"},
+  {n:"CANACO / sector empresarial", c:6, e:"Enojo organizado", pot:"Alto como aliado de exigencia de resultados"},
+  {n:"Gobierno federal / Marina", c:5, e:"Ambivalencia", pot:"Medio — presencia parcial, reconocida pero insuficiente"},
+  {n:"Medios locales / prensa digital", c:5, e:"Credibilidad variable", pot:"Alto para amplificar narrativa madre"},
+  {n:"Vecinos organizados de colonias rojas", c:6, e:"Miedo / resiliencia", pot:"Medio-alto como base de autoorganización"},
+];
+function trustColor(v){return v>=7?'var(--good)':v>=4?'var(--warning)':'var(--critical)';}
+document.getElementById('actor-body').innerHTML = actores.map(a=>`
+  <tr>
+    <td style="font-weight:600;color:var(--text-primary)">${a.n}</td>
+    <td><span class="trust-bar"><i style="width:${a.c*10}%;background:${trustColor(a.c)}"></i></span><span class="tabular">${a.c}/10</span></td>
+    <td>${a.e}</td>
+    <td>${a.pot}</td>
+  </tr>
+`).join('');
+
+// ---- Narrativas ----
+const narrativas = [
+  ["Oficial / gubernamental", "Gobierno estatal", "\"Sinaloa camina segura\"", 3, "Baja si no se actualiza con evidencia verificable"],
+  ["Crítica / opositora", "Ciudadanía movilizada y oposición", "\"Fuera Rocha\"", 7, "Canalizar hacia exigencia de resultados concretos, no solo salida del cargo"],
+  ["Forense / humanitaria", "Madres buscadoras", "\"Toda desaparición es forzada\"", 6, "La de mayor legitimidad moral del ecosistema — base ideal de la narrativa madre"],
+  ["Económica", "CANACO / empresarios", "\"Sin seguridad no hay economía\"", 6, "Puente entre exigencia ciudadana y política pública concreta"],
+  ["Identitaria", "Gobierno + sociedad civil", "\"Primero lo Nuestro\"", 5, "La más subutilizada como puente de cohesión social"],
+];
+document.getElementById('narr-body').innerHTML = narrativas.map(n=>`<tr><td>${n[0]}</td><td>${n[1]}</td><td class="quote-cell">${n[2]}</td><td class="tabular">${n[3]}/10</td><td>${n[4]}</td></tr>`).join('');
+
+// ---- Riesgos ----
+const riesgos = [
+  ["Escalada de protestas \"Fuera Rocha\" hacia bloqueos mayores", "alta", "alto", "Nuevo escándalo o hallazgo forense", "Canal de diálogo institucional con resultados verificables"],
+  ["Crisis humanitaria forense se vuelve caso nacional", "mediaalta", "muyalto", "Nuevo hallazgo masivo de fosas o cuerpos", "Intervención forense federal visible y auditable"],
+  ["Fuga acelerada de inversión y talento", "alta", "alto", "Nuevo cierre masivo de empresas", "Plan de emergencia económica con métricas públicas"],
+  ["Colapso de la temporada turística en Mazatlán", "media", "alto", "Nuevo hecho violento en zona turística", "Corredor seguro certificado y comunicación proactiva"],
+  ["Radicalización de colectivos de búsqueda", "media", "mediaalta", "Nueva negativa institucional a colectivos", "Mesa permanente con protocolo de resultados"],
+  ["Nueva ola de violencia contra creadores digitales", "media", "alto", "Nuevo narcovolante o amenaza directa", "Protocolo de protección a informadores e influencers"],
+];
+document.getElementById('risk-body').innerHTML = riesgos.map(r=>`
+  <tr><td>${r[0]}</td><td><span class="pill ${r[1]}">${r[1].replace('mediaalta','Media-alta').replace('media','Media').replace('alta','Alta')}</span></td>
+  <td><span class="pill ${r[2]}">${r[2].replace('muyalto','Muy alto').replace('mediaalta','Media-alta').replace('alto','Alto')}</span></td>
+  <td>${r[3]}</td><td>${r[4]}</td></tr>
+`).join('');
+
+// ---- Oportunidades ----
+const oportunidades = [
+  ["Mesa pública de resultados verificables", "Base de la narrativa madre: reportar cada 15–30 días avances medibles en seguridad, empleo y casos forenses."],
+  ["Puente cultural de cohesión", "Vincular tambora y Carnaval a una narrativa de resiliencia sin apropiarse del dolor colectivo ni minimizarlo."],
+  ["Mesa forense con madres buscadoras", "Convertir al colectivo con mayor legitimidad moral en interlocutor formal y visible de la política de búsqueda."],
+  ["Plan económico de corto plazo con métricas públicas", "Empleos y negocios reabiertos, reportados con la misma regularidad que las cifras de violencia."],
+];
+document.getElementById('opp-grid').innerHTML = oportunidades.map(o=>`<div class="opp-card"><b>${o[0]}</b><p>${o[1]}</p></div>`).join('');
+
+// ---- Recomendaciones ----
+const recos = [
+  ["Comunicación", "Reporte público quincenal de resultados verificables (seguridad, empleo, forense)", "Todo el estado", "Desconfianza institucional"],
+  ["Forense", "Banco genético estatal y mesa permanente con madres buscadoras", "Familias buscadoras — Semefo Mazatlán", "Impotencia / duelo"],
+  ["Económica", "Plan de emergencia con métricas de negocios reabiertos y empleos recuperados", "Comerciantes y sector formal", "Resentimiento económico"],
+  ["Seguridad focalizada", "Intervención verificable en las 16 colonias de mayor incidencia de Culiacán", "Culiacán — colonias rojas", "Miedo / vulnerabilidad"],
+  ["Protección digital", "Protocolo de seguridad para creadores de contenido e informadores locales", "Jóvenes e influencers", "Miedo / autocensura"],
+  ["Reubicación con garantías", "Programa de vivienda y servicios para familias desplazadas (ej. Las Víboras)", "Familias desplazadas", "Duelo / desplazamiento"],
+];
+document.getElementById('reco-grid').innerHTML = recos.map(r=>`<div class="reco-card"><div class="dim">${r[0]}</div><p>${r[1]}</p><span>${r[2]} · atiende: ${r[3]}</span></div>`).join('');
+
+// ---- 9 preguntas ----
+const qas = [
+  ["¿Qué siente profundamente?", "Miedo sostenido y desconfianza institucional profunda, con fatiga acumulada tras 21+ meses de conflicto."],
+  ["¿Qué le duele más?", "La pérdida sin resolver — desapariciones y cuerpos sin identificar en el sistema forense."],
+  ["¿Qué teme perder?", "La seguridad básica de la calle y el sustento económico del negocio o el empleo."],
+  ["¿Qué desea recuperar?", "Previsibilidad: la calle, el negocio abierto, la dignidad del duelo resuelto."],
+  ["¿A quién culpa?", "Al gobierno estatal (Rocha Moya) y a la impunidad estructural de la Fiscalía."],
+  ["¿En quién todavía confía?", "En las madres buscadoras, el tejido comunitario y la identidad cultural propia."],
+  ["¿Qué símbolo lo puede unir?", "La tambora y el negocio que reabre — continuidad más allá de la crisis."],
+  ["¿Qué narrativa puede movilizarlo?", "\"Resultados que se puedan contar, no promesas que hay que creer.\""],
+  ["¿Qué tema puede detonar una crisis?", "Un nuevo hallazgo forense masivo o un hecho violento en zona turística en temporada alta."],
+];
+document.getElementById('qa-grid').innerHTML = qas.map(q=>`<div class="qa-card"><div class="q">${q[0]}</div><div class="a">${q[1]}</div></div>`).join('');
+
+// ---- Fuentes ----
+const sources = [
+  ["Familias de Las Víboras y su desplazamiento forzado — Animal Político / X", "https://x.com/Pajaropolitico/status/2069937724501774530"],
+  ["Violencia, principal causa del desplazamiento forzado en Sinaloa: Sebides — Café Negro Portal", "https://cafenegroportal.com/violencia-sigue-siendo-la-principal-causa-del-desplazamiento-forzado-en-sinaloa-sebides/"],
+  ["16 colonias más peligrosas de Culiacán — Sinaloa Hoy", "https://www.sinaloahoy.com.mx/portal/zonas-de-alta-incidencia-delictiva-en-culiacan-las-16-colonias-mas-peligrosas-reveladas/"],
+  ["Hoteleros de Mazatlán bajan tarifas hasta 40% ante inseguridad — Luz Noticias", "https://www.luznoticias.mx/2026-08-13/sinaloa/hoteleros-de-mazatlan-bajan-tarifas-hasta-40-para-mantener-ocupacion-ante-inseguridad/300814"],
+  ["Se congelan reservaciones hoteleras para septiembre en Mazatlán — Viva la Noticia", "https://vivalanoticia.mx/la-violencia-pega-al-turismo-se-congelan-reservaciones-hoteleras-para-septiembre-en-mazatlan/"],
+  ["Golpe a los grupos musicales de Mazatlán por inseguridad — Los Noticieristas", "https://losnoticieristas.com/sinaloa/2026/08/sigue-el-golpe-a-los-grupos-musicales-de-mazatlan-sinaloa-inseguridad-opaca-su-actividad-en-este-verano-2026-1107114/"],
+  ["Sinaloa entre los estados con mayor pérdida de empleo formal: IMCO — Noroeste", "https://www.noroeste.com.mx/amp/culiacan/sinaloa-arranca-2026-entre-los-estados-con-mayor-perdida-de-empleo-formal-retrocede-27-imco-HP21956908"],
+  ["Sinaloa pierde 24 mil empleos formales, 36 mil desempleados — El Sol de Sinaloa", "https://oem.com.mx/elsoldesinaloa/local/sinaloa-pierde-24-mil-empleos-formales-y-enfrenta-36-mil-desempleados-en-2026-29645398"],
+  ["La economía de Culiacán se desinfla: 934 empresas desaparecieron en un año — Revista Espejo", "https://revistaespejo.com/2026/05/04/la-economia-de-culiacan-se-sigue-desinflando-934-empresas-desaparecieron-en-un-ano/"],
+  ["CANACO y Core 33 llaman a fortalecer la economía local — Noticiero Altavoz", "https://noticieroaltavoz.com/canaco-y-core-33-llaman-a-fortalecer-la-economia-local-ante-perdida-de-empleos-en-sinaloa/"],
+  ["Murió capitán de Marina protegiendo a madres buscadoras en Mazatlán — Infobae", "https://www.infobae.com/mexico/2026/07/04/murio-capitan-de-marina-al-proteger-a-madres-buscadoras-en-fosas-clandestinas-de-mazatlan-sinaloa/"],
+  ["Madres buscadoras denuncian crisis forense en Semefo Mazatlán — Infobae", "https://www.infobae.com/mexico/2026/08/13/madres-buscadoras-de-sinaloa-denuncian-crisis-forense-hay-cientos-de-cuerpos-en-el-semefo-mazatlan/"],
+  ["Madres buscadoras reciben a Rocha Moya con expedientes de desaparecidos — Cimacnoticias", "https://cimacnoticias.com.mx/2026/08/21/madres-buscadoras-reciben-a-rocha-moya-con-expedientes-de-desaparecidos/"],
+  ["Encuentran restos en dos fosas en Concordia, Sinaloa — LatinUS", "https://latinus.us/mexico/2026/6/15/encuentran-los-restos-de-tres-hombres-en-dos-fosas-en-concordia-sinaloa-176203.html"],
+  ["Inseguridad erosiona confianza: 67% de ciudadanos desconfía — Meganoticias", "https://www.meganoticias.mx/cdmx/noticia/inseguridad-en-sinaloa-erosiona-confianza-en-autoridades-67-de-ciudadanos-desconfia/724510"],
+  ["La guerra que devora Sinaloa: 3 mil homicidios, 4 mil desapariciones — Proceso", "https://www.proceso.com.mx/nacional/2026/7/25/la-guerra-que-devora-sinaloa-3-mil-homicidios-4-mil-desapariciones-y-1-gobernador-en-casa-376778.html"],
+  ["\"Fuera Rocha\": crecen protestas en Sinaloa — Digital Mex", "https://www.digitalmex.mx/nacional-e-internacional/story/70191/video-fuera-rocha-crecen-protestas-sinaloa-mientras-congreso-frena-relevo"],
+  ["Ciudadanos protestan y exigen plan urgente para recuperar Sinaloa — El Informador", "https://www.informador.mx/mexico/crimen-organizado-ciudadanos-protestan-y-exigen-un-plan-urgente-para-recuperar-sinaloa-20260825-0021.html"],
+  ["Familiares de desaparecidos en Mazatlán exigen a Rocha Moya agilizar búsqueda — Comunicadores", "https://comunicadores.mx/2026/08/21/familiares-de-mexiquenses-desaparecidos-en-mazatlan-exigen-a-rocha-moya-agilizar-su-busqueda/"],
+  ["Rocha Moya retoma cargo tras acusación de EE. UU. — CNN", "https://cnnespanol.cnn.com/2026/08/21/mexico/rocha-moya-retoma-gobernador-sinaloa-narcotrafico-orix"],
+  ["¿Cómo reducir la fuga de talentos de Sinaloa? — Revista Espejo", "https://revistaespejo.com/2026/04/16/como-reducir-la-fuga-de-talentos-de-sinaloa-desde-las-empresas/"],
+  ["9 influencers asesinados en Sinaloa en dos años — CNN", "https://cnnespanol.cnn.com/2026/08/07/mexico/influencers-asesinados-violencia-sinaloa-orix"],
+];
+document.getElementById('sources-list').innerHTML = sources.map((s,i)=>`
+  <div class="source-item"><span class="n">${String(i+1).padStart(2,'0')}</span><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a></div>
+`).join('');
+</script>
+
+</body>
+</html>
